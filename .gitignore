@@ -1,0 +1,11 @@
+## CLIENT
+# Dist Directory
+/client/dist
+# Node modules
+/client/node_modules
+# Bower components
+/client/src/components
+
+## Server
+# Node modules
+/server/node_modules
