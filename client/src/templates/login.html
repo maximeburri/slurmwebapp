@@ -1,0 +1,34 @@
+<div class="col-md-6 col-md-offset-3 ng-scope">
+    <div class="login-panel panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Connection</h3>
+        </div>
+        <div class="panel-body">
+            <form role="form">
+                <fieldset>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input class="form-control" placeholder="Nom d'utilisateur" name="username" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe </label>
+                        <input class="form-control" placeholder="Mot de passe" name="password" type="password" value="">
+                    </div>
+                    <hr>
+
+                    <div class="form-group">
+                        <label>Cluster (SSH) </label>
+                        <input class="form-control" placeholder="ex: baobab.ungige.ch" name="cluster" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label>Pont </label>
+                        <input class="form-control" placeholder="Pont" name="pont" type="password" value="">
+                    </div>
+
+                    <!-- Change this to a button or input when using this as a form -->
+                    <a ui-sref="dashboard.home" class="btn btn-lg btn-success btn-block">Connection</a>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
