@@ -1,0 +1,32 @@
+<div data-ng-controller="BrowserCtrl">
+    <div class="row">
+        <div class="col-lg-6">
+            <rd-widget>
+                <rd-widget-header icon="fa-tasks" title="Fichiers" >
+                </rd-widget-header>
+                <rd-widget-body classes="no-padding">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr><td><button class="btn btn-primary" ng-click="goToFile('..')"><i class="fa fa-arrow-up"></i> Dossier parent</button></td></tr>
+                                <tr ng-repeat="file in files" ng-click="goToFile(file.filename)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
+                                    <td>
+                                        <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',
+                                                      'fa fa-folder': file.type == 'folder',
+                                                      'fa fa-file-text-o': file.type == 'file',
+                                                      'fa fa-cog': file.type == 'executable'
+                                                      }"
+
+                                            style="color:gray">
+                                        </i>
+                                        <span style="margin-left:6px;">{{file.filename}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+    </div>
+</div>

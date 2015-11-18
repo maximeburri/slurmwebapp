@@ -18,6 +18,7 @@
   <script type="text/javascript" src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <script type="text/javascript" src="components/angular-cookies/angular-cookies.min.js"></script>
   <script type="text/javascript" src="components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <script type="text/javascript" src="components/socket.io-client/socket.io.js"></script>
   <!-- endbuild -->
   <!-- Custom Scripts -->
   <script type="text/javascript" src="js/dashboard.min.js"></script>
@@ -36,25 +37,31 @@
         </li>
         <li class="sidebar-title"><span>NAVIGATION</span></li>
         <li class="sidebar-list">
-          <a href="#/dashboard">Dashboard <span class="menu-icon fa fa-tachometer"></span></a>
+          <a href="#/dashboard">Tableau de bord <span class="menu-icon fa fa-tachometer"></span></a>
         </li>
         <li class="sidebar-list">
-          <a href="#/tables">Tables <span class="menu-icon fa fa-table"></span></a>
+          <a href="#/jobs">Jobs <span class="menu-icon fa fa-tasks"></span></a>
+        </li>
+        <li class="sidebar-list">
+          <a href="#/nodes">Noeuds <span class="menu-icon fa fa-code-fork"></span></a>
+        </li>
+        <li class="sidebar-list">
+          <a href="#/browser">Navigateur <span class="menu-icon fa fa-files-o"></span></a>
         </li>
       </ul>
       <div class="sidebar-footer">
         <div class="col-xs-4">
-          <a href="https://github.com/rdash/rdash-angular" target="_blank">
-            Github
+          <a href="http://ezgit.unige.ch/slurmwebapp" target="_blank">
+            Gitourious
           </a>
         </div>
         <div class="col-xs-4">
-          <a href="https://github.com/rdash/rdash-angular/README.md" target="_blank">
-            About
+          <a href="http://hepia.hesge.ch/" target="_blank">
+            HEPIA
           </a>
         </div>
         <div class="col-xs-4">
-          <a href="#">
+          <a href="#" onclick="alert('Not implemented');">
             Support
           </a>
         </div>

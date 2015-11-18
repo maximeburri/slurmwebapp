@@ -15,13 +15,21 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 url: '/',
                 templateUrl: 'templates/login.html'
             })
-            .state('tables', {
-                url: '/tables',
-                templateUrl: 'templates/tables.html'
-            })
             .state('dashboard', {
                 url: '/dashboard',
                 templateUrl: 'templates/dashboard.html'
+            })
+            .state('jobs', {
+                url: '/jobs',
+                templateUrl: 'templates/jobs.html'
+            })
+            .state('nodes', {
+                url: '/nodes',
+                templateUrl: 'templates/nodes.html'
+            })
+            .state('files', {
+                url: '/browser',
+                templateUrl: 'templates/browser.html'
             });
     }
 ]);

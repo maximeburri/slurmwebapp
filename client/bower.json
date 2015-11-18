@@ -1,14 +1,11 @@
 {
-    "name": "rdash-angular",
+    "name": "slurmwebapp-client",
     "version": "0.0.1",
-    "description": "An AngularJS implementation of the responsive dashboard",
-    "homepage": "https://github.com/Ehesp/Responsive-Dashboard",
     "authors": [
-        "Elliot Hesp <elliot.hesp@gmail.com>"
+        "Maxime BURRI <maxime.burri@gmail.com>"
     ],
     "contributors": [
-        "Ricardo Pascua Jr <rdpascua@outlook.com>",
-        "Leonel Samayoa <leonel.e.samayoa@gmail.com>"
+        "Maxime BURRI <maxime.burri@gmail.com>",
     ],
     "main": "index.html",
     "license": "MIT",
@@ -26,10 +23,11 @@
         "angular-bootstrap": "~0.11.0",
         "angular-ui-router": "^0.2.10",
         "bootstrap": "~3.2.0",
-        "font-awesome": "~4.1.0"
+        "font-awesome": "~4.1.0",
+        "socket.io-client": "~1.3.7"
     },
     "repository": {
-        "type": "git",
-        "url": "https://github.com/rdash/rdash-angular"
+        "type": "gitorious",
+        "http://ezgit.unige.ch/slurmwebapp"
     }
 }

@@ -4,29 +4,29 @@
             <h3 class="panel-title">Connection</h3>
         </div>
         <div class="panel-body">
-            <form role="form">
+            <form role="form" ng-controller="LoginCtrl"  ng-submit="login()">
                 <fieldset>
                     <div class="form-group">
                         <label>Nom</label>
-                        <input class="form-control" placeholder="Nom d'utilisateur" name="username" autofocus>
+                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.username" class="form-control" placeholder="Nom d'utilisateur" name="username" autofocus>
                     </div>
                     <div class="form-group">
                         <label>Mot de passe </label>
-                        <input class="form-control" placeholder="Mot de passe" name="password" type="password" value="">
+                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.password" class="form-control" placeholder="Mot de passe" name="password" type="password" value="">
                     </div>
                     <hr>
 
                     <div class="form-group">
                         <label>Cluster (SSH) </label>
-                        <input class="form-control" placeholder="ex: baobab.ungige.ch" name="cluster" autofocus>
+                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.cluster" class="form-control" placeholder="ex: baobab.ungige.ch" name="cluster" autofocus>
                     </div>
                     <div class="form-group">
                         <label>Pont </label>
-                        <input class="form-control" placeholder="Pont" name="pont" type="password" value="">
+                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.bridge" class="form-control" placeholder="Pont" name="bridge" value="">
                     </div>
 
                     <!-- Change this to a button or input when using this as a form -->
-                    <a ui-sref="dashboard.home" class="btn btn-lg btn-success btn-block">Connection</a>
+                    <button ng-disabled="connectionProcessing && !connected" type="submit" class="btn btn-lg btn-success btn-block"><i ng-class="{'fa fa-circle-o-notch fa-spin':connectionProcessing}"></i> Connection</button>
                 </fieldset>
             </form>
         </div>
