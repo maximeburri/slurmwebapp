@@ -116,7 +116,7 @@ io.on('connection', function (socket) {
 	// On client operation
 	function operation(operation, clientCallback){
 		if(operation.object == "files"){
-			executeCommand("ls -aF", parseListFiles, clientCallback);
+			executeCommand("ls -aFH "+operation.params.dir+"", parseListFiles, clientCallback);
 		}
 	}
 
