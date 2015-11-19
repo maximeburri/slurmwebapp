@@ -8,14 +8,21 @@
 var config = require('./config');
 var express = require('express');
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var https = require('https');
+var fs = require('fs');
+var socketio = require('socket.io');
 var util = require('util');
 var shellescape = require('shell-escape');
 var path = require('path');
 
 /* Class */
 var ClientSSH = require('ssh2').Client;
+
+var optionsServer = {
+  key: fs.readFileSync('certs/key.pem'),
+  cert: fs.readFileSync('certs/cert.pem')
+};
+var server = https.createServer(optionsServer, app);
 
 server.listen(config.http_server.port, function() {
 	console.log("Server listening on port " + config.http_server.port)
@@ -30,6 +37,7 @@ if(config.http_server.client_files.serve_files){
 }
 
 /** Socket IO **/
+var io = socketio(server);
 io.on('connection', function (socket) {
     var ssh = new ClientSSH();
 	console.log("Client::connection ")
