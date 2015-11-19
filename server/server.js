@@ -47,7 +47,7 @@ io.on('connection', function (socket) {
                 host: data.cluster,
                 username: data.username,
                 password: data.password,
-				readyTimeout: 4000 // Max timeout (milliseconds)
+				readyTimeout: config.ssh.timeout // Max timeout (milliseconds)
             });
         }
 		// Connection error

@@ -11,4 +11,7 @@ config.http_server.client_files.serve_files = true;
 config.http_server.client_files.folder = "/../client/dist/";
 config.http_server.port = 3000;
 
+config.ssh = {}
+config.ssh.timeout = 6000;
+
 module.exports = config;
