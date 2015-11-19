@@ -13,7 +13,7 @@ angular.module('RDash').service('User', function() {
             that.connectionProcessing = true;
             callbackProcessing(that.connectionProcessing);
 
-            that.socket = io.connect(params.bridge);
+            that.socket = io.connect("https://"+params.bridge, {secure:true});
             that.socket.on("message", function(data){
                 console.log("Message: " + data);
             });
