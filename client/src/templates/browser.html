@@ -8,7 +8,14 @@
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <tbody>
-                                <tr><td><button class="btn btn-primary" ng-click="goToFile('..')"><i class="fa fa-arrow-up"></i> Dossier parent</button></td></tr>
+                                <tr>
+                                    <th>
+                                        <button class="btn btn-primary" ng-click="goToFile('..')">
+                                            <i class="fa fa-arrow-up"></i> Dossier parent
+                                        </button>
+                                        <span style="margin-left:6px;">{{currentDir}}</span>
+                                    </th>
+                                </tr>
                                 <tr ng-repeat="file in files" ng-click="goToFile(file.filename)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
                                     <td>
                                         <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',

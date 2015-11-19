@@ -7,14 +7,14 @@ angular.module('RDash')
 
 function BrowserCtrl($scope, User) {
     $scope.files = [];
-    currentDir = "~";
+    $scope.currentDir = ".";
     var scope = $scope;
     var that = this;
 
     $scope.updateFiles = function(dir){
         User.get("files", {dir:dir}, function(data, errorcode){
-            that.currentDir = dir;
-            $scope.files = data;
+            $scope.currentDir = data.path;
+            $scope.files = data.files;
             console.log("Operation effectued");
             console.log(JSON.stringify(data));
             console.log(errorcode);
@@ -23,10 +23,10 @@ function BrowserCtrl($scope, User) {
     }
 
     $scope.goToFile = function(filename){
-        console.log("Go to:"+that.currentDir + "/" + filename)
-        $scope.updateFiles(that.currentDir + "/" + filename);
+        console.log("Go to:"+$scope.currentDir + "/" + filename)
+        $scope.updateFiles($scope.currentDir + "/" + filename);
     }
 
-    $scope.updateFiles(currentDir);
+    $scope.updateFiles($scope.currentDir);
 
 }

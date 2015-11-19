@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.3",
+    "shell-escape": "^0.2.0",
     "ssh2": "^0.4.12"
   }
 }

@@ -11,6 +11,8 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var util = require('util');
+var shellescape = require('shell-escape');
+var path = require('path');
 
 /* Class */
 var ClientSSH = require('ssh2').Client;
@@ -116,7 +118,10 @@ io.on('connection', function (socket) {
 	// On client operation
 	function operation(operation, clientCallback){
 		if(operation.object == "files"){
-			executeCommand("ls -aFH "+operation.params.dir+"", parseListFiles, clientCallback);
+			console.log(operation.params.dir)
+			dir = operation.params.dir;
+			console.log(shellescape(["cd", dir]) +";"+ shellescape(["pwd"])+";"+shellescape(["ls", "-aFH"]));
+			executeCommand(shellescape(["cd", dir]) +"&&"+ shellescape(["pwd"])+"&&"+shellescape(["ls", "-aFH"]), parseListFiles, clientCallback);
 		}
 	}
 
@@ -124,6 +129,8 @@ io.on('connection', function (socket) {
 	function parseListFiles(result, exitcode, clientCallback){
 		filesList = result.split("\n");
 		filesList.pop(); // Remove last element
+		currentPath = path.normalize(filesList.shift() + "/"); // Path
+		console.log("Path:"+path);
 		filesInfo = [];
 
 		// Parse each file
@@ -161,7 +168,7 @@ io.on('connection', function (socket) {
 			err = {code:exitcode, message:"Unknow"};
 		}
 
-		clientCallback(filesInfo, err)
+		clientCallback({path:currentPath, files:filesInfo}, err)
 	}
 
 	// Execute a command, when it finished, call parsingCallback that parse
