@@ -17,6 +17,17 @@ Install npm modules in the `client` and the `server` directory :
 npm install
 ```
 
+Then Bower needs to be installed. In the `client` directory,
+install Bower
+```
+sudo npm install bower -g
+```
+
+and install Bower components
+```
+bower install
+```
+
 ### Production
 `client` directory
 ```
