@@ -19,20 +19,20 @@ var path = require('path');
 var ClientSSH = require('ssh2').Client;
 
 var optionsServer = {
-  key: fs.readFileSync('certs/key.pem'),
-  cert: fs.readFileSync('certs/cert.pem')
+  key: fs.readFileSync(config.https_server.certs_key_file),
+  cert: fs.readFileSync(config.https_server.certs_cert_file)
 };
 var server = https.createServer(optionsServer, app);
 
-server.listen(config.http_server.port, function() {
-	console.log("Server listening on port " + config.http_server.port)
+server.listen(config.https_server.port, function() {
+	console.log("Server listening on port " + config.https_server.port)
 });
 
 /* HTTP server for client files */
-if(config.http_server.client_files.serve_files){
-    app.use(express.static(__dirname + config.http_server.client_files.folder));
+if(config.https_server.client_files.serve_files){
+    app.use(express.static(__dirname + config.https_server.client_files.folder));
     console.log( "Client files serving ("
-                + config.http_server.client_files.folder
+                + config.https_server.client_files.folder
                 + ")");
 }
 
