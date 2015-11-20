@@ -42,15 +42,11 @@ nodejs server.js
 The page is accessible to `https://127.0.0.1:3000/`. The bridge for websocket is `127.0.0.1:3000` (https is added).
 
 ### Developpement
-`client` directory
+In `client` and `server` directory
 ```
 gulp
 ```
 
-`server` directory
-```
-nodejs server.js
-```
 The page is accessible to `http://127.0.0.1:8888/` and auto-compiled and reload when a file is modified (with gulp). The bridge for websocket is `127.0.0.1:3000` (https is added).
 
 ## Configuration
