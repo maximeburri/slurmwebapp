@@ -6,27 +6,32 @@
         <div class="panel-body">
             <form role="form" ng-controller="LoginCtrl"  ng-submit="login()">
                 <fieldset>
-                    <div class="form-group">
-                        <label>Nom</label>
-                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.username" class="form-control" placeholder="Nom d'utilisateur" name="username" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label>Mot de passe </label>
-                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.password" class="form-control" placeholder="Mot de passe" name="password" type="password" value="">
-                    </div>
-                    <hr>
 
-                    <div class="form-group">
+                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isAuthentiaction}">
+                        <label>Nom</label>
+                        <input ng-disabled="connectionProcessing || authenticated" required ng-model="user.username" class="form-control" placeholder="Nom d'utilisateur" name="username" autofocus>
+                    </div>
+                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isAuthentiaction}">
+                        <label>Mot de passe </label>
+                        <input ng-disabled="connectionProcessing || authenticated" required ng-model="user.password" class="form-control" placeholder="Mot de passe" name="password" type="password" value="">
+                    </div>
+                    <alert type="danger" ng-show="connection.error.isAuthentiaction">Le mot de passe et/ou le nom d'utilisateur n'est pas correct</alert>
+                    <hr>
+                    <!---->
+                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isCluster}">
                         <label>Cluster (SSH) </label>
-                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.cluster" class="form-control" placeholder="ex: baobab.ungige.ch" name="cluster" autofocus>
+                        <input ng-disabled="connectionProcessing || authenticated" required ng-model="user.cluster" class="form-control" placeholder="ex: baobab.ungige.ch" name="cluster" id="inputCluser" autofocus>
                     </div>
-                    <div class="form-group">
+                    <alert type="danger" ng-show="connection.error.isCluster">Impossible de se connecter à ce cluster</alert>
+
+                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isBridge}">
                         <label>Pont </label>
-                        <input ng-disabled="connectionProcessing && !connected" required ng-model="user.bridge" class="form-control" placeholder="Pont" name="bridge" value="">
+                        <input ng-disabled="connectionProcessing || authenticated" required ng-model="user.bridge" class="form-control" placeholder="Pont" name="bridge" value="">
                     </div>
+                    <alert type="danger" ng-show="connection.error.isBridge">Impossible de se connecter à ce pont</alert>
 
                     <!-- Change this to a button or input when using this as a form -->
-                    <button ng-disabled="connectionProcessing && !connected" type="submit" class="btn btn-lg btn-success btn-block"><i ng-class="{'fa fa-circle-o-notch fa-spin':connectionProcessing}"></i> Connection</button>
+                    <button ng-disabled="connectionProcessing || authenticated" type="submit" class="btn btn-lg btn-success btn-block"><i ng-class="{'fa fa-circle-o-notch fa-spin':connectionProcessing}"></i> Connection</button>
                 </fieldset>
             </form>
         </div>

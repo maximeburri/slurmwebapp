@@ -1,61 +1,117 @@
-angular.module('RDash').service('User', function() {
+angular.module('RDash').service('User', ['$q', '$rootScope', User]);
+
+function User($q, $rootScope) {
     var that = this;
     this.socket = false;
-    this.connected = false;
-    this.connectionProcessing = false;
+    this.authenticated = false;
 
-    this.isConnected = function() {
-        return connected;
+    this.isAuthenticated = function() {
+        return this.authenticated;
     };
 
-    this.connect = function(params, callbackConnected, callbackProcessing) {
-        if(!that.socket){
-            that.connectionProcessing = true;
-            callbackProcessing(that.connectionProcessing);
+    this.connect = function(params) {
+        console.log("Connect");
+        var deferred = $q.defer();
 
-            that.socket = io.connect("https://"+params.bridge, {secure:true});
-            that.socket.on("message", function(data){
-                console.log("Message: " + data);
+        if(!this.socket && !this.socket.connected){
+            // Try connect
+            this.authenticated = false;
+            this.socket = io.connect("https://"+params.bridge,
+                {
+                    secure:true,
+                    reconnectionAttempts: 3,
+                    reconnectionDelay: 200,
+                    'force new connection': true
+                }
+            );
+
+            // Conncted on socket
+            this.socket.on('connect', function() {
+                deferred.notify('socket-connected');
+                // Try login
+                that.socket.emit("login", params);
             });
 
-            that.socket.on("error_ssh", function(data){
-                that.connectionProcessing = false;
-                callbackProcessing(that.connectionProcessing);
-                that.connected = false;
-                callbackConnected(that.connected);
+            // Error
+            this.socket.on('error', function(data) {
+                console.log('error');
+                console.log(data);
+            });
+
+            // Connect error
+            this.socket.on('connect_error', function(data) {
+                console.log('connect_error');
+                console.log(data);
+            });
+
+            // Reconnect error
+            this.socket.on('reconnect_error', function(data) {
+                console.log('reconnect_error');
+                console.log(data);
+            });
+
+            // Reconnect faild
+            this.socket.on('reconnect_failed', function(data) {
+                deferred.reject('socket-timeout');
+                console.log('reconnect_failed');
+                console.log(data);
+                that.socket = false;
+                that.authenticated = false;
+            });
+
+            // SSH error
+            this.socket.on("error_ssh", function(data){
+                // Disconnect the socket
+                that.socket.disconnect();
+
+                // Check type ssh connection error
+                err = "ssh-connection";
+                if(data.level != undefined &&
+                    data.level == "client-authentication")
+                    err ="client-authentication";
+                deferred.reject(err);
+
                 console.log("Error ssh: ");
                 console.log(data);
-                that.socket.disconnect();
-                that.socket = false;
             });
 
-            that.socket.on("authenticated", function(data){
-                that.connectionProcessing = false;
-                callbackProcessing(that.connectionProcessing);
-                that.connected = true;
-                callbackConnected(that.connected);
-                console.log("Authentified !");
+            // On disconnect
+            this.socket.on('disconnect', function() {
+                console.log("Disconnected");
+                that.socket = false;
+                that.authenticated = false;
+            });
+
+            // On authenticated
+            this.socket.on("authenticated", function(data){
+                deferred.resolve('authenticated');
+                console.log("Authenticated");
                 console.log(data);
             });
 
-            that.socket.on("logout", function(data){
+            // On logout
+            this.socket.on("logout", function(data){
                 console.log("Lougouted");
                 console.log(data);
-                that.connected = false;
-                callbackConnected(that.connected);
+                that.socket = false;
+                that.authenticated = false;
             });
-
-            if(that.socket){
-                that.socket.emit("login", params);
-            }
+        }else{
+            deferred.reject('already-connected');
         }
+
+        return deferred.promise;
     };
 
     this.operation = function(operationAttributes, callback){
-        that.socket.emit("operation", operationAttributes, callback);
+        if(that.socket && that.socket.connected){
+            that.socket.emit("operation", operationAttributes, callback);
+        }
     };
 
     this.get = function(object, params, callback){
-        that.operation({verb:"get", object:object, params:params}, callback);
+        if(that.socket && that.socket.connected){
+            that.operation({verb:"get", object:object, params:params}, callback);
+        }
     };
-});
+}
