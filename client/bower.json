@@ -5,7 +5,7 @@
         "Maxime BURRI <maxime.burri@gmail.com>"
     ],
     "contributors": [
-        "Maxime BURRI <maxime.burri@gmail.com>",
+        "Maxime BURRI <maxime.burri@gmail.com>"
     ],
     "main": "index.html",
     "license": "MIT",
@@ -28,6 +28,6 @@
     },
     "repository": {
         "type": "gitorious",
-        "http://ezgit.unige.ch/slurmwebapp"
+        "url":"http://ezgit.unige.ch/slurmwebapp"
     }
 }
