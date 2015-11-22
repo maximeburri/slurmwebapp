@@ -11,7 +11,7 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
 
         // Application routes
         $stateProvider
-            .state('index', {
+            .state('authentication', {
                 url: '/',
                 templateUrl: 'templates/login.html',
                 authenticate: false
@@ -43,10 +43,16 @@ angular.module('RDash').run(['User','$state', '$rootScope',
     function(User, $state, $rootScope){
         // On root change
         $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
-            // Change authentication
+            // Check authentication
             if (toState.authenticate && !User.isAuthenticated()){
-              $state.transitionTo("index");
-              event.preventDefault();
+                $state.transitionTo("authentication");
+                event.preventDefault();
+            }
+
+            // Already authenticated
+            if(toState.name == "authentication" && User.isAuthenticated()){
+                $state.transitionTo("dashboard");
+                event.preventDefault();
             }
         });
     }
