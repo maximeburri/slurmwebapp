@@ -13,23 +13,41 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
         $stateProvider
             .state('index', {
                 url: '/',
-                templateUrl: 'templates/login.html'
+                templateUrl: 'templates/login.html',
+                authenticate: false
             })
             .state('dashboard', {
                 url: '/dashboard',
-                templateUrl: 'templates/dashboard.html'
+                templateUrl: 'templates/dashboard.html',
+                authenticate: true
             })
             .state('jobs', {
                 url: '/jobs',
-                templateUrl: 'templates/jobs.html'
+                templateUrl: 'templates/jobs.html',
+                authenticate: true,
             })
             .state('nodes', {
                 url: '/nodes',
-                templateUrl: 'templates/nodes.html'
+                templateUrl: 'templates/nodes.html',
+                authenticate: true,
             })
             .state('files', {
                 url: '/browser',
-                templateUrl: 'templates/browser.html'
+                templateUrl: 'templates/browser.html',
+                authenticate: true,
             });
+    }
+]);
+
+angular.module('RDash').run(['User','$state', '$rootScope',
+    function(User, $state, $rootScope){
+        // On root change
+        $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
+            // Change authentication
+            if (toState.authenticate && !User.isAuthenticated()){
+              $state.transitionTo("index");
+              event.preventDefault();
+            }
+        });
     }
 ]);

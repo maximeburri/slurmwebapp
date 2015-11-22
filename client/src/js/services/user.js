@@ -61,6 +61,8 @@ function User($q, $rootScope) {
 
             // SSH error
             this.socket.on("error_ssh", function(data){
+                that.authenticated = false;
+                
                 // Disconnect the socket
                 that.socket.disconnect();
 
@@ -84,6 +86,7 @@ function User($q, $rootScope) {
 
             // On authenticated
             this.socket.on("authenticated", function(data){
+                that.authenticated = true;
                 deferred.resolve('authenticated');
                 console.log("Authenticated");
                 console.log(data);
