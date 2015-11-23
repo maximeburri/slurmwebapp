@@ -14,34 +14,39 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
             .state('authentication', {
                 url: '/',
                 templateUrl: 'templates/login.html',
-                authenticate: false
+                authenticate: false,
+                title: 'Login'
             })
             .state('dashboard', {
                 url: '/dashboard',
                 templateUrl: 'templates/dashboard.html',
-                authenticate: true
+                authenticate: true,
+                title: 'Tableau de bord'
             })
             .state('jobs', {
                 url: '/jobs',
                 templateUrl: 'templates/jobs.html',
                 authenticate: true,
+                title: 'Jobs'
             })
             .state('nodes', {
                 url: '/nodes',
                 templateUrl: 'templates/nodes.html',
                 authenticate: true,
+                title: 'Noeuds'
             })
             .state('files', {
                 url: '/browser',
                 templateUrl: 'templates/browser.html',
                 authenticate: true,
+                title: 'Navigateur de fichiers'
             });
     }
 ]);
 
 angular.module('RDash').run(['User','$state', '$rootScope',
     function(User, $state, $rootScope){
-        // On root change
+        // On route change
         $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
             // Check authentication
             if (toState.authenticate && !User.isAuthenticated()){
@@ -54,6 +59,12 @@ angular.module('RDash').run(['User','$state', '$rootScope',
                 $state.transitionTo("dashboard");
                 event.preventDefault();
             }
+        });
+
+        // On state change success
+        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+            // Update title
+            $rootScope.titlePage = toState.title;
         });
     }
 ]);
