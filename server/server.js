@@ -135,6 +135,12 @@ io.on('connection', function (socket) {
 
 	// Parse liste files (ls -aF)
 	function parseListFiles(result, exitcode, clientCallback){
+        // An error has occured
+        if (exitcode != 0){
+            clientCallback(null, {code:exitcode, type:"ACCESS_DENIED"});
+            return;
+        }
+
 		filesList = result.split("\n");
 		filesList.pop(); // Remove last element
 		currentPath = path.normalize(filesList.shift() + "/"); // Path
@@ -170,13 +176,7 @@ io.on('connection', function (socket) {
 			filesInfo.push({filename:filename, type:fileType});
 		});
 
-		// Error has occured
-		err = null;
-		if(err){
-			err = {code:exitcode, message:"Unknow"};
-		}
-
-		clientCallback({path:currentPath, files:filesInfo}, err)
+		clientCallback({path:currentPath, files:filesInfo}, false)
 	}
 
 	// Execute a command, when it finished, call parsingCallback that parse
