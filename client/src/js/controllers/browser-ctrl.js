@@ -14,8 +14,17 @@ function BrowserCtrl($scope, User, $modal) {
 
     $scope.updateFiles = function(dir){
         $scope.loading = true;
-        User.get("files", {dir:dir}, function(data, err){
-            if(err){
+        User.get("files", {dir:dir}).then(
+            // Success
+            function(data){
+                $scope.currentDir = data.path;
+                $scope.files = data.files;
+                console.log("Operation effectued");
+                console.log(JSON.stringify(data));
+                $scope.loading = false;
+            },
+            // Error
+            function(err){
                 $scope.modalError = {};
                 $scope.modalError.message = "Impossible d'accéder à " + dir;
                 var modalInstance = $modal.open({
@@ -23,15 +32,9 @@ function BrowserCtrl($scope, User, $modal) {
                     templateUrl: 'templates/modal/simpleError.html',
                     scope:$scope
                 });
-            }else{
-                $scope.currentDir = data.path;
-                $scope.files = data.files;
-                console.log("Operation effectued");
-                console.log(JSON.stringify(data));
+                $scope.loading = false;
             }
-            $scope.loading = false;
-            $scope.$apply();
-        });
+        );
     }
 
     $scope.goToFile = function(filename){

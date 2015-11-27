@@ -62,7 +62,7 @@ function User($q, $rootScope) {
             // SSH error
             this.socket.on("error_ssh", function(data){
                 that.authenticated = false;
-                
+
                 // Disconnect the socket
                 that.socket.disconnect();
 
@@ -106,15 +106,22 @@ function User($q, $rootScope) {
         return deferred.promise;
     };
 
-    this.operation = function(operationAttributes, callback){
+    this.operation = function(operationAttributes){
+        var deferred = $q.defer();
         if(that.socket && that.socket.connected){
-            that.socket.emit("operation", operationAttributes, callback);
+            that.socket.emit("operation", operationAttributes, function(data, err){
+                if(err)
+                    deferred.reject(err);
+                else
+                    deferred.resolve(data);    
+            });
+        }else {
+            deferred.reject("NOT CONNECTED");
         }
+        return deferred.promise;
     };
 
-    this.get = function(object, params, callback){
-        if(that.socket && that.socket.connected){
-            that.operation({verb:"get", object:object, params:params}, callback);
-        }
+    this.get = function(object, params){
+        return that.operation({verb:"get", object:object, params:params});
     };
 }
