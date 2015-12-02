@@ -1,5 +1,33 @@
 <div data-ng-controller="BrowserCtrl">
-    <div class="row">
+    <div class="row" ng-show="fileView.show">
+        <div class="col-lg-6">
+            <rd-widget>
+                <rd-widget-header icon="fa-file-o" title="Fichier" >
+                </rd-widget-header>
+                <rd-widget-body classes="no-padding">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <button class="btn btn-primary"
+                                        ng-click="fileView.show = false">
+                                        <i class="fa fa-arrow-up"></i> Dossier parent
+                                    </button>
+                                    <span style="margin-left:6px;">{{fileView.filename}}</span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td><pre><code style="">{{fileView.content}}</code></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+    </div>
+
+    <div class="row" ng-hide="fileView.show">
         <div class="col-lg-6">
             <rd-widget>
                 <rd-widget-header icon="fa-tasks" title="Fichiers" >
@@ -10,14 +38,14 @@
                             <tbody>
                                 <tr>
                                     <th>
-                                        <button class="btn btn-primary" ng-click="goToFile('..')">
+                                        <button class="btn btn-primary" ng-click="goToParentFolder()">
                                             <i class="fa fa-arrow-up"></i> Dossier parent
                                         </button>
                                         <span style="margin-left:6px;">{{currentDir}}</span>
                                         <i class="fa fa-cog fa-spin" ng-show="loading"></i>
                                     </th>
                                 </tr>
-                                <tr ng-repeat="file in files" ng-click="goToFile(file.filename)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
+                                <tr ng-repeat="file in files" ng-click="goToFile(file)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
                                     <td>
                                         <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',
                                                       'fa fa-folder': file.type == 'folder',

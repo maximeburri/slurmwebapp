@@ -1,7 +1,8 @@
-angular.module('RDash').service('User', ['$q', '$rootScope', User]);
+angular.module('RDash').service('User', ['$q', '$rootScope', 'Notification', User]);
 
-function User($q, $rootScope) {
+function User($q, $rootScope, Notification) {
     var that = this;
+    var idNotify = 0;
     this.socket = false;
     this.authenticated = false;
 
@@ -48,6 +49,15 @@ function User($q, $rootScope) {
             this.socket.on('reconnect_error', function(data) {
                 console.log('reconnect_error');
                 console.log(data);
+            });
+
+            // Reconnect faild
+            this.socket.on('connect_failed', function(data) {
+                deferred.reject('socket-timeout');
+                console.log('reconnect_failed');
+                console.log(data);
+                that.socket = false;
+                that.authenticated = false;
             });
 
             // Reconnect faild
@@ -106,22 +116,32 @@ function User($q, $rootScope) {
         return deferred.promise;
     };
 
-    this.operation = function(operationAttributes){
+    this.operation = function(operationAttributes, notify){
         var deferred = $q.defer();
+
+        var promiseSocketNotifiy = false;
+        if(notify){
+            promiseSocketNotifiy =
+                new Notification(this.socket, deferred,operationAttributes);
+
+        }
+
         if(that.socket && that.socket.connected){
             that.socket.emit("operation", operationAttributes, function(data, err){
                 if(err)
                     deferred.reject(err);
                 else
-                    deferred.resolve(data);    
+                    deferred.resolve(data);
             });
         }else {
             deferred.reject("NOT CONNECTED");
         }
+        if(promiseSocketNotifiy)
+            return promiseSocketNotifiy;
         return deferred.promise;
     };
 
-    this.get = function(object, params){
-        return that.operation({verb:"get", object:object, params:params});
+    this.get = function(object, params, notify){
+        return that.operation({verb:"get", object:object, params:params}, notify);
     };
 }

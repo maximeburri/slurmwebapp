@@ -128,10 +128,15 @@ io.on('connection', function (socket) {
 		if(operation.object == "files"){
 			console.log(operation.params.dir)
 			dir = operation.params.dir;
-			console.log(shellescape(["cd", dir]) +";"+ shellescape(["pwd"])+";"+shellescape(["ls", "-aFH"]));
-			executeCommand(shellescape(["cd", dir]) +"&&"+ shellescape(["pwd"])+"&&"+shellescape(["ls", "-aFH"]), parseListFiles, clientCallback);
-		}
-	}
+            var cmd = shellescape(["cd", dir]) +" && "+ shellescape(["pwd"])+" && "+shellescape(["ls", "-aFH"]);
+			console.log(cmd);
+			executeCommand(cmd, parseListFiles, clientCallback);
+		}else if(operation.object == "file"){
+            console.log(operation);
+            path = operation.params.path;
+            executeReadFile(path, operation.notifyEventName, clientCallback, socket);
+        }
+    }
 
 	// Parse liste files (ls -aF)
 	function parseListFiles(result, exitcode, clientCallback){
@@ -143,8 +148,8 @@ io.on('connection', function (socket) {
 
 		filesList = result.split("\n");
 		filesList.pop(); // Remove last element
-		currentPath = path.normalize(filesList.shift() + "/"); // Path
-		console.log("Path:"+path);
+		currentPath = filesList.shift() + "/"; // Path
+		console.log("Path:"+currentPath);
 		filesInfo = [];
 
 		// Parse each file
@@ -183,19 +188,66 @@ io.on('connection', function (socket) {
 	// the result who that call clientCallback
 	function executeCommand(command, parsingCallback, clientCallback){
 		var result = "";
+        var exitcode = 0;
 		ssh.exec(command, function(err, stream) {
 		    if (err) throw err;
 		    stream.on('data', function(data) {
-				//console.log('STDOUT: ' + data);
+				console.log('STDOUT: ' + data);
 				result += data;
-		    }).on('exit', function(exitcode) {
-				console.log('EXIT: ' + exitcode + " Final data : " + result);
-				parsingCallback(result, exitcode, clientCallback);
-		    }).stderr.on('data', function(data) {
+		    }).on('exit', function(e) {
+                console.log('EXIT: ' + e);
+                exitcode = e;
+		    }).on('end', function(){
+                console.log('CLOSE  Final data : ' + result);
+                parsingCallback(result, exitcode, clientCallback);
+            })
+            .stderr.on('data', function(data) {
 		      	console.log('STDERR: ' + data);
 		    });
 		});
 	}
+
+    // Kill a process / opened stream
+    // see http://stackoverflow.com/questions/22164570/sending-a-terminate-ctrlc-command-in-node-js-ssh2
+    function killProcess( conn, pid ) {
+        conn.exec( 'pkill -g ' + pid, function(){});
+    }
+
+    // Execute tail read file
+    function executeReadFile(filename, notifyEventName, clientCallback, socket){
+        var pid = false;
+
+        // Execute tail after get PID
+        ssh.exec('echo "PID: $$";'+ shellescape(['tail','-n','+0','-f', '--follow=name', '--retry',filename]), function(err, stream) {
+            console.log("registerNotify:"+notifyEventName);
+
+            if (err) throw err;
+            stream.on('data', function(data) {
+                data = data.toString();
+
+                // Get the pid and regiter killprocess event
+                if(!pid && data.substr( 0, 5 ) === 'PID: ' ){
+                    pid = data.substr(5);
+                    socket.on('end '+notifyEventName, function(){
+                        //stream.end("exit\n");
+                        console.log("disconnect:'"+notifyEventName+"'");
+                        killProcess(ssh, pid);
+                    });
+                }
+                // Get the data
+                else{
+                    data = data.toString();
+                    console.log("DATA:"+data);
+                    socket.emit(notifyEventName, {err:false, data:data});
+                }
+            }).on('exit', function(exitcode) {
+                //clientCallback(null, {code:exitcode});
+                console.log("EXIT (tail) : "+ exitcode);
+            }).stderr.on('data', function(data) {
+                clientCallback(null, {type:data});
+            });
+        });
+    }
 
 	ssh.on('ready', sshConnected);
 	ssh.on('error', sshError);
