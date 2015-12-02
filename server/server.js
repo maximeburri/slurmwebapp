@@ -217,6 +217,12 @@ io.on('connection', function (socket) {
     function executeReadFile(filename, notifyEventName, clientCallback, socket){
         var pid = false;
 
+        function endExecuteReadFile(){
+            //stream.end("exit\n");
+            console.log("disconnect:'"+notifyEventName+"'");
+            killProcess(ssh, pid);
+        }
+
         // Execute tail after get PID
         ssh.exec('echo "PID: $$";'+ shellescape(['tail','-n','+0','-f', '--follow=name', '--retry',filename]), function(err, stream) {
             console.log("registerNotify:"+notifyEventName);
@@ -228,11 +234,7 @@ io.on('connection', function (socket) {
                 // Get the pid and regiter killprocess event
                 if(!pid && data.substr( 0, 5 ) === 'PID: ' ){
                     pid = data.substr(5);
-                    socket.on('end '+notifyEventName, function(){
-                        //stream.end("exit\n");
-                        console.log("disconnect:'"+notifyEventName+"'");
-                        killProcess(ssh, pid);
-                    });
+                    socket.on('end '+notifyEventName, endExecuteReadFile);
                 }
                 // Get the data
                 else{
@@ -243,6 +245,7 @@ io.on('connection', function (socket) {
             }).on('exit', function(exitcode) {
                 //clientCallback(null, {code:exitcode});
                 console.log("EXIT (tail) : "+ exitcode);
+                socket.removeListener('end '+notifyEventName, endExecuteReadFile);
             }).stderr.on('data', function(data) {
                 clientCallback(null, {type:data});
             });

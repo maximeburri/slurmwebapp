@@ -6,9 +6,10 @@ angular.module('RDash')
     .controller('BrowserCtrl', ['$scope', 'User', 'Files', '$modal', BrowserCtrl]);
 
 function BrowserCtrl($scope, User, Files, $modal) {
-    $scope.fileView = {
+    $scope.fileViewer = {
         content : "",
-        filename : "",
+        filepath : "",
+        modified : false,
         show : false
     };
     $scope.files = [];
@@ -52,7 +53,7 @@ function BrowserCtrl($scope, User, Files, $modal) {
         console.log("Go to:"+futurDir);
 
         if(file.type == "folder" || file.type == "symboliclink"){
-            $scope.fileView.show = false;
+            $scope.fileViewer.show = false;
             $scope.updateFiles(futurDir).catch(
                 function(err){
                     console.log(err);
@@ -67,28 +68,12 @@ function BrowserCtrl($scope, User, Files, $modal) {
                 }
             );
         }else{
-            $scope.fileView.filename = futurDir;
-            promiseSocketContentFile = Files.getFileContent(futurDir, true);
-            $scope.fileView.show = true;
-            promiseSocketContentFile.then(
-                // Success
-                function(successMessage){
-                    console.log("Success");
-                    console.log(successMessage);
-                },
-                // Error
-                function(failMessage){
-                    console.log("Fail");
-                    console.log(failMessage);
-                },
-                // Progress
-                function(notificationMessage){
-                    console.log("Notification");
-                    console.log(notificationMessage);
-                    $scope.fileView.content += notificationMessage.data;
-                }
-            );
+            $scope.viewFile(futurDir);
         }
+    }
+
+    $scope.actualiseListFiles = function(){
+        $scope.goToFile({filename:'.', type:'folder'});
     }
 
     $scope.goToParentFolder = function(){
@@ -100,7 +85,7 @@ function BrowserCtrl($scope, User, Files, $modal) {
             promiseSocketContentFile.stop();
             delete promiseSocketContentFile;
             promiseSocketContentFile = false;
-            $scope.fileView.content = "";
+            $scope.fileViewer.content = "";
         }
     }
 
@@ -112,6 +97,38 @@ function BrowserCtrl($scope, User, Files, $modal) {
             templateUrl: 'templates/modal/simpleError.html',
             scope:$scope
         });
+    }
+
+    $scope.viewFileRefresh = function(){
+        $scope.stopFollowFileContent();
+        $scope.viewFile($scope.fileViewer.filepath);
+    }
+
+    $scope.viewFile = function(filePath){
+        $scope.fileViewer.modified = false;
+        $scope.fileViewer.filepath = filePath;
+        promiseSocketContentFile = Files.getFileContent(filePath, true);
+        $scope.fileViewer.show = true;
+        promiseSocketContentFile.then(
+            // Success
+            function(successMessage){
+                console.log("Success");
+                console.log(successMessage);
+            },
+            // Error
+            function(failMessage){
+                console.log("Fail");
+                console.log(failMessage);
+                $scope.stopFollowFileContent();
+                $scope.fileViewer.modified = true;
+            },
+            // Progress
+            function(notificationMessage){
+                console.log("Notification");
+                console.log(notificationMessage);
+                $scope.fileViewer.content += notificationMessage.data;
+            }
+        );
     }
 
     $scope.updateFiles($scope.currentDir);

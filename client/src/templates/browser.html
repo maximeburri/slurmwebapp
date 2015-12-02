@@ -1,5 +1,5 @@
 <div data-ng-controller="BrowserCtrl">
-    <div class="row" ng-show="fileView.show">
+    <div class="row" ng-show="fileViewer.show">
         <div class="col-lg-6">
             <rd-widget>
                 <rd-widget-header icon="fa-file-o" title="Fichier" >
@@ -10,14 +10,21 @@
                             <tr>
                                 <th>
                                     <button class="btn btn-primary"
-                                        ng-click="fileView.show = false">
+                                        ng-click="fileViewer.show = false; stopFollowFileContent(); actualiseListFiles();">
                                         <i class="fa fa-arrow-up"></i> Dossier parent
                                     </button>
-                                    <span style="margin-left:6px;">{{fileView.filename}}</span>
+                                    <span style="margin-left:6px;">{{fileViewer.filepath}}</span>
+                                    <div ng-show="fileViewer.modified" style="margin-top:10px;" class="alert alert-warning">
+                                        Le fichier à été entièrement modifié
+                                        <button class="btn btn-primary btn-xs"
+                                            ng-click="viewFileRefresh()">
+                                            <i class="fa fa-refresh"></i> Actualiser
+                                        </button>
+                                    </div>
                                 </th>
                             </tr>
                             <tr>
-                                <td><pre><code style="">{{fileView.content}}</code></pre>
+                                <td><pre><code style="">{{fileViewer.content}}</code></pre>
                                 </td>
                             </tr>
                         </tbody>
@@ -27,7 +34,7 @@
         </div>
     </div>
 
-    <div class="row" ng-hide="fileView.show">
+    <div class="row" ng-hide="fileViewer.show">
         <div class="col-lg-6">
             <rd-widget>
                 <rd-widget-header icon="fa-tasks" title="Fichiers" >
@@ -43,6 +50,11 @@
                                         </button>
                                         <span style="margin-left:6px;">{{currentDir}}</span>
                                         <i class="fa fa-cog fa-spin" ng-show="loading"></i>
+                                        <button class="btn btn-default btn-xs"
+                                            ng-click="actualiseListFiles()"
+                                            ng-hide="loading">
+                                            <i class="fa fa-refresh"></i>
+                                        </button>
                                     </th>
                                 </tr>
                                 <tr ng-repeat="file in files" ng-click="goToFile(file)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
