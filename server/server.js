@@ -224,7 +224,9 @@ io.on('connection', function (socket) {
         }
 
         // Execute tail after get PID
-        ssh.exec('echo "PID: $$";'+ shellescape(['tail','-n','+0','-f', '--follow=name', '--retry',filename]), function(err, stream) {
+        ssh.exec(shellescape(['test','-f',filename]) + ' && echo "PID: $$" &&'+
+            shellescape(['tail','-n','+0','-f', '--follow=name', '--retry',filename]),
+            function(err, stream) {
             console.log("registerNotify:"+notifyEventName);
 
             if (err) throw err;
@@ -244,6 +246,8 @@ io.on('connection', function (socket) {
                 }
             }).on('exit', function(exitcode) {
                 //clientCallback(null, {code:exitcode});
+                if(exitcode == 1)
+                    clientCallback(null, {type:"not_exist"});
                 console.log("EXIT (tail) : "+ exitcode);
                 socket.removeListener('end '+notifyEventName, endExecuteReadFile);
             }).stderr.on('data', function(data) {

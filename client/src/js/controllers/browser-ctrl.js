@@ -10,6 +10,7 @@ function BrowserCtrl($scope, User, Files, $modal) {
         content : "",
         filepath : "",
         modified : false,
+        not_exist : false,
         show : false
     };
     $scope.files = [];
@@ -85,7 +86,6 @@ function BrowserCtrl($scope, User, Files, $modal) {
             promiseSocketContentFile.stop();
             delete promiseSocketContentFile;
             promiseSocketContentFile = false;
-            $scope.fileViewer.content = "";
         }
     }
 
@@ -105,10 +105,12 @@ function BrowserCtrl($scope, User, Files, $modal) {
     }
 
     $scope.viewFile = function(filePath){
+        $scope.fileViewer.content = "";
         $scope.fileViewer.modified = false;
         $scope.fileViewer.filepath = filePath;
         promiseSocketContentFile = Files.getFileContent(filePath, true);
         $scope.fileViewer.show = true;
+        $scope.fileViewer.not_exist = false;
         promiseSocketContentFile.then(
             // Success
             function(successMessage){
@@ -116,11 +118,15 @@ function BrowserCtrl($scope, User, Files, $modal) {
                 console.log(successMessage);
             },
             // Error
-            function(failMessage){
+            function(err){
                 console.log("Fail");
-                console.log(failMessage);
+                console.log(err);
+                if(err.type == "not_exist"){
+                    $scope.fileViewer.not_exist = true;
+                }else{
+                    $scope.fileViewer.modified = true;
+                }
                 $scope.stopFollowFileContent();
-                $scope.fileViewer.modified = true;
             },
             // Progress
             function(notificationMessage){

@@ -21,9 +21,12 @@
                                             <i class="fa fa-refresh"></i> Actualiser
                                         </button>
                                     </div>
+                                    <div ng-show="fileViewer.not_exist" style="margin-top:10px;" class="alert alert-danger">
+                                        Le fichier n'existe pas
+                                    </div>
                                 </th>
                             </tr>
-                            <tr>
+                            <tr ng-hide="fileViewer.not_exist">
                                 <td><pre><code style="">{{fileViewer.content}}</code></pre>
                                 </td>
                             </tr>
