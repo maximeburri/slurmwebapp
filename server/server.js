@@ -134,7 +134,23 @@ io.on('connection', function (socket) {
 		}else if(operation.object == "file"){
             console.log(operation);
             path = operation.params.path;
-            executeReadFile(path, operation.notifyEventName, clientCallback, socket);
+
+            // Request file size
+            executeFilesizeRequest(path,
+                // Error filesize
+                function(exitcode){
+                    if(exitcode == 1)
+                        clientCallback(null, {type:"not_exist"});
+                },
+                // Filesize received
+                function(filesize){
+                    if(filesize > config.general.max_filesize_transfer)
+                        clientCallback(null, {type:"too_big"});
+                    else
+                        executeReadFile(path, operation.notifyEventName,
+                        clientCallback, socket);
+                }
+            );
         }
     }
 
@@ -213,9 +229,29 @@ io.on('connection', function (socket) {
         conn.exec( 'pkill -g ' + pid, function(){});
     }
 
+    function executeFilesizeRequest(filename, callbackError, callbackResult){
+        var filesize = null;
+        ssh.exec(shellescape(['stat', '-c%s',filename]),
+            function(err, stream) {
+                if (err) throw err;
+                stream.on('data', function(data) {
+                    if(filesize == null){
+                        filesize = parseInt(data.slice(0, -1));
+                    }
+                }).on('exit', function(exitcode) {
+                    //clientCallback(null, {code:exitcode});
+                    callbackError(exitcode);
+                }).on('end', function(){
+                    callbackResult(filesize);
+                })
+            }
+        );
+    }
+
     // Execute tail read file
     function executeReadFile(filename, notifyEventName, clientCallback, socket){
-        var pid = false;
+        var pid = null;
+        var fileSize = null;
 
         function endExecuteReadFile(){
             //stream.end("exit\n");
@@ -224,36 +260,35 @@ io.on('connection', function (socket) {
         }
 
         // Execute tail after get PID
-        ssh.exec(shellescape(['test','-f',filename]) + ' && echo "PID: $$" &&'+
-            shellescape(['tail','-n','+0','-f', '--follow=name', '--retry',filename]),
+        ssh.exec(shellescape(['test','-f',filename]) +
+            '&& echo "PID: $$"&&'+
+            shellescape(['tail','-n','+0','-f','--follow=name','--retry',filename]),
             function(err, stream) {
-            console.log("registerNotify:"+notifyEventName);
+                console.log("registerNotify:"+notifyEventName);
 
-            if (err) throw err;
-            stream.on('data', function(data) {
-                data = data.toString();
-
-                // Get the pid and regiter killprocess event
-                if(!pid && data.substr( 0, 5 ) === 'PID: ' ){
-                    pid = data.substr(5);
-                    socket.on('end '+notifyEventName, endExecuteReadFile);
-                }
-                // Get the data
-                else{
+                if (err) throw err;
+                stream.on('data', function(data) {
                     data = data.toString();
                     console.log("DATA:"+data);
-                    socket.emit(notifyEventName, {err:false, data:data});
-                }
-            }).on('exit', function(exitcode) {
-                //clientCallback(null, {code:exitcode});
-                if(exitcode == 1)
-                    clientCallback(null, {type:"not_exist"});
-                console.log("EXIT (tail) : "+ exitcode);
-                socket.removeListener('end '+notifyEventName, endExecuteReadFile);
-            }).stderr.on('data', function(data) {
-                clientCallback(null, {type:data});
-            });
-        });
+                    // Get the pid and regiter killprocess event
+                    if(pid == null && data.substr( 0, 5 ) === 'PID: ' ){
+                        pid = data.substr(5);
+                        socket.on('end '+notifyEventName, endExecuteReadFile);
+                    }
+                    // Get the data
+                    else{
+                        data = data.toString();
+                        socket.emit(notifyEventName, {err:false, data:data});
+                    }
+                }).on('exit', function(exitcode) {
+                    //clientCallback(null, {code:exitcode});
+                    if(exitcode == 1)
+                        clientCallback(null, {type:"not_exist"});
+                }).stderr.on('data', function(data) {
+                    clientCallback(null, {type:data});
+                });
+            }
+        );
     }
 
 	ssh.on('ready', sshConnected);

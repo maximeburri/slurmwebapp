@@ -24,9 +24,12 @@
                                     <div ng-show="fileViewer.not_exist" style="margin-top:10px;" class="alert alert-danger">
                                         Le fichier n'existe pas
                                     </div>
+                                    <div ng-show="fileViewer.too_big" style="margin-top:10px;" class="alert alert-danger">
+                                        Le fichier est trop volumineux
+                                    </div>
                                 </th>
                             </tr>
-                            <tr ng-hide="fileViewer.not_exist">
+                            <tr ng-hide="fileViewer.not_exist || fileViewer.too_big">
                                 <td><pre><code style="">{{fileViewer.content}}</code></pre>
                                 </td>
                             </tr>

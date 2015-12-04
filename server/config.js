@@ -16,4 +16,7 @@ config.https_server.certs_cert_file = "./certs/cert.pem";
 config.ssh = {}
 config.ssh.timeout = 6000;
 
+config.general = {}
+config.general.max_filesize_transfer = 100000;
+
 module.exports = config;

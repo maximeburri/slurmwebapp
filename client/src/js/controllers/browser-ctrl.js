@@ -111,6 +111,7 @@ function BrowserCtrl($scope, User, Files, $modal) {
         promiseSocketContentFile = Files.getFileContent(filePath, true);
         $scope.fileViewer.show = true;
         $scope.fileViewer.not_exist = false;
+        $scope.fileViewer.too_big = false;
         promiseSocketContentFile.then(
             // Success
             function(successMessage){
@@ -123,6 +124,8 @@ function BrowserCtrl($scope, User, Files, $modal) {
                 console.log(err);
                 if(err.type == "not_exist"){
                     $scope.fileViewer.not_exist = true;
+                }else if(err.type == "too_big"){
+                    $scope.fileViewer.too_big = true;
                 }else{
                     $scope.fileViewer.modified = true;
                 }
