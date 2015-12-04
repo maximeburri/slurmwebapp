@@ -19,9 +19,6 @@ function BrowserCtrl($scope, User, Files, $modal) {
     promiseSocketContentFile = false;
     var scope = $scope;
     var that = this;
-    setTimeout(function(){
-
-    }, 3000);
 
     $scope.updateFiles = function(dir){
         $scope.loading = true;
@@ -33,18 +30,7 @@ function BrowserCtrl($scope, User, Files, $modal) {
                 console.log("Operation effectued");
                 console.log(JSON.stringify(data));
                 $scope.loading = false;
-            }/*,
-            // Error
-            function(err){
-                $scope.modalError = {};
-                $scope.modalError.message = "Impossible d'accéder à " + dir;
-                var modalInstance = $modal.open({
-                    animation: true,
-                    templateUrl: 'templates/modal/simpleError.html',
-                    scope:$scope
-                });
-                $scope.loading = false;
-            }*/
+            }
         );
     }
 
