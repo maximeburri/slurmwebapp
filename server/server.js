@@ -282,9 +282,12 @@ io.on('connection', function (socket) {
                     }
                 }).on('exit', function(exitcode) {
                     //clientCallback(null, {code:exitcode});
-                    if(exitcode == 1)
-                        clientCallback(null, {type:"not_exist"});
-                }).stderr.on('data', function(data) {
+                    console.log("EXIT:"+exitcode);
+                }).on('end', function(){
+                    socket.removeAllListeners('end '+notifyEventName);
+                })
+                .stderr.on('data', function(data) {
+                    console.log("STDERR:"+data);
                     clientCallback(null, {type:data});
                 });
             }

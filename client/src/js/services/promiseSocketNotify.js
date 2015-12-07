@@ -23,7 +23,7 @@ function Notification() {
         console.log(this);
         console.log("registerNotify:"+"notify end "+this.notificationId);
         this.socket.emit("end " + this.notifyEventName);
-        this.socket.removeListener(this.notifyEventName, this.notify);
+        this.socket.removeAllListeners(this.notifyEventName);
         delete this.deferred.promise;
         delete this.deferred;
     };
