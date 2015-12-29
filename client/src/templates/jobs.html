@@ -1,0 +1,58 @@
+<div data-ng-controller="JobsCtrl">
+    <div class="row">
+        <div class="col-lg-6">
+            <rd-widget>
+                <rd-widget-header icon="fa-tasks" title="Jobs">
+                    <i class="fa fa-user"></i>
+                    <div class="btn-group">
+                        <label class="btn btn-xs btn-primary" ng-model="jobsOwner" btn-radio="'my'" >Moi</label>
+                        <label class="btn btn-xs btn-primary" ng-model="jobsOwner" btn-radio="'all'" >Tous</label>
+                    </div>
+                    <br/>
+                    <i class="fa fa-search"></i>
+                    <input type="text" ng-model="query" placeholder="Recherche" class="form-control input-sm" style="display: inline;max-width: 100px;padding:5px;" />
+                </rd-widget-header>
+                <rd-widget-body classes="no-padding">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>User</th>
+                                    <th>Partition</th>
+                                    <th>Remaining<br/>time</th>
+                                    <th>Nb<br/>CPU</th>
+                                    <th>Nodes</th>
+                                </tr>
+                                <tr ng-repeat="job in jobs" ng-click="goToJob(job)" style="cursor: pointer;">
+                                    <td>
+                                        <span>{{job.id}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{job.name}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{job.user}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{job.partition}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{job.remainingTime}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{job.nbCPU}}</span>
+                                    </td>
+                                    <td>
+                                        <span>{{job.nodes}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+    </div>
+</div>
