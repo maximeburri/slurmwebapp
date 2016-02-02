@@ -1,6 +1,6 @@
 <div data-ng-controller="JobsCtrl">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <rd-widget>
                 <rd-widget-header icon="fa-tasks" title="Jobs">
                     <i class="fa fa-user" style="margin-right: 13px;"></i>
@@ -47,7 +47,7 @@
                                         <span>{{job.nbCPU}}</span>
                                     </td>
                                     <td>
-                                        <span><button ng-show="job.nodes != null" class="btn btn-xs btn-info">{{job.nodes}}</button></span>
+                                        <span><button ng-show="job.nodes != null" class="btn btn-xs btn-info" style="width:80px;">{{job.nodes}}</button></span>
                                     </td>
                                 </tr>
                             </tbody>
