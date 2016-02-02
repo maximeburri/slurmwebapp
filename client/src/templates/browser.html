@@ -63,7 +63,7 @@
                                         </button>
                                     </th>
                                 </tr>
-                                <tr ng-repeat="file in files" ng-click="goToFile(file)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
+                                <tr ng-repeat="file in filteredFiles = (files)" ng-click="goToFile(file)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
                                     <td>
                                         <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',
                                                       'fa fa-folder': file.type == 'folder',
@@ -78,6 +78,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div ng-show="filteredFiles.length<=2">
+                            <p class="text-center"><i>Aucun fichier</i></p>
+                        </div>
                     </div>
                 </rd-widget-body>
             </rd-widget>
