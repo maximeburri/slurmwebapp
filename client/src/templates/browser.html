@@ -1,4 +1,4 @@
-<div data-ng-controller="BrowserCtrl">
+<div data-ng-controller="BrowserCtrl" class="ng-scope ng-binding">
     <div class="row" ng-show="fileViewer.show">
         <div class="col-lg-6">
             <rd-widget>
@@ -44,6 +44,10 @@
         <div class="col-lg-6">
             <rd-widget>
                 <rd-widget-header icon="fa-tasks" title="Fichiers" >
+                    <button type="button" class="btn btn-primary btn-xs" ng-model="options.showHiddenFiles" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+                        <i ng-class="options.showHiddenFiles ? 'fa fa-check-square-o' : 'fa fa-square-o'"></i>
+                    </i> {{options.showHiddenFiles}} Afficher fichiers cachées
+                    </button>
                 </rd-widget-header>
                 <rd-widget-body classes="no-padding">
                     <div class="table-responsive">
@@ -63,7 +67,7 @@
                                         </button>
                                     </th>
                                 </tr>
-                                <tr ng-repeat="file in filteredFiles = (files)" ng-click="goToFile(file)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
+                                <tr ng-repeat="file in filteredFiles = (files | filterHiddenFilename :options.showHiddenFiles)" ng-click="goToFile(file)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
                                     <td>
                                         <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',
                                                       'fa fa-folder': file.type == 'folder',

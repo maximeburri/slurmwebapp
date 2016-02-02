@@ -6,6 +6,8 @@ angular.module('RDash')
     .controller('BrowserCtrl', ['$scope', 'User', 'Files', '$modal', BrowserCtrl]);
 
 function BrowserCtrl($scope, User, Files, $modal) {
+    $scope.options = {};
+    $scope.options.showHiddenFiles = false;
     $scope.fileViewer = {
         content : "",
         filepath : "",
