@@ -117,6 +117,9 @@ function parseJobs(text){
             reasonWaiting = nodesList.slice(1,-1);
             nodesList = null;
         }
+        if(nodesList == ''){
+            nodesList = null;
+        }
         result.push({
             'id' : job[0],
             'partition' : job[1],
