@@ -8,7 +8,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job à été explicitement annulé",
             icon :{
                 name : "ban",
-                color : "#B51818"
+                class : "text-danger"
             }
         },
         'CD' : {
@@ -16,7 +16,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job est terminé",
             icon :{
                 name : "check",
-                color : "#163E16"
+                class : "text-success"
             }
         },
         'CF' : {
@@ -24,7 +24,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job est en cours de démarrage",
             icon :{
                 name : "hourglass-start",
-                color : "#163E16"
+                class : "text-success"
             }
         },
         'CG' : {
@@ -32,7 +32,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job est en train de terminé",
             icon :{
                 name : "check",
-                color : "orange"
+                class : "text-warning"
             }
         },
         'F' : {
@@ -40,7 +40,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job a terminé avec un code de sortie non nul",
             icon :{
                 name : "times",
-                color : "#B51818"
+                class : "text-danger"
             }
         },
         'NF' : {
@@ -48,7 +48,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job est prématurément terminé pour défaillance d'un noeud",
             icon :{
                 name : "bolt",
-                color : "#B51818"
+                class : "text-danger"
             }
         },
         'PD' : {
@@ -56,7 +56,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job est en attente d'allocation de ressources",
             icon :{
                 name : "hourglass-start",
-                color : "gray"
+                class : "gray"
             }
         },
         'PR' : {
@@ -64,7 +64,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job terminé en raison de préemption",
             icon :{
                 name : "eject",
-                color : "#B51818"
+                class : "text-danger"
             }
         },
         'R' : {
@@ -72,7 +72,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job a actuellement une allocation",
             icon :{
                 name : "play",
-                color : "#163E16"
+                class : "text-success"
             }
         },
         'S' : {
@@ -80,7 +80,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job a été suspendu",
             icon :{
                 name : "pause",
-                color : "gray"
+                class : "gray"
             }
         },
         'TO' : {
@@ -88,7 +88,7 @@ function Jobs($q, $rootScope, User) {
             description : "Le job a atteint sa limite de temps",
             icon :{
                 name : "clock-o",
-                color : "#B51818"
+                class : "text-danger"
             }
         }
     };
