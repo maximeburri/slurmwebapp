@@ -69,7 +69,7 @@ function updateJobs(){
     showSubscribers();
     console.log("Choosen : " + client.socket.id);
     try {
-        client.ssh.exec("squeue --format=\"%i %P %j %u %t %M %C %R\"", function(err, stream) {
+        client.ssh.exec("squeue -a --format=\"%i %P %j %u %t %M %C %R\"", function(err, stream) {
             if (err) throw err;
             stream.on('data', function(data) {
                 result += data;
