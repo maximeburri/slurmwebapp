@@ -19,4 +19,7 @@ config.ssh.timeout = 6000;
 config.general = {}
 config.general.max_filesize_transfer = 100000;
 
+config.jobs = {}
+config.jobs.interval_update = 10000
+
 module.exports = config;

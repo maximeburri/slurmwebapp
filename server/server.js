@@ -36,10 +36,111 @@ if(config.https_server.client_files.serve_files){
                 + ")");
 }
 
+var subscribersJobs = [];
+var jobsInfo = {
+    lastRequest : 0,
+    jobs : {
+        text : "",
+        objects : []
+    }
+}
+
+function showSubscribers(){
+    console.log("================ Subscribers Jobs ================== ");
+    console.log("Nb: " + subscribersJobs.length);
+    for (var i = 0; i < subscribersJobs.length; i++) {
+        console.log(" - " + subscribersJobs[i].username + " (" + subscribersJobs[i].socket.id + ")");
+    }
+    console.log("================ Subscribers Jobs ================== ");
+}
+
+function updateJobs(){
+    if(subscribersJobs.length == 0)
+        return;
+
+    var client = subscribersJobs[Math.floor(Math.random() * subscribersJobs.length)];
+
+    if(client == undefined)
+        return;
+
+    var result = "";
+    var exitcode = 0;
+    console.log("Try exec squeue");
+    showSubscribers();
+    console.log("Choosen : " + client.socket.id);
+    try {
+        client.ssh.exec("squeue --format=\"%i %P %j %u %t %M %C %R\"", function(err, stream) {
+            if (err) throw err;
+            stream.on('data', function(data) {
+                result += data;
+            }).on('exit', function(e) {
+                console.log('EXIT: ' + e);
+                exitcode = e;
+            }).on('end', function(){
+                console.log('CLOSE');
+                if(exitcode == 0){
+                    if(jobsInfo.jobs.text != result){
+                        jobsInfo.jobs.text = result;
+                        jobsInfo.lastRequest = Date.now();
+                        jobsInfo.jobs.objects = parseJobs(result);
+                        subscribersJobs.forEach(function(subscriber){
+                            subscriber.socket.emit("publish jobs", {date:jobsInfo.lastRequest, jobs:jobsInfo.jobs.objects});
+                        });
+                    }
+                }
+                if(subscribersJobs.length >= 0)
+                    setTimeout(updateJobs, config.jobs.interval_update);
+            })
+            .stderr.on('data', function(data) {
+                console.log('STDERR: ' + data);
+            });
+        });
+    }catch(err) {
+        console.error("UpdateJobs : client ssh error");
+        // Une erreur s'est produite, directement remettre à jour les jobs
+        if(subscribersJobs.length >= 0)
+            setTimeout(updateJobs, config.jobs.interval_update);
+    }
+}
+
+// Parse jobs formated %i %P %j %u %t %M %C %R
+function parseJobs(text){
+    var result = [];
+
+    var lines = text.split('\n');
+
+    for(i = 1; i < lines.length-1;i++){
+        var job = lines[i].split(' ');
+        var nodesList = job.length > 7 ? job[7] : "";
+        var reasonWaiting = null;
+        if(nodesList.length >= 3 && nodesList[0] == '(' && nodesList[nodesList.length - 1] == ')'){
+            reasonWaiting = nodesList.slice(1,-1);
+            nodesList = null;
+        }
+        result.push({
+            'id' : job[0],
+            'partition' : job[1],
+            'name' : job[2],
+            'username' : job[3],
+            'state' : job[4],
+            'time' : job[5],
+            'nbCPU' : job[6],
+            'nodes' : nodesList,
+            'reasonWaiting' : reasonWaiting
+        });
+    }
+
+    return result;
+}
+
+
+
 /** Socket IO **/
 var io = socketio(server);
 io.on('connection', function (socket) {
     var ssh = new ClientSSH();
+    var jobsSubscribed = false;
+    var username = false;
 	console.log("Client::connection ")
 
 	// Login
@@ -51,6 +152,7 @@ io.on('connection', function (socket) {
 
 		// Try to connect
         try{
+            username = data.username;
             ssh.connect({
                 host: data.cluster,
                 username: data.username,
@@ -74,7 +176,8 @@ io.on('connection', function (socket) {
 
 			// Reconnect login function
 			socket.on('login', login);
-			socket.removeListener('operation', operation)
+			socket.removeListener('operation', operation);
+            unsubscribeJobs();
 
 			// Send log outed
 			socket.emit("logout", {type:"NORMAL_LOGOUT"});
@@ -105,6 +208,7 @@ io.on('connection', function (socket) {
 			// Reconnect login function
 			socket.on('login', login);
 			socket.removeListener('operation', operation)
+            unsubscribeJobs();
 
 			// End ssh connection
 			ssh.end();
@@ -121,6 +225,7 @@ io.on('connection', function (socket) {
 		socket.emit("error_ssh", err);
 		//
 		console.log("Client::login::error "+err)
+        unsubscribeJobs();
 	}
 
 	// On client operation
@@ -151,6 +256,43 @@ io.on('connection', function (socket) {
                         clientCallback, socket);
                 }
             );
+        }
+        // Subscribe to jobs
+        else if (operation.object == "jobs"){
+            if(!jobsSubscribed){
+
+                socket.on("unsubscribe jobs", unsubscribeJobs);
+                subscribersJobs.push({username:username,ssh:ssh, socket:socket});
+                console.log(subscribersJobs.length);
+                // First personn : start periodic request
+                if(subscribersJobs.length == 1){
+                    updateJobs();
+                }else{
+                    socket.emit("publish jobs", {date:jobsInfo.lastRequest, jobs:jobsInfo.jobs.objects});
+                }
+                jobsSubscribed = true;
+            }
+        }
+    }
+
+    function unsubscribeJobs(){
+        if(jobsSubscribed){
+            // Delete the subscriber
+            for (var i = 0; i < subscribersJobs.length; i++) {
+                if (subscribersJobs[i].socket.id == socket.id) {
+                    subscribersJobs.splice(i--, 1);
+                    break;
+                }
+            }
+            showSubscribers();
+
+            socket.removeAllListeners("unsubscribe jobs");
+
+            // Last client, stop periodic request
+            if(subscribersJobs.length == 0){
+                clearTimeout(updateJobs);
+            }
+            jobsSubscribed = false;
         }
     }
 
