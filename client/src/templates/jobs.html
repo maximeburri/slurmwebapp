@@ -15,6 +15,7 @@
                 <rd-widget-body classes="no-padding">
                     <div class="table-responsive">
                         <table class="table table-hover">
+
                             <tbody>
                                 <tr>
                                     <th>ID</th>
@@ -25,27 +26,27 @@
                                     <th>Nb<br/>CPU</th>
                                     <th>Nodes</th><!-- -->
                                 </tr>
-                                <tr ng-repeat="job in jobs | filter: (search.jobsOwner == 'my' || '') && {user:user.username} | filter: search.query" ng-click="goToJob(job)" style="cursor: pointer;">
+                                <tr ng-repeat="job in jobs | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query" ng-click="goToJob(job)" style="cursor: pointer;">
                                     <td>
-                                        <span>{{job.id}}</span>
+                                        <span><swa-job-state state="{{job.state}}" reason="{{job.reasonWaiting}}"></swa-job-state> {{job.id}}</span>
                                     </td>
                                     <td>
                                         <span>{{job.name}}</span>
                                     </td>
                                     <td>
-                                        <span>{{job.user}}</span>
+                                        <span>{{job.username}}</span>
                                     </td>
                                     <td>
                                         <span>{{job.partition}}</span>
                                     </td>
                                     <td>
-                                        <span>{{job.remainingTime}}</span>
+                                        <span>{{job.time}}</span>
                                     </td>
                                     <td>
                                         <span>{{job.nbCPU}}</span>
                                     </td>
                                     <td>
-                                        <span>{{job.nodes}}</span>
+                                        <span><button ng-show="job.nodes != null" class="btn btn-xs btn-info">{{job.nodes}}</button></span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -53,6 +54,17 @@
                     </div>
                 </rd-widget-body>
             </rd-widget>
+            Légende :   <swa-job-state state="CD" description="true"></swa-job-state>
+                        <swa-job-state state="CG" description="true"></swa-job-state>
+                        <swa-job-state state="CF" description="true"></swa-job-state>
+                        <swa-job-state state="PD" description="true"></swa-job-state>
+                        <swa-job-state state="R" description="true"></swa-job-state>
+                        <swa-job-state state="S" description="true"></swa-job-state>
+                        <swa-job-state state="CA" description="true"></swa-job-state>
+                        <swa-job-state state="TO" description="true"></swa-job-state>
+                        <swa-job-state state="F" description="true"></swa-job-state>
+                        <swa-job-state state="NF" description="true"></swa-job-state>
+                        <swa-job-state state="PR" description="true"></swa-job-state>
         </div>
     </div>
 </div>
