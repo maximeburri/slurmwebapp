@@ -14,7 +14,7 @@
                 </rd-widget-header>
                 <rd-widget-body classes="no-padding">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover" ng-show="jobs.length">
 
                             <tbody>
                                 <tr>
@@ -26,7 +26,7 @@
                                     <th>Nb<br/>CPU</th>
                                     <th>Nodes</th><!-- -->
                                 </tr>
-                                <tr ng-repeat="job in jobs | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query" ng-click="goToJob(job)" style="cursor: pointer;">
+                                <tr ng-repeat="job in filteredJobs = (jobs | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query)" ng-click="goToJob(job)" style="cursor: pointer;">
                                     <td>
                                         <span><swa-job-state state="{{job.state}}" reason="{{job.reasonWaiting}}"></swa-job-state> {{job.id}}</span>
                                     </td>
@@ -51,6 +51,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div ng-show="!filteredJobs.length">
+                        <p class="text-center"><i>Aucun jobs</i></p>
                     </div>
                 </rd-widget-body>
             </rd-widget>
