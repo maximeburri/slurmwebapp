@@ -3,13 +3,20 @@
  */
 
 angular.module('RDash')
-    .controller('JobsCtrl', ['$scope', 'User', 'Jobs', '$modal', JobsCtrl]);
+    .controller('JobsCtrl', ['$scope', '$rootScope', 'User', 'Jobs', '$modal', JobsCtrl]);
 
-function JobsCtrl($scope, User, Jobs, $modal) {
-    $scope.jobs = [];
-    $scope.search = {}
-    $scope.search.jobsOwner ="all";
-    $scope.search.query = "";
+function JobsCtrl($scope, $rootScope, User, Jobs, $modal) {
+    if($rootScope.jobs == undefined){
+        $rootScope.jobs = [];
+        $rootScope.search = {}
+        $rootScope.search.jobsOwner ="all";
+        $rootScope.search.query = "";
+    }
+
+    $scope.$on("$destroy", function() {
+        Jobs.unsubscribe();
+    });
+
 
     Jobs.subscribe().then(
         // Success
@@ -28,12 +35,8 @@ function JobsCtrl($scope, User, Jobs, $modal) {
         function(response){
             console.log("Update jobs");
             console.log(response);
-            $scope.jobs = response.jobs;
+            $rootScope.jobs = response.jobs;
         }
     );
-
-    $scope.$on("$destroy", function() {
-        Jobs.unsubscribe();
-    });
 
 }
