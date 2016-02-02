@@ -7,7 +7,8 @@ function filterHiddenFilename() {
         console.log(showHiddenFile);
         var filtered = [];
         angular.forEach(input, function(file) {
-            if(showHiddenFile || (input.length > 1 && file.filename[0] != '.' && file.filename[0] != '~'))
+            if((showHiddenFile && file.filename != '.' && file.filename != '..') ||
+                (input.length > 1 && file.filename[0] != '.' && file.filename[0] != '~'))
                filtered.push(file);
         });
 
