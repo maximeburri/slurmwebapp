@@ -26,7 +26,8 @@
                                     <th>Nb<br/>CPU</th>
                                     <th>Nodes</th><!-- -->
                                 </tr>
-                                <tr ng-repeat="job in filteredJobs = (jobs | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query)" ng-click="goToJob(job)" style="cursor: pointer;">
+                                <tr ng-repeat="job in filteredJobs = (jobs | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query)"
+                                ng-click="goToJob(job)" style="cursor: pointer;">
                                     <td>
                                         <span><swa-job-state state="{{job.state}}" reason="{{job.reasonWaiting}}"></swa-job-state> {{job.id}}</span>
                                     </td>

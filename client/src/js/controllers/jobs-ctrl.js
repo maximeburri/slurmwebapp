@@ -3,9 +3,9 @@
  */
 
 angular.module('RDash')
-    .controller('JobsCtrl', ['$scope', '$rootScope', 'User', 'Jobs', '$modal', JobsCtrl]);
+    .controller('JobsCtrl', ['$scope', '$rootScope', 'User', 'Jobs', '$modal','$location', JobsCtrl]);
 
-function JobsCtrl($scope, $rootScope, User, Jobs, $modal) {
+function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location) {
     if($rootScope.jobs == undefined){
         $rootScope.jobs = [];
         $rootScope.search = {}
@@ -17,6 +17,9 @@ function JobsCtrl($scope, $rootScope, User, Jobs, $modal) {
         Jobs.unsubscribe();
     });
 
+    $scope.goToJob = function(job){
+        $location.path( "/job/"+job.id );
+    }
 
     Jobs.subscribe().then(
         // Success

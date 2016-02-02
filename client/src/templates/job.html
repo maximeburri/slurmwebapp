@@ -1,0 +1,72 @@
+<div data-ng-controller="JobCtrl">
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-xs-12">
+            <rd-widget>
+                <rd-widget-header icon="fa-tasks" title="Général">
+                </rd-widget-header>
+                <rd-widget-body classes="no-padding">
+                    <p style="margin:10px;">
+                        <swa-job-state state="R" description="true"></swa-job-state> <b>Nom du job</b> (1291911)
+                    </p>
+                    <!--<p style="margin:10px;">
+                        stderr : stderr.txt <br/>
+                        stdout : stdout.txt
+                    </p>-->
+                    <table class="table">
+                        <tr>
+                            <th> <i class="fa fa-sign-out"></i> Stantard out </th><td> std_out.txt</td>
+                        </tr>
+                        <tr>
+                            <th> <i class="fa fa-sign-out"></i> Standard error </th><td> std_err.txt</td>
+                        </tr>
+                        <tr>
+                            <th> <i class="fa fa-clock-o"></i> Remaining time </th><td> 10:05:43</td>
+                        </tr>
+                    </table>
+
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12">
+            <rd-widget>
+                <rd-widget-header icon="fa-sign-out" title="Noeuds/CPU">
+                </rd-widget-header>
+                <rd-widget-body classes="">
+                    <img class="noborder" id="graph_img_hour" style="margin-top:5px;max-width:100%;" title="Last hour" src="https://baobabmaster.unige.ch/ganglia2/graph.php?r=hour&amp;z=large&amp;h=node001.cluster&amp;m=load_one&amp;s=by+name&amp;mc=2&amp;g=mem_report&amp;c=Baobab">
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-xs-12">
+            <rd-widget>
+                <rd-widget-header icon="fa-sign-out" title="Standard out">
+                </rd-widget-header>
+                <rd-widget-body classes="">
+                    <pre><code style="">Contenu du fichier standard out
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Maecenas sit amet ante non lacus aliquet pulvinar vel in nisi. Mauris eget nisi ac nisi tempor suscipit. Nullam suscipit tristique sapien vel lacinia. Nulla quis leo non nibh ullamcorper convallis eu et sem.
+Curabitur massa enim, ullamcorper ut vehicula vel, varius et mi.
+Integer vehicula in lacus nec ultricies. Nulla facilisi.
+Mauris et vulputate lorem. Vivamus at sapien sagittis, tempus neque molestie, lobortis ex. Duis porttitor volutpat nisi.
+Sed nibh diam, viverra eu libero quis, efficitur hendrerit dui. Vivamus egestas cursus sem, sed efficitur nibh aliquam non. Sed vel nulla accumsan, dapibus dolor vel, fringilla lorem. Nunc nulla lacus, euismod egestas magna non, rhoncus aliquet tortor. Mauris nec magna rutrum, elementum nibh quis, tincidunt elit.</code></pre>
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12">
+            <rd-widget>
+                <rd-widget-header icon="fa-sign-out" title="Standard err">
+                </rd-widget-header>
+                <rd-widget-body classes="">
+                    <pre><code style="">Contenu du fichier standard err
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Maecenas sit amet ante non lacus aliquet pulvinar vel in nisi. Mauris eget nisi ac nisi tempor suscipit. Nullam suscipit tristique sapien vel lacinia. Nulla quis leo non nibh ullamcorper convallis eu et sem.
+Curabitur massa enim, ullamcorper ut vehicula vel, varius et mi.
+Integer vehicula in lacus nec ultricies. Nulla facilisi.
+Mauris et vulputate lorem. Vivamus at sapien sagittis, tempus neque molestie, lobortis ex. Duis porttitor volutpat nisi.
+Sed nibh diam, viverra eu libero quis, efficitur hendrerit dui. Vivamus egestas cursus sem, sed efficitur nibh aliquam non. Sed vel nulla accumsan, dapibus dolor vel, fringilla lorem. Nunc nulla lacus, euismod egestas magna non, rhoncus aliquet tortor. Mauris nec magna rutrum, elementum nibh quis, tincidunt elit.</code></pre>
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+    </div>
+</div>
