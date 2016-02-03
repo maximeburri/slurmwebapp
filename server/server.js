@@ -278,24 +278,21 @@ io.on('connection', function (socket) {
         }
         else if (operation.object == "job"){
             if(operation.verb == "detail"){
-                executeCommand(shellescape(["scontrol", "show", "job", operation.params.job.id, "-d"]), function(result, exitcode, clientCallback){
+                executeCommand(shellescape(["scontrol", "show", "job", operation.params.job.id, "-dd"]), function(result, exitcode, clientCallback){
                     if(exitcode != 0){
                         clientCallback(null, {error:"DETAIL_JOB_FAILED"});
                     }else{
-                        var lines = result.split("\n");
+                        // source de base : http://stackoverflow.com/a/28131137/3139417
+                        var infos = result.match(/(\b[a-zA-Z0-9_:\/]+)=(.*?(?=\s[a-zA-Z0-9_():\-\/\*. ]+=|$|\n))/g);
                         var job = {};
-                        for(var i = 0; i < lines.length; i++) {
-                            var pieces = lines[i].split(" ");
-                            for(var j = 0;j < pieces.length;j++){
-                                var keyValue = pieces[j].split("=");
-                                if(keyValue.length >= 2){
-                                    key = keyValue[0];
-                                    value = keyValue[1];
-                                    key = key[0].toLowerCase() + key.slice(1);
-                                    key = key.replace("/", "_");
-                                    job[key] = value;
-                                }
-                            }
+
+                        for(var i = 0; i < infos.length; i++) {
+                            arrayKey = infos[i].split("=");
+                            key = arrayKey[0];
+                            key = key[0].toLowerCase() + key.slice(1);
+                            key = key.replace(/([\/ :])/g, '');
+                            value = arrayKey[1];
+                            job[key] = value;
                         }
 
                         clientCallback({job:job}, false);
