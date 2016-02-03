@@ -6,14 +6,14 @@
                 </rd-widget-header>
                 <rd-widget-body classes="no-padding">
                     <p style="margin:10px;">
-                        <swa-job-state state="R" description="true"></swa-job-state> <b>Nom du job</b> (1291911)
+                        <swa-job-state state="R" description="true"></swa-job-state> <b>Nom du job</b> ({{job.id}})
                     </p>
                     <!--<p style="margin:10px;">
                         stderr : stderr.txt <br/>
                         stdout : stdout.txt
                     </p>-->
                     <p style="margin:10px;">
-                        <button class="btn btn-sm btn-danger"> <i class="fa fa-ban"></i> Annuler</button> <button class="btn btn-sm btn-success"> <i class="fa fa-external-link"></i> Relancer</button>
+                        <button class="btn btn-sm btn-danger" ng-click="cancel()"> <i class="fa fa-ban"></i> Annuler</button> <button class="btn btn-sm btn-success"> <i class="fa fa-external-link"></i> Relancer</button>
                     </p>
                     <table class="table">
                         <tr>

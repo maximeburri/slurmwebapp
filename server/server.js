@@ -276,6 +276,19 @@ io.on('connection', function (socket) {
                 jobsSubscribed = true;
             }
         }
+        else if (operation.object == "job"){
+            if(operation.verb == "detail"){
+
+            }if(operation.verb == "cancel"){
+                executeCommand(shellescape(["scancel", operation.params.job.id]), function(result, exitcode, clientCallback){
+                    if(exitcode != 0){
+                        clientCallback(null, {error:"CANCEL_FAIL"});
+                    }else{
+                        clientCallback({success:true}, false);
+                    }
+                }, clientCallback);
+            }
+        }
     }
 
     function unsubscribeJobs(){

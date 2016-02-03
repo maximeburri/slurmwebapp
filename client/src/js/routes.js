@@ -33,7 +33,7 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 url: '/job/{id}',
                 templateUrl: 'templates/job.html',
                 authenticate: true,
-                title: 'Job'
+                title: 'Job {{job.id}}'
             })
             .state('nodes', {
                 url: '/nodes',
