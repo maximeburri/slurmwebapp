@@ -3,7 +3,7 @@ angular.module('RDash').service('Jobs', ['$q', '$rootScope', 'User', Jobs]);
 function Jobs($q, $rootScope, User) {
     this.jobStateCodes = {
         // https://computing.llnl.gov/linux/slurm/squeue.html#SECTION_JOB STATE CODES
-        'CA' : {
+        'CANCELLED' : {
             completeName : "Annulé",
             description : "Le job à été explicitement annulé",
             icon :{
@@ -11,7 +11,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-danger"
             }
         },
-        'CD' : {
+        'COMPLETED' : {
             completeName : "Terminé",
             description : "Le job est terminé",
             icon :{
@@ -19,7 +19,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-success"
             }
         },
-        'CF' : {
+        'CONFIGURING' : {
             completeName : "Configuration",
             description : "Le job est en cours de démarrage",
             icon :{
@@ -27,7 +27,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-success"
             }
         },
-        'CG' : {
+        'COMPLETING' : {
             completeName : "Achevement",
             description : "Le job est en train de terminé",
             icon :{
@@ -35,7 +35,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-warning"
             }
         },
-        'F' : {
+        'FAILED' : {
             completeName : "Echec",
             description : "Le job a terminé avec un code de sortie non nul",
             icon :{
@@ -43,7 +43,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-danger"
             }
         },
-        'NF' : {
+        'NODE_FAIL' : {
             completeName : "Défaillance",
             description : "Le job est prématurément terminé pour défaillance d'un noeud",
             icon :{
@@ -51,7 +51,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-danger"
             }
         },
-        'PD' : {
+        'PENDING' : {
             completeName : "Attente",
             description : "Le job est en attente d'allocation de ressources",
             icon :{
@@ -59,7 +59,7 @@ function Jobs($q, $rootScope, User) {
                 class : "gray"
             }
         },
-        'PR' : {
+        'PREEMPTED' : {
             completeName : "Préempté",
             description : "Le job terminé en raison de préemption",
             icon :{
@@ -67,7 +67,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-danger"
             }
         },
-        'R' : {
+        'RUNNING' : {
             completeName : "En cours",
             description : "Le job a actuellement une allocation",
             icon :{
@@ -75,7 +75,7 @@ function Jobs($q, $rootScope, User) {
                 class : "text-success"
             }
         },
-        'S' : {
+        'SUSPENDED' : {
             completeName : "Suspendu",
             description : "Le job a été suspendu",
             icon :{
@@ -83,7 +83,7 @@ function Jobs($q, $rootScope, User) {
                 class : "gray"
             }
         },
-        'TO' : {
+        'TIMEOUT' : {
             completeName : "Temps écoulé",
             description : "Le job a atteint sa limite de temps",
             icon :{

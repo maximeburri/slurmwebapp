@@ -69,7 +69,7 @@ function updateJobs(){
     showSubscribers();
     console.log("Choosen : " + client.socket.id);
     try {
-        client.ssh.exec("squeue -a --states=all --format=\"%i %P %j %u %t %M %C %R\"", function(err, stream) {
+        client.ssh.exec("squeue -a --states=all --format=\"%i %P %j %u %T %M %C %R\"", function(err, stream) {
             if (err) throw err;
             stream.on('data', function(data) {
                 result += data;
@@ -103,7 +103,7 @@ function updateJobs(){
     }
 }
 
-// Parse jobs formated %i %P %j %u %t %M %C %R
+// Parse jobs formated %i %P %j %u %T %M %C %R
 function parseJobs(text){
     var result = [];
 
