@@ -278,7 +278,29 @@ io.on('connection', function (socket) {
         }
         else if (operation.object == "job"){
             if(operation.verb == "detail"){
+                executeCommand(shellescape(["scontrol", "show", "job", operation.params.job.id, "-d"]), function(result, exitcode, clientCallback){
+                    if(exitcode != 0){
+                        clientCallback(null, {error:"DETAIL_JOB_FAILED"});
+                    }else{
+                        var lines = result.split("\n");
+                        var job = {};
+                        for(var i = 0; i < lines.length; i++) {
+                            var pieces = lines[i].split(" ");
+                            for(var j = 0;j < pieces.length;j++){
+                                var keyValue = pieces[j].split("=");
+                                if(keyValue.length >= 2){
+                                    key = keyValue[0];
+                                    value = keyValue[1];
+                                    key = key[0].toLowerCase() + key.slice(1);
+                                    key = key.replace("/", "_");
+                                    job[key] = value;
+                                }
+                            }
+                        }
 
+                        clientCallback({job:job}, false);
+                    }
+                }, clientCallback);
             }if(operation.verb == "cancel"){
                 executeCommand(shellescape(["scancel", operation.params.job.id]), function(result, exitcode, clientCallback){
                     if(exitcode != 0){

@@ -6,25 +6,24 @@
                 </rd-widget-header>
                 <rd-widget-body classes="no-padding">
                     <p style="margin:10px;">
-                        <swa-job-state state="R" description="true"></swa-job-state> <b>Nom du job</b> ({{job.id}})
+                        <swa-job-state state="R" description="true"></swa-job-state> <b>{{job.jobName}}</b> ({{job.id}})
                     </p>
-                    <!--<p style="margin:10px;">
-                        stderr : stderr.txt <br/>
-                        stdout : stdout.txt
-                    </p>-->
                     <p style="margin:10px;">
                         <button class="btn btn-sm btn-danger" ng-click="cancel()"> <i class="fa fa-ban"></i> Annuler</button> <button class="btn btn-sm btn-success"> <i class="fa fa-external-link"></i> Relancer</button>
                     </p>
                     <table class="table">
                         <tr>
-                            <th> <i class="fa fa-sign-out"></i> Stantard out </th><td> std_out.txt</td>
+                            <th> <i class="fa fa-user"></i> Utilisateur </th><td> {{job.userId}}</td>
                         </tr>
                         <tr>
-                            <th> <i class="fa fa-sign-out"></i> Standard error </th><td> std_err.txt</td>
+                            <th> <i class="fa fa-sign-out"></i> Stantard out </th><td> {{job.stdOut}}</td>
                         </tr>
                         <tr>
+                            <th> <i class="fa fa-sign-out"></i> Standard error </th><td> {{job.stdErr}}</td>
+                        </tr>
+                        <!--<tr>
                             <th> <i class="fa fa-clock-o"></i> Remaining time </th><td> 10:05:43</td>
-                        </tr>
+                        </tr>-->
                     </table>
 
 
