@@ -294,7 +294,10 @@ io.on('connection', function (socket) {
                             value = arrayKey[1];
                             job[key] = value;
                         }
-
+                        userNameId = job.userId.split("(");
+                        job.userNameId = job.userId;
+                        job.userName = userNameId[0];
+                        job.userId = userNameId[1].slice(0, -1); // Remove ')'
                         clientCallback({job:job}, false);
                     }
                 }, clientCallback);
