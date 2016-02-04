@@ -58,6 +58,10 @@ function JobCtrl($stateParams, $scope, $rootScope, $interval, Files, $interpolat
                     $scope.viewFile($scope.job.stdErr, $scope.fileStdErr);
                 }
 
+                if($scope.job.jobState == "COMPLETED"){
+                    $scope.endUpdate();
+                }
+
             },
             // Error
             function(err){
@@ -109,12 +113,15 @@ function JobCtrl($stateParams, $scope, $rootScope, $interval, Files, $interpolat
         }
     }
 
-    $scope.$on("$destroy", function() {
+    $scope.endUpdate = function(){
         $scope.stopFollowFileContent($scope.fileStdOut);
         $scope.stopFollowFileContent($scope.fileStdErr);
         $interval.cancel(updateInterval);
         updateInterval = undefined;
-    });
+
+    }
+
+    $scope.$on("$destroy", $scope.endUpdate);
 
     $scope.update();
     updateInterval = $interval(function() {
