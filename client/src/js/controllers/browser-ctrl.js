@@ -22,6 +22,10 @@ function BrowserCtrl($scope, User, Files, $modal) {
     var scope = $scope;
     var that = this;
 
+    $scope.$on("$destroy", function() {
+        $scope.stopFollowFileContent();
+    });
+
     $scope.updateFiles = function(dir){
         $scope.loading = true;
         return Files.getListFiles(dir).then(
