@@ -3,9 +3,9 @@
  */
 
 angular.module('RDash')
-    .controller('JobCtrl', ['$stateParams', '$scope', '$rootScope','Files','$interpolate', 'User', JobCtrl]);
+    .controller('JobCtrl', ['$stateParams', '$scope', '$rootScope', '$interval', 'Files','$interpolate', 'User', JobCtrl]);
 
-function JobCtrl($stateParams, $scope, $rootScope, Files, $interpolate, User) {
+function JobCtrl($stateParams, $scope, $rootScope, $interval, Files, $interpolate, User) {
     $scope.job = {
         id: $stateParams.id
     }
@@ -26,16 +26,20 @@ function JobCtrl($stateParams, $scope, $rootScope, Files, $interpolate, User) {
     };
 
     firstActualisation = true;
+    updateInterval = undefined;
+
 
     $scope.cancel = function(){
         User.operation({verb:"cancel", object:"job", params:{job:{id:$scope.job.id}}}).then(
             // Success
             function(successMessage){
                 console.log("Job cancelled");
+                $scope.update();
             },
             // Error
             function(err){
                 console.error("Job no cancelled");
+                $scope.update();
             }
         );
     }
@@ -108,7 +112,12 @@ function JobCtrl($stateParams, $scope, $rootScope, Files, $interpolate, User) {
     $scope.$on("$destroy", function() {
         $scope.stopFollowFileContent($scope.fileStdOut);
         $scope.stopFollowFileContent($scope.fileStdErr);
+        $interval.cancel(updateInterval);
+        updateInterval = undefined;
     });
 
     $scope.update();
+    updateInterval = $interval(function() {
+        $scope.update()
+    }, 5000);
 }
