@@ -10,8 +10,7 @@
                         <swa-job-state ng-show="job.jobState" state="{{job.jobState}}" description="true"></swa-job-state> <b>{{job.jobName}}</b> ({{job.id}})
                     </p>
                     <p style="margin:10px;">
-                        <button class="btn btn-sm btn-danger" ng-click="cancel()" ng-disabled="job.userName != user.username || job.jobState != 'RUNNING'"> <i class="fa fa-ban"></i> Annuler</button>
-                        <!--<button class="btn btn-sm btn-success"> <i class="fa fa-external-link"></i> Relancer</button>-->
+                        <button class="btn btn-sm btn-danger" ng-click="cancel()" ng-disabled="job.userName != user.username || (job.jobState != 'RUNNING' && job.jobState != 'PENDING')"> <i class="fa fa-ban"></i> Annuler</button>
                     </p>
                     <table class="table">
                         <tr>
