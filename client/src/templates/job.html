@@ -47,13 +47,22 @@
                 <rd-widget-header icon="fa-sign-out" title="Standard out">
                 </rd-widget-header>
                 <rd-widget-body classes="">
-                    <pre><code style="">Contenu du fichier standard out
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Maecenas sit amet ante non lacus aliquet pulvinar vel in nisi. Mauris eget nisi ac nisi tempor suscipit. Nullam suscipit tristique sapien vel lacinia. Nulla quis leo non nibh ullamcorper convallis eu et sem.
-Curabitur massa enim, ullamcorper ut vehicula vel, varius et mi.
-Integer vehicula in lacus nec ultricies. Nulla facilisi.
-Mauris et vulputate lorem. Vivamus at sapien sagittis, tempus neque molestie, lobortis ex. Duis porttitor volutpat nisi.
-Sed nibh diam, viverra eu libero quis, efficitur hendrerit dui. Vivamus egestas cursus sem, sed efficitur nibh aliquam non. Sed vel nulla accumsan, dapibus dolor vel, fringilla lorem. Nunc nulla lacus, euismod egestas magna non, rhoncus aliquet tortor. Mauris nec magna rutrum, elementum nibh quis, tincidunt elit.</code></pre>
+                    <tr>
+                    <div ng-show="fileStdOut.modified" style="margin-top:10px;" class="alert alert-warning">
+                        Le fichier à été entièrement modifié
+                        <button class="btn btn-primary btn-xs"
+                            ng-click="viewFileRefresh(fileStdOut)">
+                            <i class="fa fa-refresh"></i> Actualiser
+                        </button>
+                    </div>
+                    <div ng-show="fileStdOut.not_exist" style="margin-top:10px;" class="alert alert-danger">
+                        Le fichier n'existe pas ou vous n'avez pas les droits
+                    </div>
+                    <div ng-show="fileStdOut.too_big" style="margin-top:10px;" class="alert alert-danger">
+                        Le fichier est trop volumineux
+                    </div>
+                    <pre ng-hide="fileStdOut.too_big || fileStdOut.not_exist"><code style="">{{fileStdOut.content}}</code></pre>
+
                 </rd-widget-body>
             </rd-widget>
         </div>
@@ -62,13 +71,22 @@ Sed nibh diam, viverra eu libero quis, efficitur hendrerit dui. Vivamus egestas 
                 <rd-widget-header icon="fa-sign-out" title="Standard err">
                 </rd-widget-header>
                 <rd-widget-body classes="">
-                    <pre><code style="">Contenu du fichier standard err
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Maecenas sit amet ante non lacus aliquet pulvinar vel in nisi. Mauris eget nisi ac nisi tempor suscipit. Nullam suscipit tristique sapien vel lacinia. Nulla quis leo non nibh ullamcorper convallis eu et sem.
-Curabitur massa enim, ullamcorper ut vehicula vel, varius et mi.
-Integer vehicula in lacus nec ultricies. Nulla facilisi.
-Mauris et vulputate lorem. Vivamus at sapien sagittis, tempus neque molestie, lobortis ex. Duis porttitor volutpat nisi.
-Sed nibh diam, viverra eu libero quis, efficitur hendrerit dui. Vivamus egestas cursus sem, sed efficitur nibh aliquam non. Sed vel nulla accumsan, dapibus dolor vel, fringilla lorem. Nunc nulla lacus, euismod egestas magna non, rhoncus aliquet tortor. Mauris nec magna rutrum, elementum nibh quis, tincidunt elit.</code></pre>
+                    <tr>
+                    <div ng-show="fileStdErr.modified" style="margin-top:10px;" class="alert alert-warning">
+                        Le fichier à été entièrement modifié
+                        <button class="btn btn-primary btn-xs"
+                            ng-click="viewFileRefresh(fileStdErr)">
+                            <i class="fa fa-refresh"></i> Actualiser
+                        </button>
+                    </div>
+                    <div ng-show="fileStdErr.not_exist" style="margin-top:10px;" class="alert alert-danger">
+                        Le fichier n'existe pas ou vous n'avez pas les droits
+                    </div>
+                    <div ng-show="fileStdErr.too_big" style="margin-top:10px;" class="alert alert-danger">
+                        Le fichier est trop volumineux
+                    </div>
+                    <pre ng-hide="fileStdErr.too_big || fileStdErr.not_exist"><code style="">{{fileStdErr.content}}</code></pre>
+
                 </rd-widget-body>
             </rd-widget>
         </div>

@@ -251,7 +251,7 @@ io.on('connection', function (socket) {
                         clientCallback(null, {type:"not_exist"});
                 },
                 // Filesize received
-                function(filesize){
+                function(filesize, path){
                     if(filesize > config.general.max_filesize_transfer)
                         clientCallback(null, {type:"too_big"});
                     else
@@ -419,7 +419,7 @@ io.on('connection', function (socket) {
                     //clientCallback(null, {code:exitcode});
                     callbackError(exitcode);
                 }).on('end', function(){
-                    callbackResult(filesize);
+                    callbackResult(filesize, filename);
                 })
             }
         );
@@ -435,7 +435,6 @@ io.on('connection', function (socket) {
             console.log("disconnect:'"+notifyEventName+"'");
             killProcess(ssh, pid);
         }
-
         // Execute tail after get PID
         ssh.exec(shellescape(['test','-f',filename]) +
             '&& echo "PID: $$"&&'+
