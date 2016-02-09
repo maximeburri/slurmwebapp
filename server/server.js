@@ -15,6 +15,9 @@ var util = require('util');
 var shellescape = require('shell-escape');
 var path = require('path');
 
+var Client = require('./client.js');
+
+
 /* Class */
 var ClientSSH = require('ssh2').Client;
 
@@ -144,6 +147,8 @@ io.on('connection', function (socket) {
     var ssh = new ClientSSH();
     var jobsSubscribed = false;
     var username = false;
+    var client = new Client(ssh, socket);
+
 	console.log("Client::connection ")
 
 	// Login
@@ -162,6 +167,7 @@ io.on('connection', function (socket) {
                 password: data.password,
 				readyTimeout: config.ssh.timeout // Max timeout (milliseconds)
             });
+            client.params = data;
         }
 		// Connection error
 		catch(e){
@@ -192,6 +198,7 @@ io.on('connection', function (socket) {
 	// Connected on ssh
 	function sshConnected(){
 		try{
+
 			console.log("SSH::connected")
 
 			// Add logout
@@ -383,24 +390,7 @@ io.on('connection', function (socket) {
 	// Execute a command, when it finished, call parsingCallback that parse
 	// the result who that call clientCallback
 	function executeCommand(command, parsingCallback, clientCallback){
-		var result = "";
-        var exitcode = 0;
-		ssh.exec(command, function(err, stream) {
-		    if (err) throw err;
-		    stream.on('data', function(data) {
-				console.log('STDOUT: ' + data);
-				result += data;
-		    }).on('exit', function(e) {
-                console.log('EXIT: ' + e);
-                exitcode = e;
-		    }).on('end', function(){
-                console.log('CLOSE  Final data : ' + result);
-                parsingCallback(result, exitcode, clientCallback);
-            })
-            .stderr.on('data', function(data) {
-		      	console.log('STDERR: ' + data);
-		    });
-		});
+		client.executeCommand(command, parsingCallback, clientCallback, function(){});
 	}
 
     // Kill a process / opened stream
