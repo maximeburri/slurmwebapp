@@ -289,40 +289,7 @@ io.on('connection', function (socket) {
             }
         }
         else if (operation.object == "job"){
-            if(operation.verb == "detail"){
-                executeCommand(shellescape(["scontrol", "show", "job", operation.params.job.id, "-dd"]), function(result, exitcode, clientCallback){
-                    if(exitcode != 0){
-                        clientCallback(null, {error:"DETAIL_JOB_FAILED"});
-                    }else{
-                        // source de base : http://stackoverflow.com/a/28131137/3139417
-                        var infos = result.match(/(\b[a-zA-Z0-9_:\/]+)=(.*?(?=\s[a-zA-Z0-9_():\-\/\*. ]+=|$|\n))/g);
-                        var job = {};
-
-                        for(var i = 0; i < infos.length; i++) {
-                            arrayKey = infos[i].split("=");
-                            key = arrayKey[0];
-                            key = key[0].toLowerCase() + key.slice(1);
-                            key = key.replace(/([\/ :])/g, '');
-                            value = arrayKey[1];
-                            job[key] = value;
-                        }
-                        userNameId = job.userId.split("(");
-                        job.userNameId = job.userId;
-                        job.userName = userNameId[0];
-                        job.userId = userNameId[1].slice(0, -1); // Remove ')'
-                        clientCallback({job:job}, false);
-                    }
-                }, clientCallback);
-            }if(operation.verb == "cancel"){
-                /*executeCommand(shellescape(["scancel", operation.params.job.id]), function(result, exitcode, clientCallback){
-                    if(exitcode != 0){
-                        clientCallback(null, {error:"CANCEL_FAIL"});
-                    }else{
-                        clientCallback({success:true}, false);
-                    }
-                }, clientCallback);*/
-                objectsOperations.makeOperation(client, operation, clientCallback);
-            }
+            objectsOperations.makeOperation(client, operation, clientCallback);
         }
     }
 
