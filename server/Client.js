@@ -7,6 +7,9 @@ function Client(ssh, socket, params) {
 // class methods
 Client.prototype.executeCustomCommand =
 function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
+    if(stdErrCallbak == undefined)
+        stdErrCallbak = function(err){throw err};
+
     return this.ssh.exec(command, function(err, stream) {
         if (err) throw err;
         stream
@@ -19,6 +22,9 @@ function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
 
 Client.prototype.executeCommand =
 function(command, parsingCallback, paramsCallback, errorCallback) {
+    if(errorCallback == undefined)
+        errorCallback = function(err){};
+
     var result = "";
     var exitcodeFinal = 0;
     return this.executeCustomCommand(

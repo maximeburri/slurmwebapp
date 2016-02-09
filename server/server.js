@@ -15,9 +15,14 @@ var util = require('util');
 var shellescape = require('shell-escape');
 var path = require('path');
 
-var Client = require('./client.js');
+var Client = require('./Client.js');
 
+var ObjectController = require('./objects/ObjectController.js');
+var JobObject = require('./objects/JobObject.js');
 
+var objectsOperations = new ObjectController({
+    "job" : new JobObject()
+});
 /* Class */
 var ClientSSH = require('ssh2').Client;
 
@@ -309,13 +314,14 @@ io.on('connection', function (socket) {
                     }
                 }, clientCallback);
             }if(operation.verb == "cancel"){
-                executeCommand(shellescape(["scancel", operation.params.job.id]), function(result, exitcode, clientCallback){
+                /*executeCommand(shellescape(["scancel", operation.params.job.id]), function(result, exitcode, clientCallback){
                     if(exitcode != 0){
                         clientCallback(null, {error:"CANCEL_FAIL"});
                     }else{
                         clientCallback({success:true}, false);
                     }
-                }, clientCallback);
+                }, clientCallback);*/
+                objectsOperations.makeOperation(client, operation, clientCallback);
             }
         }
     }
