@@ -19,9 +19,11 @@ var Client = require('./Client.js');
 
 var ObjectController = require('./objects/ObjectController.js');
 var JobObject = require('./objects/JobObject.js');
+var FilesObject = require('./objects/FilesObject.js');
 
 var objectsOperations = new ObjectController({
-    "job" : new JobObject()
+    "job" : new JobObject(),
+    "files" : new FilesObject()
 });
 /* Class */
 var ClientSSH = require('ssh2').Client;
@@ -246,11 +248,7 @@ io.on('connection', function (socket) {
 	// On client operation
 	function operation(operation, clientCallback){
 		if(operation.object == "files"){
-			console.log(operation.params.dir)
-			dir = operation.params.dir;
-            var cmd = shellescape(["cd", dir]) +" && "+ shellescape(["pwd"])+" && "+shellescape(["ls", "-aFH"]);
-			console.log(cmd);
-			executeCommand(cmd, parseListFiles, clientCallback);
+            objectsOperations.makeOperation(client, operation, clientCallback);
 		}else if(operation.object == "file"){
             console.log(operation);
             path = operation.params.path;
@@ -314,51 +312,6 @@ io.on('connection', function (socket) {
         }
     }
 
-	// Parse liste files (ls -aF)
-	function parseListFiles(result, exitcode, clientCallback){
-        // An error has occured
-        if (exitcode != 0){
-            clientCallback(null, {code:exitcode, type:"ACCESS_DENIED"});
-            return;
-        }
-
-		filesList = result.split("\n");
-		filesList.pop(); // Remove last element
-		currentPath = filesList.shift() + "/"; // Path
-		console.log("Path:"+currentPath);
-		filesInfo = [];
-
-		// Parse each file
-		filesList.forEach( function(filename){
-			fileType = "";
-			lastChar = filename[filename.length-1];
-			deleteLastChar = true;
-
-			switch(lastChar){
-				case '*':
-				    fileType = "executable";
-				    break
-				case '/':
-				    fileType = "folder";
-				    break
-				case '@':
-				    fileType = "symboliclink";
-				    break
-				case '|':
-					fileType = "FIFO";
-				    break
-				default:
-				    fileType = "file";
-					deleteLastChar = false;
-				    break
-			}
-			if(deleteLastChar)
-				filename = filename.substring(0, filename.length-1);
-			filesInfo.push({filename:filename, type:fileType});
-		});
-
-		clientCallback({path:currentPath, files:filesInfo}, false)
-	}
 
 	// Execute a command, when it finished, call parsingCallback that parse
 	// the result who that call clientCallback
