@@ -48,5 +48,11 @@ function(command, parsingCallback, paramsCallback, errorCallback) {
     )
 };
 
+// Kill a process / opened stream
+// see http://stackoverflow.com/questions/22164570/sending-a-terminate-ctrlc-command-in-node-js-ssh2
+Client.prototype.killProcess = function ( pid ) {
+    this.ssh.exec( 'pkill -g ' + pid, function(){});
+}
+
 // export the class
 module.exports = Client;

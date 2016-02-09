@@ -9,7 +9,7 @@ function(client, operationInfo, clientCallback) {
         .makeOperation(client, operationInfo, clientCallback);
     }
     catch(err) {
-        console.error("Object not implemented or failed (ObjectController)");
+        console.error("Object not implemented or failed (ObjectController) : " + err);
         console.error(operationInfo);
         console.error(this.objects);
     }
