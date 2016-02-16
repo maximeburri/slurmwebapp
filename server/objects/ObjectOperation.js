@@ -11,8 +11,8 @@ function(client, operationInfo, clientCallback) {
     }
     catch(err) {
         console.error("Operation not implemented or failed (ObjectOperation) : " + err);
+        console.error(err.stack);
         console.error(operationInfo);
-        console.error(this.operations);
     }
 };
 

@@ -8,16 +8,20 @@ function Client(ssh, socket, params) {
 Client.prototype.executeCustomCommand =
 function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
     if(stdErrCallbak == undefined)
-        stdErrCallbak = function(err){throw err};
+        stdErrCallbak = function(err){};
 
-    return this.ssh.exec(command, function(err, stream) {
-        if (err) throw err;
-        stream
-        .on('data', dataCallback)
-        .on('exit', exitCallback)
-        .on('end', endCallback)
-        .stderr.on('data', stdErrCallbak);
-    });
+    try{
+        return this.ssh.exec(command, function(err, stream) {
+            if (err) throw err;
+            stream
+            .on('data', dataCallback)
+            .on('exit', exitCallback)
+            .on('end', endCallback)
+            .stderr.on('data', stdErrCallbak);
+        });
+    }catch(err){
+        console.error(err.stack);
+    }
 };
 
 Client.prototype.executeCommand =

@@ -100,7 +100,7 @@ function Jobs($q, $rootScope, User) {
 
         if(!this.subscribed){
             this.deferred = $q.defer();
-            User.operation({verb:"subscribe", object:"jobs"}).then(
+            User.operation({verb:"list", object:"jobs", params:{type:"subscribe"}}).then(
                 // Success
                 function(successMessage){
                     that.deferred.resolve(successMessage);
@@ -111,7 +111,7 @@ function Jobs($q, $rootScope, User) {
                     that.subscribed = false;
                 }
             );
-            User.socket.on('publish jobs', function(data) {
+            User.socket.on('list jobs update', function(data) {
                 that.deferred.notify(data);
             });
             this.subscribed = true;
@@ -123,8 +123,8 @@ function Jobs($q, $rootScope, User) {
     this.unsubscribe = function() {
         if(this.subscribed){
             // Unsubscribe
-            User.socket.emit("unsubscribe jobs");
-            User.socket.removeAllListeners("publish jobs");
+            User.operation({verb:"list", object:"jobs", params:{type:"unsubscribe"}});
+            User.socket.removeAllListeners("list jobs update");
             that.deferred.reject("end");
             this.subscribed = false;
         }

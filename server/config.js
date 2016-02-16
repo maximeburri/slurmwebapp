@@ -20,6 +20,6 @@ config.general = {}
 config.general.max_filesize_transfer = 100000;
 
 config.jobs = {}
-config.jobs.interval_update = 10000
+config.jobs.interval_update = 5000
 
 module.exports = config;
