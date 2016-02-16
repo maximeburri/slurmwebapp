@@ -21,6 +21,13 @@ function(name, operation) {
     this.operations[name] = operation;
 };
 
+ObjectOperation.prototype.quitClient =
+function(client) {
+    for (var operation in this.operations) {
+        this.operations[operation].quitClient(client);
+    }
+};
+
 
 // export the class
 module.exports = ObjectOperation;

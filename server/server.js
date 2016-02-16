@@ -50,14 +50,6 @@ if(config.https_server.client_files.serve_files){
                 + ")");
 }
 
-var subscribersJobs = [];
-var jobsInfo = {
-    lastRequest : 0,
-    jobs : {
-        text : "",
-        objects : []
-    }
-}
 
 
 /** Socket IO **/
@@ -102,10 +94,11 @@ io.on('connection', function (socket) {
 			// End ssh connection
 			ssh.end();
 
+            objectsOperations.quitClient(client);
+
 			// Reconnect login function
 			socket.on('login', login);
 			socket.removeListener('operation', operation);
-            //unsubscribeJobs();
 
 			// Send log outed
 			socket.emit("logout", {type:"NORMAL_LOGOUT"});
@@ -137,7 +130,8 @@ io.on('connection', function (socket) {
 			// Reconnect login function
 			socket.on('login', login);
 			socket.removeListener('operation', operation)
-            //unsubscribeJobs();
+
+            objectsOperations.quitClient(client);
 
 			// End ssh connection
 			ssh.end();
@@ -155,7 +149,7 @@ io.on('connection', function (socket) {
 		//
 		console.log("Client::login::error "+err)
 
-        // Unsubscribe jobs
+        objectsOperations.quitClient(client);
 	}
 
 	// On client operation

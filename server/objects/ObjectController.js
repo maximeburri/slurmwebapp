@@ -15,5 +15,12 @@ function(client, operationInfo, clientCallback) {
     }
 };
 
+ObjectController.prototype.quitClient =
+function(client) {
+    for (var object in this.objects) {
+        this.objects[object].quitClient(client);
+    }
+};
+
 // export the class
 module.exports = ObjectController;

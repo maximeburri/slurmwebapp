@@ -9,5 +9,11 @@ function(client, operationInfo, clientCallback) {
     console.error(operationInfo);
 };
 
+// To override
+Operation.prototype.quitClient =
+function(client) {
+
+};
+
 // export the class
 module.exports = Operation;

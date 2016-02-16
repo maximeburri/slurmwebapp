@@ -33,7 +33,6 @@ function(client, operationInfo, clientCallback) {
     );
 };
 
-
 ContentFileOperation.prototype.executeFilesizeRequest =
 function(client, filename, callbackError, callbackResult){
     //(command, dataCallback, exitCallback, endCallback, stdErrCallbak)

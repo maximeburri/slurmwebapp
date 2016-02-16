@@ -18,24 +18,39 @@ function(client, operationInfo, clientCallback) {
 
     // Inscription
     if(type == "subscribe"){
-        if(!this.isClientSubscribed(client)){
-            this.subscribers.push(client);
-            this.onSubscribe(client);
-        }
+        this.subscribe(client);
     }
     // Désinscription
     else if(type == "unsubscribe"){
-        var i = this.getIndexClientInSubscribers(client);
-        // Client existant
-        if(i >= 0){
-            // Delete the subscriber
-            this.subscribers.splice(i--, 1);
-            this.onUnsubscribe(client);
-        }
+        this.unsubscribe(client);
     }
     // Simple demande
     else{
         clientCallback(this.dataToPublish);
+    }
+};
+
+OperationPublishSubscribe.prototype.quitClient =
+function(client) {
+    this.unsubscribe(client);
+};
+
+OperationPublishSubscribe.prototype.subscribe =
+function(client) {
+    if(!this.isClientSubscribed(client)){
+        this.subscribers.push(client);
+        this.onSubscribe(client);
+    }
+};
+
+OperationPublishSubscribe.prototype.unsubscribe =
+function(client) {
+    var i = this.getIndexClientInSubscribers(client);
+    // Client existant
+    if(i >= 0){
+        // Delete the subscriber
+        this.subscribers.splice(i--, 1);
+        this.onUnsubscribe(client);
     }
 };
 
