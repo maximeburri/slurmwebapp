@@ -16,7 +16,10 @@ function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
             stream
             .on('data', dataCallback)
             .on('exit', exitCallback)
-            .on('end', endCallback)
+            .on('end', function(){
+                stream.close();
+                endCallback();
+            })
             .stderr.on('data', stdErrCallbak);
         });
     }catch(err){

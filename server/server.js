@@ -91,10 +91,11 @@ io.on('connection', function (socket) {
 		try{
 			console.log("Client::logout" + data)
 
+            objectsOperations.quitClient(client);
+
 			// End ssh connection
 			ssh.end();
 
-            objectsOperations.quitClient(client);
 
 			// Reconnect login function
 			socket.on('login', login);
@@ -150,6 +151,8 @@ io.on('connection', function (socket) {
 		console.log("Client::login::error "+err)
 
         objectsOperations.quitClient(client);
+
+        ssh.end();
 	}
 
 	// On client operation

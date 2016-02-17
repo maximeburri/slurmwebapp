@@ -5,6 +5,7 @@ var inherits = require('util').inherits;
 var config = require('../../config');
 
 function ContentFileOperation() {
+    this.files = {};
     Operation.call(this);
 }
 inherits(ContentFileOperation, Operation);
@@ -33,6 +34,19 @@ function(client, operationInfo, clientCallback) {
     );
 };
 
+ContentFileOperation.prototype.showReaders =
+function(){
+    console.log("================ Files Content PID ================== ");
+    for(token in this.files){
+        console.log(' -- ' + token + ' : ' + this.files[token].length);
+        for(i=0;i<this.files[token].length;i++){
+            console.log('  -> ' + this.files[token][i]);
+        }
+    }
+    console.log("================ ================= ================== ");
+}
+
+
 ContentFileOperation.prototype.executeFilesizeRequest =
 function(client, filename, callbackError, callbackResult){
     //(command, dataCallback, exitCallback, endCallback, stdErrCallbak)
@@ -55,15 +69,42 @@ function(client, filename, callbackError, callbackResult){
     );
 }
 
+ContentFileOperation.prototype.quitClient =
+function(client) {
+    if(this.files[client.socket.id] != undefined)
+        for(i = 0;i<this.files[client.socket.id].length;i++){
+            this.endReadFile(client, this.files[client.socket.id][i]);
+        }
+    this.showReaders();
+};
+
+ContentFileOperation.prototype.endReadFile =
+function(client, pid) {
+    this.showReaders();
+    if(pid != null){
+        console.log("Kill file tail pid : " + pid);
+        client.killProcess(pid);
+        this.files[client.socket.id].splice(
+            this.files[client.socket.id].indexOf(pid),
+            1);
+
+        if(this.files[client.socket.id].length == 0){
+            delete this.files[client.socket.id];
+        }
+    }
+    this.showReaders();
+};
+
 // Execute tail read file
 ContentFileOperation.prototype.executeReadFile =
 function(client, filename, notifyEventName, clientCallback){
     var pid = null;
     var fileSize = null;
+    var self = this;
 
     function endExecuteReadFile(){
         console.log("disconnect:'"+notifyEventName+"'");
-        client.killProcess(pid);
+        self.endReadFile(client, pid);
     }
 
     var command = shellescape(['test','-f',filename]) +
@@ -78,8 +119,11 @@ function(client, filename, notifyEventName, clientCallback){
             console.log("DATA:"+data);
             // Get the pid and regiter killprocess event
             if(pid == null && data.substr( 0, 5 ) === 'PID: ' ){
-                pid = data.substr(5);
+                pid = data.substr(5).slice(0, -1);
                 client.socket.on('end '+notifyEventName, endExecuteReadFile);
+                if(self.files[client.socket.id] == undefined)
+                    self.files[client.socket.id] = [];
+                self.files[client.socket.id].push(pid);
             }
             // Get the data
             else{
@@ -99,6 +143,7 @@ function(client, filename, notifyEventName, clientCallback){
         function(data) {
             console.log("STDERR:"+data);
             clientCallback(null, {type:data});
+            endExecuteReadFile();
         }
     );
 
