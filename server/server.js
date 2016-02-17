@@ -16,21 +16,20 @@ var shellescape = require('shell-escape');
 var path = require('path');
 
 var Client = require('./Client.js');
+var ClientSSH = require('ssh2').Client;
 
+// Construction of objectsOperations (operations rooter)
 var ObjectController = require('./objects/ObjectController.js');
 var JobObject = require('./objects/JobObject.js');
 var JobsObject = require('./objects/JobsObject.js');
 var FilesObject = require('./objects/FilesObject.js');
 var FileObject = require('./objects/FileObject.js');
-
 var objectsOperations = new ObjectController({
     "job" : new JobObject(),
     "jobs" : new JobsObject(),
     "files" : new FilesObject(),
     "file" : new FileObject()
 });
-/* Class */
-var ClientSSH = require('ssh2').Client;
 
 var optionsServer = {
   key: fs.readFileSync(config.https_server.certs_key_file),
@@ -51,7 +50,6 @@ if(config.https_server.client_files.serve_files){
 }
 
 
-
 /** Socket IO **/
 var io = socketio(server);
 io.on('connection', function (socket) {
@@ -62,7 +60,7 @@ io.on('connection', function (socket) {
 
 	console.log("Client::connection ")
 
-	// Login
+	// When client want to login
     function login(data){
 		// Remove login
 		socket.removeListener('login', login);
@@ -86,7 +84,7 @@ io.on('connection', function (socket) {
         }
     }
 
-	// Logout
+	// When client want to logout
 	function logout(data){
 		try{
 			console.log("Client::logout" + data)
@@ -108,7 +106,7 @@ io.on('connection', function (socket) {
 		}
 	}
 
-	// Connected on ssh
+	// When the SSH is connected
 	function sshConnected(){
 		try{
 
@@ -123,7 +121,7 @@ io.on('connection', function (socket) {
 		}catch(e){}
 	}
 
-	// Socket disconnect
+	// When the socket disconnects
 	function disconnect(){
 		try{
 			console.log("Client::disconnected")
@@ -141,7 +139,7 @@ io.on('connection', function (socket) {
 		}
 	}
 
-	// On ssh error
+	// When SSh2 error
 	function sshError(err){
 		// Reconnect login function
 		socket.on('login', login);
@@ -155,13 +153,12 @@ io.on('connection', function (socket) {
         ssh.end();
 	}
 
-	// On client operation
+	// When receive a operation message
 	function operation(operation, clientCallback){
         objectsOperations.makeOperation(client, operation, clientCallback);
     }
 
-
-
+    // Connect events
 	ssh.on('ready', sshConnected);
 	ssh.on('error', sshError);
     socket.on('login', login);
