@@ -69,7 +69,7 @@ function(client, filename, callbackError, callbackResult){
     );
 }
 
-ContentFileOperation.prototype.quitClient =
+ContentFileOperation.prototype.onQuitClient =
 function(client) {
     if(this.files[client.socket.id] != undefined)
         for(i = 0;i<this.files[client.socket.id].length;i++){

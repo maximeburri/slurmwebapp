@@ -10,7 +10,7 @@ function(client, operationInfo, clientCallback) {
 };
 
 // To override
-Operation.prototype.quitClient =
+Operation.prototype.onQuitClient =
 function(client) {
 
 };

@@ -30,7 +30,7 @@ function(client, operationInfo, clientCallback) {
     }
 };
 
-OperationPublishSubscribe.prototype.quitClient =
+OperationPublishSubscribe.prototype.onQuitClient =
 function(client) {
     this.unsubscribe(client);
 };

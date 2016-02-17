@@ -21,10 +21,10 @@ function(name, operation) {
     this.operations[name] = operation;
 };
 
-ObjectOperation.prototype.quitClient =
+ObjectOperation.prototype.onQuitClient =
 function(client) {
     for (var operation in this.operations) {
-        this.operations[operation].quitClient(client);
+        this.operations[operation].onQuitClient(client);
     }
 };
 

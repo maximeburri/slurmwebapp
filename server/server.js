@@ -89,7 +89,7 @@ io.on('connection', function (socket) {
 		try{
 			console.log("Client::logout" + data)
 
-            objectsOperations.quitClient(client);
+            objectsOperations.onQuitClient(client);
 
 			// End ssh connection
 			ssh.end();
@@ -130,7 +130,7 @@ io.on('connection', function (socket) {
 			socket.on('login', login);
 			socket.removeListener('operation', operation)
 
-            objectsOperations.quitClient(client);
+            objectsOperations.onQuitClient(client);
 
 			// End ssh connection
 			ssh.end();
@@ -148,7 +148,7 @@ io.on('connection', function (socket) {
 		//
 		console.log("Client::login::error "+err)
 
-        objectsOperations.quitClient(client);
+        objectsOperations.onQuitClient(client);
 
         ssh.end();
 	}

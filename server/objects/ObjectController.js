@@ -15,10 +15,10 @@ function(client, operationInfo, clientCallback) {
     }
 };
 
-ObjectController.prototype.quitClient =
+ObjectController.prototype.onQuitClient =
 function(client) {
     for (var object in this.objects) {
-        this.objects[object].quitClient(client);
+        this.objects[object].onQuitClient(client);
     }
 };
 
