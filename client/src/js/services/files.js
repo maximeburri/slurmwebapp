@@ -5,9 +5,13 @@ function Files($q, $rootScope, User) {
         return User.get("files", {dir:dir});
     }
 
+    // Get file content of path
+    // If follow is true, then the server uses tail and return when new line
+    // are added
+    // else it uses simple cat
     this.getFileContent = function(path, follow){
         console.log("Follow:");
         console.log(follow);
-        return User.get("file", {path:path}, follow);
+        return User.get("file", {path:path,follow:follow}, follow);
     }
 }

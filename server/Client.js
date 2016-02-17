@@ -39,6 +39,7 @@ function(command, parsingCallback, paramsCallback, errorCallback) {
         // Data
         function(data){
             result += data;
+            console.log(data.toString());
         },
         // Exit
         function(exitcode){

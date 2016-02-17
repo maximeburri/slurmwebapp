@@ -27,9 +27,14 @@ function(client, operationInfo, clientCallback) {
         function(filesize, path){
             if(filesize > config.general.max_filesize_transfer)
                 clientCallback(null, {type:"too_big"});
-            else
-                self.executeReadFile(client, path, operationInfo.notifyEventName,
-                clientCallback);
+            else{
+                if(operationInfo.params.follow){
+                    self.executeReadFileTail(client, path, operationInfo.notifyEventName,
+                        clientCallback);
+                }else{
+                    self.executeReadFileCat(client, path, clientCallback);
+                }
+            }
         }
     );
 };
@@ -96,10 +101,9 @@ function(client, pid) {
 };
 
 // Execute tail read file
-ContentFileOperation.prototype.executeReadFile =
+ContentFileOperation.prototype.executeReadFileTail =
 function(client, filename, notifyEventName, clientCallback){
     var pid = null;
-    var fileSize = null;
     var self = this;
 
     function endExecuteReadFile(){
@@ -146,7 +150,33 @@ function(client, filename, notifyEventName, clientCallback){
             endExecuteReadFile();
         }
     );
+}
 
+ContentFileOperation.prototype.executeReadFileCat =
+function(client, filename, clientCallback){
+    var pid = null;
+    var self = this;
+
+
+    var command = shellescape(['test','-f',filename]) + ' && ' +
+        shellescape(['cat',filename]);
+    console.log(command);
+    // Execute cat
+    client.executeCommand(command,
+        function(result, exitcode, clientCallback){
+            result = result.toString();
+            if(exitcode != 0){
+                clientCallback(null, {exitcode:exitcode});
+            }else{
+                clientCallback({data:result});
+            }
+        }, clientCallback,
+        // STDERR data
+        function(result, error, paramsCallback){
+            result = result.toString();
+            clientCallback(null, {error:error.toString()});
+        }
+    );
 }
 
 // export the class
