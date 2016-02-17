@@ -9,6 +9,13 @@
                         <label class="btn btn-xs btn-primary" ng-model="search.jobsOwner" btn-radio="'all'" >Tous</label>
                     </div>
                     <br/>
+                    <i class="fa fa-filter" style="margin-right: 13px;"></i>
+                    <div class="btn-group">
+                        <label class="btn btn-xs btn-primary" ng-model="search.jobsType" btn-radio="'all'" >Tous</label>
+                        <label class="btn btn-xs btn-primary" ng-model="search.jobsType" btn-radio="'pending'" >En attente</label>
+                        <label class="btn btn-xs btn-primary" ng-model="search.jobsType" btn-radio="'running'" >En cours</label>
+                    </div>
+                    <br/>
                     <i class="fa fa-search"></i>
                     <input type="text" ng-model="search.query" placeholder="Recherche" class="form-control input-sm" style="display: inline;max-width: 100px;padding:5px;" />
                 </rd-widget-header>
@@ -26,7 +33,7 @@
                                     <th>Nb<br/>CPU</th>
                                     <th>Nodes</th><!-- -->
                                 </tr>
-                                <tr ng-repeat="job in filteredJobs = (jobs | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query)"
+                                <tr ng-repeat="job in filteredJobs = (jobs | filter: (search.jobsType == 'running' || '') && {state:'RUNNING'} | filter: (search.jobsType == 'pending' || '') && {state:'PENDING'} | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query)"
                                 ng-click="goToJob(job)" style="cursor: pointer;">
                                     <td>
                                         <span><swa-job-state state="{{job.state}}" reason="{{job.reasonWaiting}}"></swa-job-state> {{job.id}}</span>

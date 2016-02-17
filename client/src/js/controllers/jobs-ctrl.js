@@ -10,6 +10,7 @@ function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location) {
         $rootScope.jobs = [];
         $rootScope.search = {}
         $rootScope.search.jobsOwner ="all";
+        $rootScope.search.jobsType = "all";
         $rootScope.search.query = "";
     }
 
