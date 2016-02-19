@@ -6,6 +6,7 @@ var config = require('../../config');
 
 function ListJobsOperation() {
     OperationPublishSubscribe.call(this, "list jobs update");
+    this.timeoutFunction = null;
     this.dataToPublish = {
         date:0,
         jobs:[]
@@ -23,16 +24,17 @@ inherits(ListJobsOperation, OperationPublishSubscribe);
 // To override
 ListJobsOperation.prototype.onUnsubscribe =
 function(client){
-    if(this.subscribers.length == 0){
-        clearTimeout(this.updateJobsLoop);
+    if(this.subscribers.length == 0 && this.timeoutFunction != null){
+        clearTimeout(this.timeoutFunction);
+        this.timeoutFunction = null;
     }
 }
 
 // To override
 ListJobsOperation.prototype.onSubscribe =
 function(client){
-    if(this.subscribers.length == 1){
-        this.updateJobsLoop(this);
+    if(this.subscribers.length == 1 && this.timeoutFunction == null){
+        this.timeoutFunction = setTimeout(this.updateJobsLoop, 0, this);
     }else{
         this.publishDataClient(client);
     }
@@ -77,8 +79,10 @@ function(self){
                         self.publishDataBroadcast();
                     }
                 }
-                if(self.subscribers.length >= 0)
-                    setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
+                if(self.getCountSubscribers() >= 0)
+                    self.timeoutFunction = setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
+                else
+                    self.timeoutFunction = null;
             })
             .stderr.on('data', function(data) {
                 console.log('STDERR: ' + data);
@@ -88,7 +92,9 @@ function(self){
         console.error("updateJobsLoop : client ssh error");
         // Une erreur s'est produite, directement remettre à jour les jobs
         if(self.getCountSubscribers() >= 0)
-            setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
+            self.timeoutFunction = setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
+        else
+            self.timeoutFunction = null;
     }
 }
 
