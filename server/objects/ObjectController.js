@@ -16,9 +16,23 @@ function(client, operationInfo, clientCallback) {
 };
 
 ObjectController.prototype.onQuitClient =
-function(client) {
+function(client, callbackFinish) {
+    var nbFinish = 0;
+    var nbTotal = Object.keys(this.objects).length;
+
     for (var object in this.objects) {
-        this.objects[object].onQuitClient(client);
+        this.objects[object].onQuitClient(client,
+
+        // Callback when one finish
+        function(){
+            nbFinish++;
+
+            // All finish ? Call callback
+            if(nbFinish >= nbTotal){
+                if(callbackFinish != undefined)
+                    callbackFinish.call(this);
+            }
+        });
     }
 };
 

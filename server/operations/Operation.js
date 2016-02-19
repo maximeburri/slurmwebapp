@@ -11,8 +11,10 @@ function(client, operationInfo, clientCallback) {
 
 // To override
 Operation.prototype.onQuitClient =
-function(client) {
-
+function(client, callbackFinish) {
+    // Need to call that at the end
+    if(callbackFinish != undefined)
+        callbackFinish.call(this);
 };
 
 // export the class

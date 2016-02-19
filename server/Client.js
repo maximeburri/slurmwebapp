@@ -13,14 +13,15 @@ function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
     try{
         return this.ssh.exec(command, function(err, stream) {
             if (err) throw err;
-            stream
-            .on('data', dataCallback)
-            .on('exit', exitCallback)
-            .on('end', function(){
-                stream.close();
-                endCallback();
-            })
-            .stderr.on('data', stdErrCallbak);
+            else
+                stream
+                .on('data', dataCallback)
+                .on('exit', exitCallback)
+                .on('end', function(){
+                    stream.close();
+                    endCallback();
+                })
+                .stderr.on('data', stdErrCallbak);
         });
     }catch(err){
         console.error(err.stack);
@@ -58,8 +59,21 @@ function(command, parsingCallback, paramsCallback, errorCallback) {
 
 // Kill a process / opened stream
 // see http://stackoverflow.com/questions/22164570/sending-a-terminate-ctrlc-command-in-node-js-ssh2
-Client.prototype.killProcess = function ( pid ) {
-    this.ssh.exec( 'pkill -g ' + pid, function(){});
+Client.prototype.killProcess = function ( pid, callbackFinish) {
+    console.log('pkill '+pid);
+    this.executeCommand( 'pkill -g ' + pid,
+        // parsing callback
+        function(result, exitCode, callback){
+            if(callback != undefined)
+                callback.call(this);
+        },
+        callbackFinish,
+        // Error callback
+        function(result, data, callback){
+            if(callback != undefined)
+                callback.call(this);
+        }
+    );
 }
 
 // export the class

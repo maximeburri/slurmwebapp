@@ -31,8 +31,10 @@ function(client, operationInfo, clientCallback) {
 };
 
 OperationPublishSubscribe.prototype.onQuitClient =
-function(client) {
+function(client, callbackFinish) {
     this.unsubscribe(client);
+    if(callbackFinish != undefined)
+        callbackFinish.call(this);
 };
 
 OperationPublishSubscribe.prototype.subscribe =

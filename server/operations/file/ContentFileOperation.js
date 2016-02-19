@@ -5,8 +5,8 @@ var inherits = require('util').inherits;
 var config = require('../../config');
 
 function ContentFileOperation() {
-    this.files = {};
     Operation.call(this);
+    this.token = "c9ehgK8n636zK36w";
 }
 inherits(ContentFileOperation, Operation);
 
@@ -39,18 +39,23 @@ function(client, operationInfo, clientCallback) {
     );
 };
 
-ContentFileOperation.prototype.showReaders =
-function(){
-    console.log("================ Files Content PID ================== ");
-    for(token in this.files){
-        console.log(' -- ' + token + ' : ' + this.files[token].length);
-        for(i=0;i<this.files[token].length;i++){
-            console.log('  -> ' + this.files[token][i]);
+ContentFileOperation.prototype.endAllFilesReadClient
+= function(client, callbackFinish){
+    var command = "ps ax -u "+client.params.username+" | grep tail | grep -v grep | awk '{print $1}' | xargs kill";
+    client.executeCommand(command,
+        function(result, exitcode, callbackFinish){
+            result = result.toString();
+            console.log("Result kill : " + result);
+            if(callbackFinish != undefined)
+                callbackFinish.call(this);
+        }, callbackFinish,
+        // STDERR data
+        function(result, error, callbackFinish){
+            // Nothing
         }
-    }
-    console.log("================ ================= ================== ");
-}
+    );
 
+}
 
 ContentFileOperation.prototype.executeFilesizeRequest =
 function(client, filename, callbackError, callbackResult){
@@ -75,29 +80,16 @@ function(client, filename, callbackError, callbackResult){
 }
 
 ContentFileOperation.prototype.onQuitClient =
-function(client) {
-    if(this.files[client.socket.id] != undefined)
-        for(i = 0;i<this.files[client.socket.id].length;i++){
-            this.endReadFile(client, this.files[client.socket.id][i]);
-        }
-    this.showReaders();
+function(client, callbackFinish) {
+    this.endAllFilesReadClient(client, callbackFinish);
 };
 
 ContentFileOperation.prototype.endReadFile =
-function(client, pid) {
-    this.showReaders();
+function(client, pid, callbackFinish) {
     if(pid != null){
         console.log("Kill file tail pid : " + pid);
-        client.killProcess(pid);
-        this.files[client.socket.id].splice(
-            this.files[client.socket.id].indexOf(pid),
-            1);
-
-        if(this.files[client.socket.id].length == 0){
-            delete this.files[client.socket.id];
-        }
+        client.killProcess(pid, callbackFinish);
     }
-    this.showReaders();
 };
 
 // Execute tail read file
@@ -113,7 +105,7 @@ function(client, filename, notifyEventName, clientCallback){
 
     var command = shellescape(['test','-f',filename]) +
         '&& echo "PID: $$"&&'+
-        shellescape(['tail','-n','+0','-f','--follow=name','--retry',filename]);
+        "tail TOKEN_KILL="+this.token+" "+shellescape(['-n','+0','-f','-q','--follow=name','--retry',filename]);
 
     // Execute tail after get PID
     client.executeCustomCommand(command,
@@ -145,9 +137,15 @@ function(client, filename, notifyEventName, clientCallback){
         },
         // std err
         function(data) {
+            // No std err caused by token kill : stop
             console.log("STDERR:"+data);
-            clientCallback(null, {type:data});
-            endExecuteReadFile();
+            /*if(data.toString().indexOf(token) > -1){
+                console.log("STDERR f:"+data);
+                //clientCallback(null, {type:data});
+                //endExecuteReadFile();
+            }else{
+                console.log("TOKEN FINDED");
+            }*/
         }
     );
 }

@@ -22,9 +22,23 @@ function(name, operation) {
 };
 
 ObjectOperation.prototype.onQuitClient =
-function(client) {
+function(client, callbackFinish) {
+    var nbFinish = 0;
+    var nbTotal = Object.keys(this.operations).length;
+
     for (var operation in this.operations) {
-        this.operations[operation].onQuitClient(client);
+        this.operations[operation].onQuitClient(client,
+
+        // Callback when one finish
+        function(){
+            nbFinish++;
+
+            // All finish ? Call callback
+            if(nbFinish >= nbTotal){
+                if(callbackFinish != undefined)
+                    callbackFinish.call(this);
+            }
+        });
     }
 };
 
