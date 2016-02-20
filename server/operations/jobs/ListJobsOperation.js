@@ -126,8 +126,8 @@ function (text){
             'nbCPU' : job[6],
             'nodes' : nodesList,
             'reasonWaiting' : reasonWaiting,
-            'timeJobEnd' : job[7],
-            'timeLimit' : job[8]
+            'timeJobEnd' : job[8],
+            'timeLimit' : job[9]
         });
     }
 
