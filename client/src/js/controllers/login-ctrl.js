@@ -17,7 +17,7 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
             username : "",
             password : "",
             cluster  : "",
-            bridge   : ""
+            bridge   : "",
         };
     }
 
@@ -35,7 +35,7 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
                 $rootScope.user.password = "";
                 $rootScope.alerts = [{
                     type: 'success',
-                    msg: "Vous avez été connectez avec succès !",
+                    msg: "Vous avez été connecté avec succès !",
                     timeout: 10000
                 }];
                 $rootScope.updateMessageOfTheDay();
