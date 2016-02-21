@@ -29,9 +29,11 @@
                                     <th>Name </th>
                                     <th>User</th>
                                     <th>Partition</th>
-                                    <th>Remaining<br/>time</th>
+                                    <th ng-show="search.jobsType == 'pending'">Estimated<br/>start time</th>
+                                    <th ng-show="search.jobsType == 'running'">Remaining<br/>time</th>
+                                    <th ng-show="search.jobsType == 'running'">Elapsed<br/>time</th>
                                     <th>Nb<br/>CPU</th>
-                                    <th>Nodes</th><!-- -->
+                                    <th ng-show="search.jobsType == 'running'">Nodes</th><!-- -->
                                 </tr>
                                 <tr ng-repeat="job in filteredJobs = (jobs | filter: (search.jobsType == 'running' || '') && {state:'RUNNING'} | filter: (search.jobsType == 'pending' || '') && {state:'PENDING'} | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query)"
                                 ng-click="goToJob(job)" style="cursor: pointer;">
@@ -47,14 +49,47 @@
                                     <td>
                                         <span>{{job.partition}}</span>
                                     </td>
-                                    <td>
-                                        <span>{{job.time}}</span>
+                                    <td ng-show="search.jobsType == 'pending'" class="td-timer">
+                                        <i class="fa fa-clock-o" style="color:gray"> </i>
+                                        <span ng-show="job.timeLeftExecute">
+                                            <timer end-time="job.timeLeftExecute.toString()*1000" interval="1000">
+                                                <span ng-show="days">{{days}}j</span>
+                                                <span ng-show="hours">{{hhours}}h</span>
+                                                <span ng-show="minutes">{{mminutes}}m</span>
+                                                <span ng-show="seconds">{{sseconds}}s</span>
+                                            </timer>
+                                        </span>
+                                        <span ng-hide="job.timeLeftExecute">?</span>
                                     </td>
-                                    <td>
+                                    <td ng-show="search.jobsType == 'running'" class="td-timer">
+                                        <i class="fa fa-clock-o" style="color:gray"> </i>
+                                        <span ng-show="job.timeJobEnd">
+                                            <timer end-time="job.timeJobEnd.toString()*1000" interval="1000">
+                                                <span ng-show="days">{{days}}j</span>
+                                                <span ng-show="hours">{{hhours}}h</span>
+                                                <span ng-show="minutes">{{mminutes}}m</span>
+                                                <span ng-show="seconds">{{sseconds}}s</span>
+                                            </timer>
+                                        </span>
+                                        <span ng-hide="job.timeJobEnd">?</span>
+                                    </td>
+                                    <td ng-show="search.jobsType == 'running'" class="td-timer">
+                                        <i class="fa fa-clock-o" style="color:gray"> </i>
+                                        <span ng-show="job.timeStarted">
+                                            <timer start-time="job.timeStarted.toString()*1000" interval="1000">
+                                                <span ng-show="days">{{days}}j</span>
+                                                <span ng-show="hours">{{hhours}}h</span>
+                                                <span ng-show="minutes">{{mminutes}}m</span>
+                                                <span ng-show="seconds">{{sseconds}}s</span>
+                                            </timer>
+                                        </span>
+                                        <span ng-hide="job.timeStarted">?</span>
+                                    </td>
+                                    <td >
                                         <span>{{job.nbCPU}}</span>
                                     </td>
-                                    <td>
-                                        <span><button ng-show="job.nodes != null" class="btn btn-xs btn-info" style="width:80px;">{{job.nodes}}</button></span>
+                                    <td ng-show="search.jobsType == 'running'">
+                                        <span><!--<button ng-show="job.nodes != null" class="btn btn-xs btn-info" style="width:80px;">-->{{job.nodes}}<!--</button>--></span>
                                     </td>
                                 </tr>
                             </tbody>

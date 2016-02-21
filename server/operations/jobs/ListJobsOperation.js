@@ -34,6 +34,13 @@ function(client){
 ListJobsOperation.prototype.onSubscribe =
 function(client){
     if(this.subscribers.length == 1 && this.timeoutFunction == null){
+        this.jobsInfo = {
+            lastRequest : 0,
+            jobs : {
+                text : "",
+                objects : []
+            }
+        };
         this.timeoutFunction = setTimeout(this.updateJobsLoop, 0, this);
     }else{
         this.publishDataClient(client);
@@ -57,7 +64,7 @@ function(self){
     self.showSubscribers();
     console.log("Choosen : " + client.socket.id);
     try {
-        client.ssh.exec("squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l\"", function(err, stream) {
+        client.ssh.exec("squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l %S\"", function(err, stream) {
             if (err) throw err;
             stream.on('data', function(data) {
                 result += data;
@@ -98,7 +105,7 @@ function(self){
     }
 }
 
-// Parse jobs formated %i %P %j %u %T %S %C %R %e %l
+// Parse jobs formated %i %P %j %u %T %S %C %R %e %l %S
 ListJobsOperation.prototype.parseJobs =
 function (text){
     var result = [];
@@ -122,12 +129,13 @@ function (text){
             'name' : job[2],
             'username' : job[3],
             'state' : job[4],
-            'timeStarted' : job[5],
+            'timeStarted' : (new Date(job[5])).getTime()/1000,
             'nbCPU' : job[6],
             'nodes' : nodesList,
             'reasonWaiting' : reasonWaiting,
-            'timeJobEnd' : job[8],
-            'timeLimit' : job[9]
+            'timeJobEnd' : (new Date(job[8])).getTime()/1000,
+            'timeLimit' : job[9],
+            'timeLeftExecute' : (new Date(job[10])).getTime()/1000
         });
     }
 
