@@ -51,7 +51,7 @@
                                     </td>
                                     <td ng-show="search.jobsType == 'pending'" class="td-timer">
                                         <i class="fa fa-clock-o" style="color:gray"> </i>
-                                        <span ng-show="job.timeLeftExecute">
+                                        <span ng-show="job.timeLeftExecute">{{job.timeLeftExecute}}
                                             <timer end-time="job.timeLeftExecute.toString()*1000" interval="1000">
                                                 <span ng-show="days">{{days}}j</span>
                                                 <span ng-show="hours">{{hhours}}h</span>

@@ -117,9 +117,6 @@ function(client, filename, notifyEventName, clientCallback){
             if(pid == null && data.substr( 0, 5 ) === 'PID: ' ){
                 pid = data.substr(5).slice(0, -1);
                 client.socket.on('end '+notifyEventName, endExecuteReadFile);
-                if(self.files[client.socket.id] == undefined)
-                    self.files[client.socket.id] = [];
-                self.files[client.socket.id].push(pid);
             }
             // Get the data
             else{

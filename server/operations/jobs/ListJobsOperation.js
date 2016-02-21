@@ -60,11 +60,14 @@ function(self){
     var result = "";
     var exitcode = 0;
 
+    // Squeue with SLURM_TIME_FORMAT == timestamp
+    var command = "env SLURM_TIME_FORMAT=\"%s\" squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l %S\"";
+
     console.log("Try exec squeue");
     self.showSubscribers();
     console.log("Choosen : " + client.socket.id);
     try {
-        client.ssh.exec("squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l %S\"", function(err, stream) {
+        client.ssh.exec(command, function(err, stream) {
             if (err) console.error(err.stack);
             else
                 stream.on('data', function(data) {
@@ -130,13 +133,13 @@ function (text){
             'name' : job[2],
             'username' : job[3],
             'state' : job[4],
-            'timeStarted' : (new Date(job[5])).getTime()/1000,
+            'timeStarted' : job[5],
             'nbCPU' : job[6],
             'nodes' : nodesList,
             'reasonWaiting' : reasonWaiting,
-            'timeJobEnd' : (new Date(job[8])).getTime()/1000,
+            'timeJobEnd' : job[8],
             'timeLimit' : job[9],
-            'timeLeftExecute' : (new Date(job[10])).getTime()/1000
+            'timeLeftExecute' : job[10]
         });
     }
 
