@@ -65,35 +65,36 @@ function(self){
     console.log("Choosen : " + client.socket.id);
     try {
         client.ssh.exec("squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l %S\"", function(err, stream) {
-            if (err) throw err;
-            stream.on('data', function(data) {
-                result += data;
-            }).on('exit', function(e) {
-                console.log('EXIT: ' + e);
-                exitcode = e;
-            }).on('end', function(){
-                console.log('CLOSE');
-                if(exitcode == 0){
-                    if(self.jobsInfo.jobs.text != result){
-                        self.jobsInfo.jobs.text = result;
-                        self.jobsInfo.lastRequest = Date.now();
-                        self.jobsInfo.jobs.objects = self.parseJobs(result);
-                        self.dataToPublish = {
-                            date:self.jobsInfo.lastRequest,
-                            jobs:self.jobsInfo.jobs.objects
-                        }
+            if (err) console.error(err.stack);
+            else
+                stream.on('data', function(data) {
+                    result += data;
+                }).on('exit', function(e) {
+                    console.log('EXIT: ' + e);
+                    exitcode = e;
+                }).on('end', function(){
+                    console.log('CLOSE');
+                    if(exitcode == 0){
+                        if(self.jobsInfo.jobs.text != result){
+                            self.jobsInfo.jobs.text = result;
+                            self.jobsInfo.lastRequest = Date.now();
+                            self.jobsInfo.jobs.objects = self.parseJobs(result);
+                            self.dataToPublish = {
+                                date:self.jobsInfo.lastRequest,
+                                jobs:self.jobsInfo.jobs.objects
+                            }
 
-                        self.publishDataBroadcast();
+                            self.publishDataBroadcast();
+                        }
                     }
-                }
-                if(self.getCountSubscribers() >= 0)
-                    self.timeoutFunction = setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
-                else
-                    self.timeoutFunction = null;
-            })
-            .stderr.on('data', function(data) {
-                console.log('STDERR: ' + data);
-            });
+                    if(self.getCountSubscribers() >= 0)
+                        self.timeoutFunction = setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
+                    else
+                        self.timeoutFunction = null;
+                })
+                .stderr.on('data', function(data) {
+                    console.log('STDERR: ' + data);
+                });
         });
     }catch(err) {
         console.error("updateJobsLoop : client ssh error");

@@ -12,7 +12,7 @@ function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
 
     try{
         return this.ssh.exec(command, function(err, stream) {
-            if (err) throw err;
+            if (err) console.error(err.stack);
             else
                 stream
                 .on('data', dataCallback)
