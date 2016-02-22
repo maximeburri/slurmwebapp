@@ -127,19 +127,27 @@ function (text){
         if(nodesList == ''){
             nodesList = null;
         }
+        var timeJobStart = job[5];
+        var timeLeftExecute = job[10];
+        var timeJobEnd = job[8];
+
+        timeJobStart = (timeJobStart == 'N/A') ? null : parseInt(timeJobStart);
+        timeLeftExecute = (timeLeftExecute == 'N/A') ? null : parseInt(timeLeftExecute);
+        timeJobEnd = (timeJobEnd == 'N/A') ? null : parseInt(timeJobEnd);
+
         result.push({
             'id' : job[0],
             'partition' : job[1],
             'name' : job[2],
             'username' : job[3],
             'state' : job[4],
-            'timeStarted' : job[5],
+            'timeJobStart' : timeJobStart,
             'nbCPU' : job[6],
             'nodes' : nodesList,
             'reasonWaiting' : reasonWaiting,
-            'timeJobEnd' : job[8],
+            'timeJobEnd' : timeJobEnd,
             'timeLimit' : job[9],
-            'timeLeftExecute' : job[10]
+            'timeLeftExecute' : timeLeftExecute
         });
     }
 

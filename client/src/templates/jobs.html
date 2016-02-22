@@ -51,7 +51,7 @@
                                     </td>
                                     <td ng-show="search.jobsType == 'pending'" class="td-timer">
                                         <i class="fa fa-clock-o" style="color:gray"> </i>
-                                        <span ng-show="job.timeLeftExecute">{{job.timeLeftExecute}}
+                                        <span ng-show="job.timeLeftExecute">
                                             <timer end-time="job.timeLeftExecute.toString()*1000" interval="1000">
                                                 <span ng-show="days">{{days}}j</span>
                                                 <span ng-show="hours">{{hhours}}h</span>
@@ -59,9 +59,9 @@
                                                 <span ng-show="seconds">{{sseconds}}s</span>
                                             </timer>
                                         </span>
-                                        <span ng-hide="job.timeLeftExecute">?</span>
+                                        <span ng-hide="job.timeLeftExecute">?</span> {{job.timeJobUsed}}
                                     </td>
-                                    <td ng-show="search.jobsType == 'running'" class="td-timer">
+                                    <td ng-show="search.jobsType == 'running'" class="td-timer"><br/>
                                         <i class="fa fa-clock-o" style="color:gray"> </i>
                                         <span ng-show="job.timeJobEnd">
                                             <timer end-time="job.timeJobEnd.toString()*1000" interval="1000">
@@ -72,18 +72,25 @@
                                             </timer>
                                         </span>
                                         <span ng-hide="job.timeJobEnd">?</span>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-success progress-bar-striped"
+                                            role="progressbar"
+                                            style="height: 30px;width: {{(((timestamp*1)-(job.timeJobStart*1)) / ((job.timeJobEnd*1) - (job.timeJobStart*1))*100)|number:0}}%;">
+                                                <span>{{(((timestamp*1)-(job.timeJobStart*1)) / ((job.timeJobEnd*1) - (job.timeJobStart*1))*100)|number:0}}% </span>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td ng-show="search.jobsType == 'running'" class="td-timer">
                                         <i class="fa fa-clock-o" style="color:gray"> </i>
-                                        <span ng-show="job.timeStarted">
-                                            <timer start-time="job.timeStarted.toString()*1000" interval="1000">
+                                        <span ng-show="job.timeJobStart">
+                                            <timer start-time="job.timeJobStart.toString()*1000" interval="1000">
                                                 <span ng-show="days">{{days}}j</span>
                                                 <span ng-show="hours">{{hhours}}h</span>
                                                 <span ng-show="minutes">{{mminutes}}m</span>
                                                 <span ng-show="seconds">{{sseconds}}s</span>
                                             </timer>
                                         </span>
-                                        <span ng-hide="job.timeStarted">?</span>
+                                        <span ng-hide="job.timeJobStart">?</span>
                                     </td>
                                     <td >
                                         <span>{{job.nbCPU}}</span>

@@ -3,13 +3,18 @@
  */
 
 angular.module('RDash')
-    .controller('JobsCtrl', ['$scope', '$rootScope', 'User', 'Jobs', '$modal','$location', JobsCtrl]);
+    .controller('JobsCtrl', ['$scope', '$rootScope', 'User', 'Jobs', '$modal','$location', '$interval', JobsCtrl]);
 
-function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location) {
+function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location, $interval) {
+
+    $interval(function(){
+        $rootScope.timestamp = Math.round((new Date()).getTime()/1000);
+    }, 1000);
+
     if($rootScope.jobs == undefined){
         $rootScope.jobs = [];
         $rootScope.search = {}
-        $rootScope.search.jobsOwner ="all";
+        $rootScope.search.jobsOwner ="my";
         $rootScope.search.jobsType = "all";
         $rootScope.search.query = "";
     }
