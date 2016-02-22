@@ -29,9 +29,9 @@
                                     <th>Name </th>
                                     <th>User</th>
                                     <th>Partition</th>
-                                    <th ng-show="search.jobsType == 'pending'">Estimated<br/>start time</th>
-                                    <th ng-show="search.jobsType == 'running'">Remaining<br/>time</th>
-                                    <th ng-show="search.jobsType == 'running'">Elapsed<br/>time</th>
+                                    <th ng-show="search.jobsType == 'pending'" style="min-width:160px;">Estimated<br/>start time</th>
+                                    <th ng-show="search.jobsType == 'running'" style="min-width:160px;">Remaining<br/>time</th>
+                                    <th ng-show="search.jobsType == 'running'" style="min-width:160px;">Elapsed<br/>time</th>
                                     <th>Nb<br/>CPU</th>
                                     <th ng-show="search.jobsType == 'running'">Nodes</th><!-- -->
                                 </tr>
@@ -58,8 +58,16 @@
                                                 <span ng-show="minutes">{{mminutes}}m</span>
                                                 <span ng-show="seconds">{{sseconds}}s</span>
                                             </timer>
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-info progress-bar-striped"
+                                                role="progressbar"
+                                                style="height: 30px;width: {{100-(((job.timeLeftExecute*1)-(timestamp*1)) / ((job.timeLeftExecute*1) - (job.timeJobSubmit*1))*100)|number:0}}%;">
+                                                    <span>{{100-(((job.timeLeftExecute*1)-(timestamp*1)) / ((job.timeLeftExecute*1) - (job.timeJobSubmit*1))*100)|number:0}}% </span>
+                                                </div>
+                                            </div>
                                         </span>
-                                        <span ng-hide="job.timeLeftExecute">?</span> {{job.timeJobUsed}}
+                                        <span ng-hide="job.timeLeftExecute">?</span>
+
                                     </td>
                                     <td ng-show="search.jobsType == 'running'" class="td-timer"><br/>
                                         <i class="fa fa-clock-o" style="color:gray"> </i>

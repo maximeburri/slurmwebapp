@@ -61,7 +61,7 @@ function(self){
     var exitcode = 0;
 
     // Squeue with SLURM_TIME_FORMAT == timestamp
-    var command = "env SLURM_TIME_FORMAT=\"%s\" squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l %S\"";
+    var command = "env SLURM_TIME_FORMAT=\"%s\" squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l %S %V\"";
 
     console.log("Try exec squeue");
     self.showSubscribers();
@@ -109,7 +109,7 @@ function(self){
     }
 }
 
-// Parse jobs formated %i %P %j %u %T %S %C %R %e %l %S
+// Parse jobs formated %i %P %j %u %T %S %C %R %e %l %S %V
 ListJobsOperation.prototype.parseJobs =
 function (text){
     var result = [];
@@ -130,10 +130,12 @@ function (text){
         var timeJobStart = job[5];
         var timeLeftExecute = job[10];
         var timeJobEnd = job[8];
+        var timeJobSubmit = job[11];
 
         timeJobStart = (timeJobStart == 'N/A') ? null : parseInt(timeJobStart);
         timeLeftExecute = (timeLeftExecute == 'N/A') ? null : parseInt(timeLeftExecute);
         timeJobEnd = (timeJobEnd == 'N/A') ? null : parseInt(timeJobEnd);
+        timeJobSubmit = (timeJobEnd == 'N/A') ? null : parseInt(timeJobSubmit);
 
         result.push({
             'id' : job[0],
@@ -147,7 +149,8 @@ function (text){
             'reasonWaiting' : reasonWaiting,
             'timeJobEnd' : timeJobEnd,
             'timeLimit' : job[9],
-            'timeLeftExecute' : timeLeftExecute
+            'timeLeftExecute' : timeLeftExecute,
+            'timeJobSubmit' : timeJobSubmit
         });
     }
 
