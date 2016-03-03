@@ -42,9 +42,8 @@ function(client){
             }
         };
         this.timeoutFunction = setTimeout(this.updateJobsLoop, 0, this);
-    }else{
-        this.publishDataClient(client);
     }
+    this.publishDataClient(client);
 }
 
 ListJobsOperation.prototype.updateJobsLoop =
