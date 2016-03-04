@@ -59,7 +59,8 @@ function JobCtrl($stateParams, $scope, $rootScope, $interval, Files, $interpolat
                 }
 
                 if($scope.job.jobState == "COMPLETED"){
-                    $scope.endUpdate();
+                    $interval.cancel(updateInterval);
+                    updateInterval = undefined;
                 }
 
             },
