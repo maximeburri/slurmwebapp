@@ -58,6 +58,62 @@
                         <tr>
                             <th> <i class="fa fa-bug"></i> Exit code </th><td> {{job.exitCode}}</td>
                         </tr>
+                        <tr ng-show="job.jobState == 'PENDING'">
+                            <th> <i class="fa fa-clock-o"></i> Temps prévu </th>
+                            <td class="td-timer">
+                                <span ng-show="job.startTime && job.startTime!='Unknown'">
+                                    <timer end-time="job.startTime.toString()*1000" interval="1000">
+                                        <span ng-show="days">{{days}}j</span>
+                                        <span ng-show="hours">{{hhours}}h</span>
+                                        <span ng-show="minutes">{{mminutes}}m</span>
+                                        <span ng-show="seconds">{{sseconds}}s</span>
+                                    </timer>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-info progress-bar-striped"
+                                        role="progressbar"
+                                        style="height: 30px;width: {{100-(((job.startTime*1)-(timestamp*1)) / ((job.startTime*1) - (job.submitTime*1))*100)|number:0}}%;">
+                                            <span>{{100-(((job.startTime*1)-(timestamp*1)) / ((job.startTime*1) - (job.submitTime*1))*100)|number:0}}% </span>
+                                        </div>
+                                    </div>
+                                </span>
+                                <span ng-hide="job.startTime && job.startTime!='Unknown'">?</span>
+                            </td>
+                        </tr>
+                        <tr ng-show="job.jobState == 'RUNNING'">
+                            <th> <i class="fa fa-clock"></i> Temps restant </th>
+                            <td class="td-timer">
+                                <span ng-show="job.endTime && job.endTime != 'Unknow'">
+                                    <timer end-time="job.endTime.toString()*1000" interval="1000">
+                                        <span ng-show="days">{{days}}j</span>
+                                        <span ng-show="hours">{{hhours}}h</span>
+                                        <span ng-show="minutes">{{mminutes}}m</span>
+                                        <span ng-show="seconds">{{sseconds}}s</span>
+                                    </timer>
+                                </span>
+                                <span ng-hide="job.endTime && job.endTime != 'Unknow'">?</span>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success progress-bar-striped"
+                                    role="progressbar"
+                                    style="height: 30px;width: {{(((timestamp*1)-(job.startTime*1)) / ((job.endTime*1) - (job.startTime*1))*100)|number:0}}%;">
+                                        <span>{{(((timestamp*1)-(job.startTime*1)) / ((job.endTime*1) - (job.startTime*1))*100)|number:0}}% </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="job.jobState == 'RUNNING'">
+                            <th> <i class="fa fa-clock"></i> Temps passé </th>
+                            <td class="td-timer">
+                                <span ng-show="job.startTime">
+                                    <timer start-time="job.startTime.toString()*1000" interval="1000">
+                                        <span ng-show="days">{{days}}j</span>
+                                        <span ng-show="hours">{{hhours}}h</span>
+                                        <span ng-show="minutes">{{mminutes}}m</span>
+                                        <span ng-show="seconds">{{sseconds}}s</span>
+                                    </timer>
+                                </span>
+                                <span ng-hide="job.startTime">?</span>
+                            </td>
+                        </tr>
                     </table>
                 </rd-widget-body>
             </rd-widget>
