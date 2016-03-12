@@ -5,6 +5,8 @@
  */
 var config = {};
 
+config.debug_show_output = false; // Show output of command in server
+
 config.https_server = {}
 config.https_server.client_files = {}
 config.https_server.client_files.serve_files = true;

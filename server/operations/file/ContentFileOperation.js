@@ -45,7 +45,7 @@ ContentFileOperation.prototype.endAllFilesReadClient
     client.executeCommand(command,
         function(result, exitcode, callbackFinish){
             result = result.toString();
-            console.log("Result kill : " + result);
+            //console.log("Result kill : " + result);
             if(callbackFinish != undefined)
                 callbackFinish.call(this);
         }, callbackFinish,
@@ -87,7 +87,7 @@ function(client, callbackFinish) {
 ContentFileOperation.prototype.endReadFile =
 function(client, pid, callbackFinish) {
     if(pid != null){
-        console.log("Kill file tail pid : " + pid);
+        //console.log("Kill file tail pid : " + pid);
         client.killProcess(pid, callbackFinish);
     }
 };
@@ -99,7 +99,7 @@ function(client, filename, notifyEventName, clientCallback){
     var self = this;
 
     function endExecuteReadFile(){
-        console.log("disconnect:'"+notifyEventName+"'");
+        //console.log("disconnect:'"+notifyEventName+"'");
         self.endReadFile(client, pid);
     }
 
@@ -112,7 +112,7 @@ function(client, filename, notifyEventName, clientCallback){
         // data
         function(data) {
             data = data.toString();
-            console.log("DATA:"+data);
+            //console.log("DATA:"+data);
             // Get the pid and regiter killprocess event
             if(pid == null && data.substr( 0, 5 ) === 'PID: ' ){
                 pid = data.substr(5).slice(0, -1);
@@ -134,15 +134,7 @@ function(client, filename, notifyEventName, clientCallback){
         },
         // std err
         function(data) {
-            // No std err caused by token kill : stop
             console.log("STDERR:"+data);
-            /*if(data.toString().indexOf(token) > -1){
-                console.log("STDERR f:"+data);
-                //clientCallback(null, {type:data});
-                //endExecuteReadFile();
-            }else{
-                console.log("TOKEN FINDED");
-            }*/
         }
     );
 }
@@ -155,7 +147,7 @@ function(client, filename, clientCallback){
 
     var command = shellescape(['test','-f',filename]) + ' && ' +
         shellescape(['cat',filename]);
-    console.log(command);
+
     // Execute cat
     client.executeCommand(command,
         function(result, exitcode, clientCallback){

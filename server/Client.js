@@ -1,3 +1,5 @@
+var config = require('./config');
+
 function Client(ssh, socket, params) {
     this.ssh = ssh;
     this.socket = socket;
@@ -7,6 +9,7 @@ function Client(ssh, socket, params) {
 // class methods
 Client.prototype.executeCustomCommand =
 function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
+    console.log(this.toString() + " execute command : \n\t" + command);
     if(stdErrCallbak == undefined)
         stdErrCallbak = function(err){};
 
@@ -30,6 +33,7 @@ function(command, dataCallback, exitCallback, endCallback, stdErrCallbak) {
 
 Client.prototype.executeCommand =
 function(command, parsingCallback, paramsCallback, errorCallback) {
+    var self = this;
     if(errorCallback == undefined)
         errorCallback = function(err){};
 
@@ -40,18 +44,22 @@ function(command, parsingCallback, paramsCallback, errorCallback) {
         // Data
         function(data){
             result += data;
-            console.log(data.toString());
+            if(config.debug_show_output)
+                console.log(data.toString());
         },
         // Exit
         function(exitcode){
+            console.log(self.toString() + " exit command : \n\t" + command+ "\n\tcode:"+exitcode.toString());
             exitcodeFinal = exitcode;
         },
         // End
         function(){
+            console.log(self.toString() + " end command : \n\t" + command);
             parsingCallback(result, exitcodeFinal, paramsCallback);
         },
         // STDERR data
         function(data){
+            console.log(self.toString() + " stderr command : \n\t" + command+ "\n\t"+data.toString());
             errorCallback(result, data, paramsCallback);
         }
     )
@@ -60,20 +68,24 @@ function(command, parsingCallback, paramsCallback, errorCallback) {
 // Kill a process / opened stream
 // see http://stackoverflow.com/questions/22164570/sending-a-terminate-ctrlc-command-in-node-js-ssh2
 Client.prototype.killProcess = function ( pid, callbackFinish) {
-    console.log('pkill '+pid);
+    var self = this;
     this.executeCommand( 'pkill -g ' + pid,
         // parsing callback
         function(result, exitCode, callback){
             if(callback != undefined)
-                callback.call(this);
+                callback.call(self);
         },
         callbackFinish,
         // Error callback
         function(result, data, callback){
             if(callback != undefined)
-                callback.call(this);
+                callback.call(self);
         }
     );
+}
+
+Client.prototype.toString = function () {
+    return  this.params.username + " " + "("+this.params.cluster+")";
 }
 
 // export the class

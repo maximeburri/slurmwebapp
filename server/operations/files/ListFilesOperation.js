@@ -27,7 +27,7 @@ function(result, exitcode, clientCallback){
     filesList = result.split("\n");
     filesList.pop(); // Remove last element
     currentPath = filesList.shift() + "/"; // Path
-    console.log("Path:"+currentPath);
+    //console.log("Path:"+currentPath);
     filesInfo = [];
 
     // Parse each file

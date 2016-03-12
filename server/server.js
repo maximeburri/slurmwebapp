@@ -55,7 +55,6 @@ var io = socketio(server);
 io.on('connection', function (socket) {
     var ssh = new ClientSSH();
     var jobsSubscribed = false;
-    var username = false;
     var client = new Client(ssh, socket);
 
 	console.log("Client::connection ")
@@ -64,12 +63,12 @@ io.on('connection', function (socket) {
     function login(data){
 		// Remove login
 		socket.removeListener('login', login);
-		//
-		console.log("Client::login : "+ util.inspect(data))
 
 		// Try to connect
         try{
-            username = data.username;
+            client.params = data;
+            console.log("Client::login : " + client.toString());
+
             ssh.connect({
                 host: data.cluster,
                 username: data.username,
@@ -87,7 +86,7 @@ io.on('connection', function (socket) {
 	// When client want to logout
 	function logout(data){
 		try{
-			console.log("Client::logout" + data)
+			console.log("Client::logout : " + client.toString())
 
             quitClientCloseSSH();
 
@@ -108,7 +107,7 @@ io.on('connection', function (socket) {
             // Kill old processes tail
             objectsOperations.objects["file"].operations["get"].endAllFilesReadClient(client);
 
-			console.log("SSH::connected")
+			console.log("SSH::connected : " + client.toString())
 
 			// Add logout
 			socket.on('logout', logout);
@@ -122,7 +121,7 @@ io.on('connection', function (socket) {
 	// When the socket disconnects
 	function disconnect(){
 		try{
-			console.log("Client::disconnected")
+			console.log("Client::disconnected : " + client.toString())
 
             quitClientCloseSSH();
 
@@ -142,7 +141,7 @@ io.on('connection', function (socket) {
 		// Send error
 		socket.emit("error_ssh", err);
 		//
-		console.log("Client::login::error "+err)
+		console.log("Client::ssh::error:"+ client.toString()+err)
 
         ssh.end();
 	}
@@ -158,7 +157,7 @@ io.on('connection', function (socket) {
             // End ssh connection when all operations finished
             function(){
                 console.log('SSH finished, close ssh for ' +
-                    client.params.username);
+                    client.toString());
                 // End ssh connection
                 ssh.end();
             }
