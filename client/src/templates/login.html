@@ -4,18 +4,19 @@
             <h3 class="panel-title">Connection</h3>
         </div>
         <div class="panel-body">
+            <alert type="danger" ng-show="connection.error.bridgeDisconnected">Vous avez été déconnecté du pont</alert>
             <form role="form" ng-controller="LoginCtrl"  ng-submit="login()">
                 <fieldset>
 
-                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isAuthentiaction}">
+                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isAuthentication}">
                         <label>Nom</label>
                         <input ng-disabled="connectionProcessing || authenticated" required ng-model="user.username" class="form-control" placeholder="Nom d'utilisateur" name="username" autofocus>
                     </div>
-                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isAuthentiaction}">
+                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isAuthentication}">
                         <label>Mot de passe </label>
                         <input ng-disabled="connectionProcessing || authenticated" required ng-model="user.password" class="form-control" placeholder="Mot de passe" name="password" type="password" value="">
                     </div>
-                    <alert type="danger" ng-show="connection.error.isAuthentiaction">Le mot de passe et/ou le nom d'utilisateur n'est pas correct</alert>
+                    <alert type="danger" ng-show="connection.error.isAuthentication">Le mot de passe et/ou le nom d'utilisateur n'est pas correct</alert>
                     <hr>
                     <!---->
                     <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isCluster}">

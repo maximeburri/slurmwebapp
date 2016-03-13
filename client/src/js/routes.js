@@ -72,5 +72,11 @@ angular.module('RDash').run(['User','$state', '$rootScope',
             // Update title
             $rootScope.titlePage = toState.title;
         });
+
+        $rootScope.$watch(function(){return $rootScope.authenticated}, function(){
+            if(!$rootScope.authenticated){
+                $state.transitionTo("authentication");
+            }
+        });
     }
 ]);

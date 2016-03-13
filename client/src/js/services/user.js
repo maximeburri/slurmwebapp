@@ -90,6 +90,7 @@ function User($q, $rootScope, Notification) {
             // On disconnect
             this.socket.on('disconnect', function() {
                 console.log("Disconnected");
+                deferred.reject('disconnect');
                 that.socket = false;
                 that.authenticated = false;
             });
@@ -97,7 +98,7 @@ function User($q, $rootScope, Notification) {
             // On authenticated
             this.socket.on("authenticated", function(data){
                 that.authenticated = true;
-                deferred.resolve('authenticated');
+                deferred.notify('authenticated');
                 console.log("Authenticated");
                 console.log(data);
             });

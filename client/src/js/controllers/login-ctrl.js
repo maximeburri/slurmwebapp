@@ -30,35 +30,38 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
         User.connect($rootScope.user).then(
             // Success
             function(successMessage){
-                $rootScope.connectionProcessing = false;
-                $rootScope.authenticated = true;
-                $rootScope.user.password = "";
-                $rootScope.alerts = [{
-                    type: 'success',
-                    msg: "Vous avez été connecté avec succès !",
-                    timeout: 10000
-                }];
-                $rootScope.updateMessageOfTheDay();
-                $location.path('/dashboard');
-
+                console.log(successMessage);
             },
             // Error
             function(failMessage){
                 $rootScope.connectionProcessing = false;
                 $rootScope.authenticated = false;
-                console.log(failMessage)
+                console.log("Failed message "+failMessage)
                 if(failMessage == "socket-timeout")
                     $rootScope.connection.error.isBridge = true;
                 else if(failMessage == "client-authentication")
-                    $rootScope.connection.error.isAuthentiaction = true;
+                    $rootScope.connection.error.isAuthentication = true;
                 else if(failMessage == "ssh-connection")
                     $rootScope.connection.error.isCluster = true;
-                else
-                    alert('Unknow error');
+                else if(failMessage == "disconnect"){
+                    $rootScope.connection.error.bridgeDisconnected = true;
+                }
             },
             // Progress
             function(updateMessage){
-                // Socket conneciton is connected
+                console.log(updateMessage);
+                if(updateMessage == "authenticated"){
+                    $rootScope.connectionProcessing = false;
+                    $rootScope.authenticated = true;
+                    $rootScope.user.password = "";
+                    $rootScope.alerts = [{
+                        type: 'success',
+                        msg: "Vous avez été connecté avec succès !",
+                        timeout: 10000
+                    }];
+                    $rootScope.updateMessageOfTheDay();
+                    $location.path('/dashboard');
+                }
             }
         );
     };
