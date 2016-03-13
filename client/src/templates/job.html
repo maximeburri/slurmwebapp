@@ -80,7 +80,7 @@
                             </td>
                         </tr>
                         <tr ng-show="job.jobState == 'RUNNING'">
-                            <th> <i class="fa fa-clock"></i> Temps restant </th>
+                            <th> <i class="fa fa-clock-o"></i> Temps restant </th>
                             <td class="td-timer">
                                 <span ng-show="job.endTime && job.endTime != 'Unknow'">
                                     <timer end-time="job.endTime.toString()*1000" interval="1000">
@@ -101,7 +101,7 @@
                             </td>
                         </tr>
                         <tr ng-show="job.jobState == 'RUNNING'">
-                            <th> <i class="fa fa-clock"></i> Temps passé </th>
+                            <th> <i class="fa fa-clock-o"></i> Temps passé </th>
                             <td class="td-timer">
                                 <span ng-show="job.startTime">
                                     <timer start-time="job.startTime.toString()*1000" interval="1000">
