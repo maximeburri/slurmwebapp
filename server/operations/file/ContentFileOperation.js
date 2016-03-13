@@ -41,7 +41,7 @@ function(client, operationInfo, clientCallback) {
 
 ContentFileOperation.prototype.endAllFilesReadClient
 = function(client, callbackFinish){
-    var command = "ps ax -u "+client.params.username+" | grep tail | grep -v grep | awk '{print $1}' | xargs kill";
+    var command = "ps x -u "+client.params.username+" | grep tail | grep -v grep | awk '{print $1}' | xargs kill";
     client.executeCommand(command,
         function(result, exitcode, callbackFinish){
             result = result.toString();
