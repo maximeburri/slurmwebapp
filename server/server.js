@@ -93,7 +93,6 @@ io.on('connection', function (socket) {
 	function logout(data){
 		try{
 			console.log("Client::logout : " + client.toString())
-
             quitClientCloseSSH();
 
 			// Reconnect login function
@@ -110,6 +109,8 @@ io.on('connection', function (socket) {
 	// When the SSH is connected
 	function sshConnected(){
 		try{
+            ssh.ready = true;
+
             // Kill old processes tail
             objectsOperations.objects["file"].operations["get"].endAllFilesReadClient(client);
 
@@ -159,15 +160,18 @@ io.on('connection', function (socket) {
 
     // Quit client (close ssh after quit operations)
     function quitClientCloseSSH(){
-        objectsOperations.onQuitClient(client,
-            // End ssh connection when all operations finished
-            function(){
-                console.log('SSH finished, close ssh for ' +
-                    client.toString());
-                // End ssh connection
-                ssh.end();
-            }
-        );
+        // If ssh ready
+        if(ssh.ready){
+            objectsOperations.onQuitClient(client,
+                // End ssh connection when all operations finished
+                function(){
+                    console.log('SSH finished, close ssh for ' +
+                        client.toString());
+                    // End ssh connection
+                    ssh.end();
+                }
+            );
+        }
     }
 
     // Connect events

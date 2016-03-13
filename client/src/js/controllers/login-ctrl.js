@@ -53,7 +53,7 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
                 if(updateMessage == "authenticated"){
                     $rootScope.connectionProcessing = false;
                     $rootScope.authenticated = true;
-                    $rootScope.user.password = "";
+
                     $rootScope.alerts = [{
                         type: 'success',
                         msg: "Vous avez été connecté avec succès !",

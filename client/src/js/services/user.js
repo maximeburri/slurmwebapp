@@ -73,9 +73,6 @@ function User($q, $rootScope, Notification) {
             this.socket.on("error_ssh", function(data){
                 that.authenticated = false;
 
-                // Disconnect the socket
-                that.socket.disconnect();
-
                 // Check type ssh connection error
                 err = "ssh-connection";
                 if(data.level != undefined &&
@@ -83,6 +80,9 @@ function User($q, $rootScope, Notification) {
                     err ="client-authentication";
                 deferred.reject(err);
 
+                // Disconnect the socket
+                that.socket.disconnect();
+                
                 console.log("Error ssh: ");
                 console.log(data);
             });
