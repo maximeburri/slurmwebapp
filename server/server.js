@@ -79,7 +79,8 @@ io.on('connection', function (socket) {
                 host: data.cluster,
                 username: data.username,
                 password: data.password,
-				readyTimeout: config.ssh.timeout // Max timeout (milliseconds)
+				readyTimeout: config.ssh.timeout, // Max timeout (milliseconds)
+                agent : "SlurmWebApp"
             });
             client.params = data;
         }
