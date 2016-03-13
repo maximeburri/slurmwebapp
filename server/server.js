@@ -49,6 +49,12 @@ if(config.https_server.client_files.serve_files){
                 + ")");
 }
 
+console.logCopy = console.log.bind(console);
+console.log = function(data)
+{
+    var currentDate = '[' + new Date().toUTCString() + '] ';
+    this.logCopy(currentDate, data);
+};
 
 /** Socket IO **/
 var io = socketio(server);
