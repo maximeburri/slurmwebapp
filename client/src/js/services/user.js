@@ -82,7 +82,7 @@ function User($q, $rootScope, Notification) {
 
                 // Disconnect the socket
                 that.socket.disconnect();
-                
+
                 console.log("Error ssh: ");
                 console.log(data);
             });
@@ -144,5 +144,9 @@ function User($q, $rootScope, Notification) {
 
     this.get = function(object, params, notify){
         return that.operation({verb:"get", object:object, params:params}, notify);
+    };
+
+    this.logout = function(){
+        that.socket.disconnect();
     };
 }

@@ -3,9 +3,9 @@
  */
 
 angular.module('RDash')
-    .controller('MasterCtrl', ['$scope', '$cookieStore', MasterCtrl]);
+    .controller('MasterCtrl', ['$scope', '$cookieStore', 'User', MasterCtrl]);
 
-function MasterCtrl($scope, $cookieStore) {
+function MasterCtrl($scope, $cookieStore, User) {
     /**
      * Sidebar Toggle & Cookie Control
      */
@@ -31,6 +31,10 @@ function MasterCtrl($scope, $cookieStore) {
     $scope.toggleSidebar = function() {
         $scope.toggle = !$scope.toggle;
         $cookieStore.put('toggle', $scope.toggle);
+    };
+
+    $scope.logout = function() {
+        User.logout();
     };
 
     window.onresize = function() {

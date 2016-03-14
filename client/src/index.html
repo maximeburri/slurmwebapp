@@ -75,40 +75,31 @@
 
         <!-- Header Bar -->
         <div class="row header">
-          <div class="col-xs-12">
-            <!--<div class="user pull-right" ng-show="authenticated">
-              <div class="item dropdown" dropdown>
-                <a href="#" class="dropdown-toggle" dropdown-toggle>
-                  <img src="img/avatar.jpg">
+          <div class="col-xs-11">
+            <div class="user pull-right" ng-show="authenticated">
+              <div class="item dropdown" dropdown style="width: auto;">
+                <a href="#" class="dropdown-toggle" dropdown-toggle style="margin-top:10px;">
+                    <span class="fa fa-user"></span> {{user.username}} <span class="fa fa-caret-down"></span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right" dropdown-menu>
+                <ul style="margin-top:-20px;" class="dropdown-menu dropdown-menu-right" dropdown-menu>
                   <li class="dropdown-header">
                     {{user.username}}
                   </li>
                   <li class="divider"></li>
                   <li class="link">
-                    <a href="#">
-                      Profile
-                    </a>
-                  </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
-                    </a>
-                  </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
+                    <a href="" onclick="javascript:alert('Not implemented');">
+                      <span class="fa fa-cogs"></span> Paramètres
                     </a>
                   </li>
                   <li class="divider"></li>
                   <li class="link">
-                    <a href="#">
-                      Logout
+                    <a href="" ng-click="logout()">
+                      <span class="fa fa-sign-out"></span> Déconnexion
                     </a>
                   </li>
                 </ul>
               </div>
+              <!--
               <div class="item dropdown" dropdown>
                <a href="#" class="dropdown-toggle" dropdown-toggle>
                   <i class="fa fa-bell-o"></i>
@@ -122,8 +113,8 @@
                     <a href="#">Server Down!</a>
                   </li>
                 </ul>
-              </div>
-          </div>-->
+            </div>-->
+          </div>
             <div class="meta">
               <div class="page">
                 {{titlePage}}
