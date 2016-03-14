@@ -6,52 +6,72 @@ var config = require('../../config');
 
 function ListJobsOperation() {
     OperationPublishSubscribe.call(this, "list jobs update");
-    this.timeoutFunction = null;
-    this.dataToPublish = {
-        date:0,
-        jobs:[]
-    }
-    this.jobsInfo = {
-        lastRequest : 0,
-        jobs : {
-            text : "",
-            objects : []
+
+    /* Dictionnary of hostname, exemple :
+        {
+            "baobab.unige.ch":{
+                date:1019191;
+                jobs:[]
+            }
         }
-    }
+    */
+    this.dataToPublish = {}
+
+    /* Dictionnary of hostname, exemple :
+        {
+            "baobab.unige.ch":{
+                timeoutFunction : null, << Timeout function returned by setTimeout (use for clearTimeout)
+                lastRequest : 2222, << the last request,
+                jobs :{
+                        text : "", << the text not parsed outputed
+                        objects : [], << the jobs objects parsed
+                }
+            }
+        }
+    */
+    this.jobsInfo = {}
 }
 inherits(ListJobsOperation, OperationPublishSubscribe);
 
 // To override
 ListJobsOperation.prototype.onUnsubscribe =
 function(client){
-    if(this.subscribers.length == 0 && this.timeoutFunction != null){
-        clearTimeout(this.timeoutFunction);
-        this.timeoutFunction = null;
+    var hostname = client.ssh.config.host;
+
+    if(this.subscribers[hostname].length == 0 && this.jobsInfo[hostname].timeoutFunction != null){
+        clearTimeout(this.jobsInfo[hostname].timeoutFunction);
+        this.jobsInfo[hostname].timeoutFunction = null;
     }
 }
 
 // To override
 ListJobsOperation.prototype.onSubscribe =
 function(client){
-    if(this.subscribers.length == 1 && this.timeoutFunction == null){
-        this.jobsInfo = {
+    var hostname = client.ssh.config.host;
+
+    if(this.subscribers[hostname].length == 1 &&
+        (this.jobsInfo[hostname] === undefined || this.jobsInfo[hostname].timeoutFunction === null)){
+        this.jobsInfo[hostname] = {
             lastRequest : 0,
+            timeoutFunction : null,
             jobs : {
                 text : "",
                 objects : []
             }
         };
-        this.timeoutFunction = setTimeout(this.updateJobsLoop, 0, this);
+        this.jobsInfo[hostname].timeoutFunction =
+            setTimeout(this.updateJobsLoop, 0, hostname, this);
     }
     this.publishDataClient(client);
 }
 
 ListJobsOperation.prototype.updateJobsLoop =
-function(self){
-    if(self.getCountSubscribers() == 0)
+function(hostname, self){
+
+    if(self.subscribers[hostname].length == 0)
         return;
 
-    var client = self.subscribers[Math.floor(Math.random() * self.subscribers.length)];
+    var client = self.subscribers[hostname][Math.floor(Math.random() * self.subscribers[hostname].length)];
 
     if(client == undefined)
         return;
@@ -76,22 +96,23 @@ function(self){
                 }).on('end', function(){
                     //console.log('CLOSE');
                     if(exitcode == 0){
-                        if(self.jobsInfo.jobs.text != result){
-                            self.jobsInfo.jobs.text = result;
-                            self.jobsInfo.lastRequest = Date.now();
-                            self.jobsInfo.jobs.objects = self.parseJobs(result);
-                            self.dataToPublish = {
-                                date:self.jobsInfo.lastRequest,
-                                jobs:self.jobsInfo.jobs.objects
+                        if(self.jobsInfo[hostname].jobs.text != result){
+                            self.jobsInfo[hostname].jobs.text = result;
+                            self.jobsInfo[hostname].lastRequest = Date.now();
+                            self.jobsInfo[hostname].jobs.objects = self.parseJobs(result);
+                            self.dataToPublish[hostname] = {
+                                date:self.jobsInfo[hostname].lastRequest,
+                                jobs:self.jobsInfo[hostname].jobs.objects
                             }
 
-                            self.publishDataBroadcast();
+                            self.publishDataBroadcast(hostname);
                         }
                     }
-                    if(self.getCountSubscribers() >= 0)
-                        self.timeoutFunction = setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
+                    if(self.subscribers[hostname].length >= 0)
+                        self.jobsInfo[hostname].timeoutFunction =
+                            setTimeout(self.updateJobsLoop, config.jobs.interval_update, hostname, self);
                     else
-                        self.timeoutFunction = null;
+                        self.jobsInfo[hostname].timeoutFunction = null;
                 })
                 .stderr.on('data', function(data) {
                     console.log('squeue STDERR: ' + data);
@@ -100,10 +121,11 @@ function(self){
     }catch(err) {
         console.error("updateJobsLoop : client ssh error");
         // Une erreur s'est produite, directement remettre à jour les jobs
-        if(self.getCountSubscribers() >= 0)
-            self.timeoutFunction = setTimeout(self.updateJobsLoop, config.jobs.interval_update, self);
+        if(self.subscribers[hostname].length >= 0)
+            self.jobsInfo[hostname].timeoutFunction =
+                setTimeout(self.updateJobsLoop, config.jobs.interval_update, hostname, self);
         else
-            self.timeoutFunction = null;
+            self.jobsInfo[hostname].timeoutFunction = null;
     }
 }
 

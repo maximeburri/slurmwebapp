@@ -6,8 +6,8 @@ var inherits = require('util').inherits;
 function OperationPublishSubscribe(eventNamePublish) {
     Operation.call(this);
     this.eventNamePublish = eventNamePublish;
-    this.dataToPublishToPublish = null;
-    this.subscribers = [];
+    this.dataToPublish = null;
+    this.subscribers = {};
 }
 inherits(OperationPublishSubscribe, Operation);
 
@@ -15,6 +15,7 @@ inherits(OperationPublishSubscribe, Operation);
 OperationPublishSubscribe.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
     var type = operationInfo.params.type;
+    var hostname = client.ssh.config.host;
 
     // Inscription
     if(type == "subscribe"){
@@ -26,7 +27,7 @@ function(client, operationInfo, clientCallback) {
     }
     // Simple demande
     else{
-        clientCallback(this.dataToPublish);
+        clientCallback(this.dataToPublish[hostname]);
     }
 };
 
@@ -39,21 +40,33 @@ function(client, callbackFinish) {
 
 OperationPublishSubscribe.prototype.subscribe =
 function(client) {
+    this.showSubscribers();
     if(!this.isClientSubscribed(client)){
-        this.subscribers.push(client);
+        var hostname = client.ssh.config.host;
+        console.log("listJobs::subscribe::"+hostname+" client : " + client.params.username);
+
+        if(this.subscribers[hostname] === undefined)
+            this.subscribers[hostname] = [];
+        this.subscribers[hostname].push(client);
         this.onSubscribe(client);
     }
+    this.showSubscribers();
 };
 
 OperationPublishSubscribe.prototype.unsubscribe =
 function(client) {
+    this.showSubscribers();
     var i = this.getIndexClientInSubscribers(client);
     // Client existant
     if(i >= 0){
+        var hostname = client.ssh.config.host;
+        console.log("listJobs::unsubscribe::"+hostname+" client : " + client.params.username);
+
         // Delete the subscriber
-        this.subscribers.splice(i--, 1);
+        this.subscribers[hostname].splice(i--, 1);
         this.onUnsubscribe(client);
     }
+    this.showSubscribers();
 };
 
 // To override
@@ -71,19 +84,15 @@ function(client){
 // Publish to one client
 OperationPublishSubscribe.prototype.publishDataClient =
 function(client){
-    client.socket.emit(this.eventNamePublish, this.dataToPublish);
-}
-
-OperationPublishSubscribe.prototype.getCountSubscribers =
-function(){
-    return this.subscribers.length;
+    var hostname = client.ssh.config.host;
+    client.socket.emit(this.eventNamePublish, this.dataToPublish[hostname]);
 }
 
 // Publish to all subscribers
 OperationPublishSubscribe.prototype.publishDataBroadcast =
-function(client){
-    for (var i = 0; i < this.subscribers.length; i++) {
-        this.publishDataClient(this.subscribers[i]);
+function(hostname){
+    for (var i = 0; i < this.subscribers[hostname].length; i++) {
+        this.publishDataClient(this.subscribers[hostname][i]);
     }
 }
 
@@ -94,9 +103,14 @@ function(client){
 
 OperationPublishSubscribe.prototype.getIndexClientInSubscribers =
 function(client){
+    var hostname = client.ssh.config.host;
+
+    if(this.subscribers[hostname] == undefined)
+        return -1;
+
     // Delete the subscriber
-    for (var i = 0; i < this.subscribers.length; i++) {
-        if (this.subscribers[i].socket.id == client.socket.id) {
+    for (var i = 0; i < this.subscribers[hostname].length; i++) {
+        if (this.subscribers[hostname][i].socket.id == client.socket.id) {
             return i;
         }
     }
@@ -106,11 +120,14 @@ function(client){
 OperationPublishSubscribe.prototype.showSubscribers =
 function(){
     console.log("================ Subscribers '" + this.eventNamePublish +"' ================== ");
-    console.log("Nb: " + this.subscribers.length);
-    for (var i = 0; i < this.subscribers.length; i++) {
-        console.log(" - " + this.subscribers[i].params.username + " (" + this.subscribers[i].socket.id + ")");
+    for (var hostname in this.subscribers) {
+        console.log("Hostname: " + hostname);
+        console.log("Nb: " + this.subscribers[hostname].length);
+        for (var i = 0; i < this.subscribers[hostname].length; i++) {
+            console.log(" - " + this.subscribers[hostname][i].params.username + " (" + this.subscribers[hostname][i].socket.id + ")");
+        }
     }
-    console.log("================ Subscribers " + this.eventNamePublish +" ================== ");
+    console.log("================ =============== ================== ");
 }
 
 // export the class
