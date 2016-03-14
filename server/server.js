@@ -80,7 +80,6 @@ io.on('connection', function (socket) {
                 username: data.username,
                 password: data.password,
 				readyTimeout: config.ssh.timeout, // Max timeout (milliseconds)
-                agent : "SlurmWebApp"
             });
             client.params = data;
         }
