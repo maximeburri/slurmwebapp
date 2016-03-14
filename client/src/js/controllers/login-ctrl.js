@@ -16,8 +16,8 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
         $rootScope.user = {
             username : "",
             password : "",
-            cluster  : "",
-            bridge   : "",
+            cluster  : "baobab.unige.ch",
+            bridge   : "129.194.185.74",
         };
     }
 
