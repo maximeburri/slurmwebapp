@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     less = require('gulp-less'),
     rename = require('gulp-rename'),
     minifyHTML = require('gulp-minify-html');
+var Server = require('karma').Server;
 
 var paths = {
     scripts: 'src/js/**/*.*',
@@ -99,6 +100,13 @@ gulp.task('livereload', function() {
     gulp.src(['dist/**/*.*'])
         .pipe(watch())
         .pipe(connect.reload());
+});
+
+gulp.task('test', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
 });
 
 /**

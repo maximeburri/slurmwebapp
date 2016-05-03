@@ -32,5 +32,11 @@
   "repository": {
     "type": "gitorious",
     "url": "http://ezgit.unige.ch/slurmwebapp"
+  },
+  "resolutions": {
+    "angular": "~1.2.21"
+  },
+  "devDependencies": {
+    "angular-cookies": "^1.5.5"
   }
 }

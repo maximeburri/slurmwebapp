@@ -7,7 +7,11 @@
     "Ricardo Pascua <rdpascua@outlook.com>"
   ],
   "devDependencies": {
+    "angular": "^1.5.5",
+    "angular-mocks": "^1.5.5",
     "bower": "^1.3.9",
+    "bowserify": "^10.2.1",
+    "browserify": "^13.0.0",
     "chai": "^3.5.0",
     "gulp": "~3.8.0",
     "gulp-concat": "^2.4.1",
@@ -22,16 +26,27 @@
     "gulp-wrap": "^0.3.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
+    "karma-angular": "0.0.6",
+    "karma-browserify": "^5.0.4",
     "karma-chai-sinon": "^0.1.5",
     "karma-chrome-launcher": "^0.2.3",
+    "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.8",
     "karma-mocha": "^0.2.2",
     "karma-mocha-reporter": "^2.0.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-requirejs": "^0.2.6",
+    "karma-script-launcher": "^0.2.0",
     "mocha": "^2.4.5",
+    "module": "^1.2.5",
+    "ms": "^0.7.1",
+    "phantomjs-prebuilt": "^2.1.7",
     "sinon": "^1.17.3",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "watchify": "^3.7.0"
   },
   "dependencies": {
-    "bower": "^1.7.7"
+    "bower": "^1.7.7",
+    "bower-requirejs": "^1.2.0"
   }
 }
