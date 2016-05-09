@@ -46,7 +46,19 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'templates/browser.html',
                 authenticate: true,
                 title: 'Navigateur de fichiers'
-            });
+            })
+            .state('submission', {
+                url: '/submission',
+                templateUrl: 'templates/submission.html',
+                authenticate: true,
+                title: 'Soumission de job'
+            })
+            .state('history', {
+                url: '/history',
+                templateUrl: 'templates/history.html',
+                authenticate: true,
+                title: 'Historique'
+            })
     }
 ]);
 
