@@ -24,11 +24,14 @@ var JobObject = require('./objects/JobObject.js');
 var JobsObject = require('./objects/JobsObject.js');
 var FilesObject = require('./objects/FilesObject.js');
 var FileObject = require('./objects/FileObject.js');
+var PartitionsObject = require('./objects/PartitionsObject.js');
+
 var objectsOperations = new ObjectController({
     "job" : new JobObject(),
     "jobs" : new JobsObject(),
     "files" : new FilesObject(),
-    "file" : new FileObject()
+    "file" : new FileObject(),
+    "partitions" : new PartitionsObject(),
 });
 
 var optionsServer = {
