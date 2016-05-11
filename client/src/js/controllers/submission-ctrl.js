@@ -3,9 +3,9 @@
  */
 
 angular.module('RDash')
-    .controller('SubmissionCtrl', ['$scope', '$rootScope', SubmissionCtrl]);
+    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', SubmissionCtrl]);
 
-function SubmissionCtrl($scope, $rootScope) {
+function SubmissionCtrl($scope, $rootScope, User) {
     $scope.jobFileSelected = undefined;
 
     $scope.parameters = {
@@ -37,11 +37,19 @@ function SubmissionCtrl($scope, $rootScope) {
     ];
 
     $scope.partitions = [
-      {name: 'debug'},
-      {name: 'bigmem'},
-      {name: 'shared'},
-      {name: 'mono'}
     ];
+
+    User.get('partitions').then(
+        // Success
+        function(data){
+            $scope.partitions = data.partitions;
+        },
+
+        function(data){
+            console.error(data);
+        }
+    );
+
 
     $scope.notificationEvents = [
       {name: 'Commence'},

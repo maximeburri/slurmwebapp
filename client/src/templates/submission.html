@@ -43,9 +43,9 @@
                             <label class="col-sm-3 control-label">Partition </label>
                             <div class="col-sm-9">
                               <ol id="values-example" class="nya-bs-select" ng-model="jobPartition" data-selected-text-format="values">
-                                <li nya-bs-option="option in partitions">
+                                <li nya-bs-option="(name, partition) in partitions">
                                   <a>
-                                    {{option.name}}
+                                    {{name}}
                                     <span class="glyphicon glyphicon-ok check-mark"></span>
                                   </a>
                                 </li>

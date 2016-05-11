@@ -15,7 +15,7 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
         // Default input
         $rootScope.user = {
             username : "burrimax",
-            password : "FERMO3rt",
+            password : "",
             cluster  : "baobab.unige.ch",
             bridge   : "127.0.0.1:3000",//129.194.185.74
         };
