@@ -1,0 +1,62 @@
+
+<div style="background: #F9F9F9;
+    border-radius: 5px;
+    border: 1px solid #B9B9B9;
+    ">
+    <div style="padding:5px;border-bottom: 1px dashed #A2A2A2;
+    background-color: #DEDEDE;border-radius: 5px;">
+                <button class="btn btn-primary" ng-click="goToParentFolder()">
+                    <i class="fa fa-arrow-up"></i> Dossier parent
+                </button>
+                <span style="margin-left:6px;">{{currentDir}}</span>
+                <i class="fa fa-cog fa-spin" ng-show="loading"></i>
+                <button class="btn btn-default btn-xs"
+                    ng-click="actualiseListFiles()"
+                    ng-hide="loading">
+                    <i class="fa fa-refresh"></i>
+                </button>
+    </div>
+    <div style="width:100%; margin-top:5x;padding: 10px; height: 300px; overflow:overlay;">
+        <span style="
+    margin: 2px;
+    float: left;
+    width: 100px;
+    min-height: 80px;
+    text-align: center;
+    cursor: pointer;
+    padding: 2px;
+    padding-top:6px;
+    height: 20px;
+    overflow: hidden; " ng-repeat="file in filteredFiles = (files | filterHiddenFilename :options.showHiddenFiles)"
+        ng-click="itemClick(file)"
+        ng-hide="file.filename == '.' || file.filename == '..'"
+        ng-class="{'bg-primary' : currentDir + file.filename == selected}">
+
+
+                <!--<label style="font-weight: normal; font-size:23px;">-->
+                    <input type="radio" ng-model="selected"
+                    ng-show="selectable && isSelectableFile(file) "
+                    ng-value="currentDir + file.filename"
+                    ng-disabled="!isSelectableFile(file)"
+                    style="display: none;"
+
+                    />
+                    <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',
+                                  'fa fa-folder': file.type == 'folder',
+                                  'fa fa-file-text-o': file.type == 'file',
+                                  'fa fa-cog': file.type == 'executable'
+                                  }"
+
+                        style="font-size:20px;">
+                    </i><br/>
+                    <span style="
+    overflow: hidden;
+    font-family: sans-serif;
+    line-height: initial;overflow-wrap: break-word;">{{file.filename}}</span>
+    </span>
+    </div>
+
+<div ng-show="!filteredFiles.length">
+    <p class="text-center"><i>Aucun fichier</i></p>
+</div>
+</div>
