@@ -69,10 +69,10 @@
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
-                              <ol id="values-example" class="nya-bs-select" ng-model="jobLicences" data-selected-text-format="values" multiple>
-                                <li nya-bs-option="option in licences">
+                              <ol id="values-example" class="nya-bs-select" ng-model="jobLicenses" data-selected-text-format="values" multiple>
+                                <li nya-bs-option="(name, license) in licenses">
                                   <a>
-                                    {{option.name}}
+                                    {{name}}
                                     <span class="glyphicon glyphicon-ok check-mark"></span>
                                   </a>
                                 </li>

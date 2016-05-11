@@ -29,12 +29,19 @@ function SubmissionCtrl($scope, $rootScope, User) {
       {name: 'Matlab'}
     ];
 
-    $scope.licences = [
-      {name: 'distrib_computing_toolbox@matlablm.unige.ch'},
-      {name: 'matlab@matlablm.unige.ch'},
-      {name: 'wavelet-toolbox@matlablm.unige.ch'},
-      {name: 'statistics_toolbox@matlablm.unige.ch'}
+    $scope.licenses = [
     ];
+
+    User.get('licenses').then(
+        // Success
+        function(data){
+            $scope.licenses = data.licenses;
+        },
+
+        function(data){
+            console.error(data);
+        }
+    );
 
     $scope.partitions = [
     ];
