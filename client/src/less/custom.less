@@ -40,7 +40,7 @@ td .fa{
  }
 
  .widget{
-     overflow: overlay;
+     overflow: visible;
  }
 
 a:hover,a:focus{
@@ -63,4 +63,13 @@ a:hover,a:focus{
     vertical-align: middle;
     height: 55px;
     display: table-cell;
+}
+
+.animate-hide {
+  transition: all linear 2s;
+}
+
+.animate-hide.ng-hide {
+  line-height: 0;
+  opacity: 0;
 }

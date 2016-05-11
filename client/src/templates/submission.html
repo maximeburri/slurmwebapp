@@ -2,29 +2,179 @@
     <div class="row">
         <div class="col-lg-12">
             <rd-widget>
-                <rd-widget-header icon="fa-tasks" title="Fichiers">
+                <rd-widget-header icon="fa-tasks" title="Général">
                 </rd-widget-header>
                 <rd-widget-body classes="">
-                    <form>
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputFile">File input</label>
-                        <input type="file" id="exampleInputFile">
-                        <p class="help-block">Example block-level help text here.</p>
-                      </div>
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> Check me out
-                        </label>
-                      </div>
-                      <button type="submit" class="btn btn-default">Submit</button>
+                    <form class="form-horizontal">
+                        <div class="form-group animate-hide">
+                            <div class="col-md-5 col-sm-5">
+                                <div class="btn-group" style="margin:2px;">
+                                    <label class="btn btn-primary" ng-model="parameters.submissionType" btn-radio="'submission'" >Soumission</label>
+                                    <label class="btn btn-primary" ng-model="parameters.submissionType" btn-radio="'estimation'" >Estimation</label>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-sm-5">
+                                <div class="btn-group" style="margin:2px;">
+                                    <label class="btn btn-primary" ng-model="parameters.userType" btn-radio="'novice'" >Novice</label>
+                                    <label class="btn btn-primary" ng-model="parameters.userType" btn-radio="'expert'" >Expert</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Soumission préfédinie </label>
+                            <ol class="nya-bs-select" ng-model="submissionPredefined" data-live-search="true" style="margin-left:15px;">
+                              <li nya-bs-option="option in options group by option.group">
+                                <span class="dropdown-header">{{$group}}</span> <!-- group header cannot be searched -->
+                                <a>
+                                  <span>{{ option.name }}</span> <!-- this content will be search first -->
+                                  <span class="small">{{ option.subtitle }}</span> <!-- if the name failed, this will be used -->
+                                  <span class="glyphicon glyphicon-ok check-mark"></span>
+                                </a>
+                              </li>
+                            </ol>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Nom du job </label>
+                            <div class="col-sm-9">
+                              <input type="name" class="form-control" id="jobName" placeholder="Nom">
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide">
+                            <label class="col-sm-3 control-label">Partition </label>
+                            <div class="col-sm-9">
+                              <ol id="values-example" class="nya-bs-select" ng-model="jobPartition" data-selected-text-format="values">
+                                <li nya-bs-option="option in partitions">
+                                  <a>
+                                    {{option.name}}
+                                    <span class="glyphicon glyphicon-ok check-mark"></span>
+                                  </a>
+                                </li>
+                              </ol>
+                            </div>
+                        </div>
+
+                        <div class="form-group animate-hide"  ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Modules </label>
+                            <div class="col-sm-9">
+                              <ol id="values-example" class="nya-bs-select" ng-model="jobModules" data-selected-text-format="values" multiple>
+                                <li nya-bs-option="option in modules">
+                                  <a>
+                                    {{option.name}}
+                                    <span class="glyphicon glyphicon-ok check-mark"></span>
+                                  </a>
+                                </li>
+                              </ol>
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Licences </label>
+                            <div class="col-sm-9">
+                              <ol id="values-example" class="nya-bs-select" ng-model="jobLicences" data-selected-text-format="values" multiple>
+                                <li nya-bs-option="option in licences">
+                                  <a>
+                                    {{option.name}}
+                                    <span class="glyphicon glyphicon-ok check-mark"></span>
+                                  </a>
+                                </li>
+                              </ol>
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide">
+                            <label class="col-sm-3 control-label">Temps limite </label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="jobTimeLimit" placeholder="Ex: 2-12:00:00">
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
+                            <label class="col-sm-3 control-label">Nombre de tâche </label>
+                            <div class="col-sm-3">
+                              <input type="number" class="form-control" id="jobTaskNumber" placeholder="">
+                            </div>
+                            <label class="col-sm-3 control-label">CPU par tâche </label>
+                            <div class="col-sm-3">
+                              <input type="number" class="form-control" id="jobCpuPerTask" placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Fichier sortie standard</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="jobFileStdOut" placeholder="slurm.o">
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Fichier sortie erreur</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="jobFileStdErr" placeholder="slurm.e">
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Notification email</label>
+                            <div class="col-sm-9">
+                               <div class="input-group">
+                                   <span class="input-group-addon">
+                                       <input type="checkbox" id="jobNotification">
+                                   </span>
+                                   <input type="text" style="" class="form-control" id="jobNotificationEmail" placeholder="email">
+                                    <ol id="values-example" class="nya-bs-select" ng-model="jobNotificationEvents" data-selected-text-format="values" multiple>
+                                     <li nya-bs-option="option in notificationEvents">
+                                       <a>
+                                         {{option.name}}
+                                         <span class="glyphicon glyphicon-ok check-mark"></span>
+                                       </a>
+                                     </li>
+                                   </ol>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide">
+                            <div class="col-md-5 col-sm-5">
+                                <label class="btn btn-primary" ng-show="parameters.submissionType == 'estimation'">Estimer</label>
+                            </div>
+                        </div>
+                    </form>
+                </rd-widget-body>
+            </rd-widget>
+            <rd-widget ng-hide="parameters.submissionType == 'estimation'">
+                <rd-widget-header icon="fa-tasks" title="Fichier">
+                </rd-widget-header>
+                <rd-widget-body classes="">
+                    <form class="form-horizontal">
+                        <div class="form-group animate-hide">
+                            <div class="col-md-5 col-sm-5">
+                                <div class="btn-group" style="margin:2px;">
+                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'paste'" >Coller</label>
+                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'select'" >Selectionner</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="parameters.execFileType == 'paste'">
+                          <label for="jobScript">Coller votre script :</label>
+                          <textarea class="form-control" rows="10" id="jobScript"></textarea>
+                        </div>
+
+                        <div class="form-group" ng-show="parameters.execFileType == 'select'" >
+                            <label>Fichier séléctionné : </label>
+                            <span ng-if="jobFileSelected == undefined">
+                                <i>aucun</i>
+                            </span>
+                            <span ng-if="jobFileSelected != undefined">
+                                {{jobFileSelected}}
+                            </span>
+
+                            <swa-files-browser selectable="true" selected="jobFileSelected" tableStyle="height:50px;overflow:scroll" ></swa-files-browser>
+                        </div>
+
+                        <div class="form-group animate-hide">
+                            <label class="col-sm-2 control-label">Arguments </label>
+                            <div class="col-sm-6">
+                              <input type="name" class="form-control" id="jobExecArguments" placeholder="Ex: arg1 arg2 arg3">
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide">
+                            <div class="col-md-5 col-sm-5">
+                                <label class="btn btn-primary" ng-show="parameters.submissionType == 'submission'">Soumettre</label>
+                            </div>
+                        </div>
                     </form>
                 </rd-widget-body>
             </rd-widget>

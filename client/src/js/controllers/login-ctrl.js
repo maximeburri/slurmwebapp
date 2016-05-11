@@ -14,10 +14,10 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
 
         // Default input
         $rootScope.user = {
-            username : "",
-            password : "",
+            username : "burrimax",
+            password : "FERMO3rt",
             cluster  : "baobab.unige.ch",
-            bridge   : "129.194.185.74:3000",
+            bridge   : "127.0.0.1:3000",//129.194.185.74
         };
     }
 
@@ -61,10 +61,13 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
                     }];
                     $rootScope.updateMessageOfTheDay();
                     $location.path('/dashboard');
+                    $location.path('/submission');
                 }
             }
         );
     };
+
+    $rootScope.login();
 
     $rootScope.updateMessageOfTheDay = function(){
         Files.getFileContent("/etc/motd", false).then(

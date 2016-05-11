@@ -13,7 +13,6 @@ function Notification() {
         });
         attributesToSend["notifyEventName"] = this.notifyEventName;
         nextNotificationId++;
-        console.log(this.deferred);
         //PromiseSocketNotifiy.prototype.then = this.deferred.promise.then;
         PromiseSocketNotifiy.prototype.catch = this.deferred.promise.catch;
         PromiseSocketNotifiy.prototype.finally = this.deferred.promise.finally;
@@ -29,12 +28,10 @@ function Notification() {
     };
 
     PromiseSocketNotifiy.prototype.notify = function () {
-        console.log(this.deferred);
         this.deferred.notify.apply(this, arguments);
     };
 
     PromiseSocketNotifiy.prototype.then = function(successCallback, errorCallback, notifyCallback){
-        //console.log(this.deferred);
          this.deferred.promise.then.call(this.deferred.promise, successCallback, errorCallback, notifyCallback);
     }
 
