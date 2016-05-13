@@ -33,13 +33,26 @@
                               </li>
                             </ol>
                         </div>
-                        <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
-                            <label class="col-sm-3 control-label">Nom du job </label>
-                            <div class="col-sm-9">
-                              <input type="name" class="form-control" id="jobName" placeholder="Nom">
+
+                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
+                            <label class="col-sm-3 control-label">Nombre de tâche </label>
+                            <div class="col-sm-3">
+                              <input type="number" class="form-control" id="jobTaskNumber" placeholder="">
+                            </div>
+                            <label class="col-sm-3 control-label">CPU par tâche </label>
+                            <div class="col-sm-3">
+                              <input type="number" class="form-control" id="jobCpuPerTask" placeholder="">
                             </div>
                         </div>
                         <div class="form-group animate-hide">
+                            <label class="col-sm-3 control-label">Temps limite </label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="jobTimeLimit" placeholder="Ex: 2-12:00:00">
+                            </div>
+                        </div>
+
+                        <swa-partitions-estimation selected="partitionSelected" ></swa-partitions-estimation>
+                        <!--<div class="form-group animate-hide">
                             <label class="col-sm-3 control-label">Partition </label>
                             <div class="col-sm-9">
                               <ol id="values-example" class="nya-bs-select"  data-live-search="true" ng-model="jobPartition" data-selected-text-format="values">
@@ -51,8 +64,27 @@
                                 </li>
                               </ol>
                             </div>
+                        </div>-->
+
+                        <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Nom du job </label>
+                            <div class="col-sm-9">
+                              <input type="name" class="form-control" id="jobName" placeholder="Nom">
+                            </div>
                         </div>
 
+                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Fichier sortie standard</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="jobFileStdOut" placeholder="slurm.o">
+                            </div>
+                        </div>
+                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
+                            <label class="col-sm-3 control-label">Fichier sortie erreur</label>
+                            <div class="col-sm-9">
+                              <input type="text" class="form-control" id="jobFileStdErr" placeholder="slurm.e">
+                            </div>
+                        </div>
                         <div class="form-group animate-hide"  ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Modules </label>
                             <div class="col-sm-9">
@@ -83,34 +115,8 @@
                               </ol>
                             </div>
                         </div>
-                        <div class="form-group animate-hide">
-                            <label class="col-sm-3 control-label">Temps limite </label>
-                            <div class="col-sm-9">
-                              <input type="text" class="form-control" id="jobTimeLimit" placeholder="Ex: 2-12:00:00">
-                            </div>
-                        </div>
-                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
-                            <label class="col-sm-3 control-label">Nombre de tâche </label>
-                            <div class="col-sm-3">
-                              <input type="number" class="form-control" id="jobTaskNumber" placeholder="">
-                            </div>
-                            <label class="col-sm-3 control-label">CPU par tâche </label>
-                            <div class="col-sm-3">
-                              <input type="number" class="form-control" id="jobCpuPerTask" placeholder="">
-                            </div>
-                        </div>
-                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
-                            <label class="col-sm-3 control-label">Fichier sortie standard</label>
-                            <div class="col-sm-9">
-                              <input type="text" class="form-control" id="jobFileStdOut" placeholder="slurm.o">
-                            </div>
-                        </div>
-                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
-                            <label class="col-sm-3 control-label">Fichier sortie erreur</label>
-                            <div class="col-sm-9">
-                              <input type="text" class="form-control" id="jobFileStdErr" placeholder="slurm.e">
-                            </div>
-                        </div>
+
+
                         <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Notification email</label>
                             <div class="col-sm-9">

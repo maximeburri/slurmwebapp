@@ -1,0 +1,70 @@
+<div style="background: #F9F9F9;
+    border-radius: 5px;
+    border: 1px solid #B9B9B9;
+    margin-bottom:4px;
+    ">
+    <div style="padding:5px;border-bottom: 1px dashed #A2A2A2;
+    background-color: #DEDEDE;border-radius: 5px;">
+                <span style="margin-left:6px;">{{currentDir}}</span>
+                <i class="fa fa-cog fa-spin" ng-show="loading"></i>
+                <button class="btn btn-default btn-xs"
+                    ng-click="actualiseListFiles()"
+                    ng-hide="loading">
+                    <i class="fa fa-refresh"></i>
+                </button>
+    </div>
+    <div style="width:100%; margin-top:1x;padding: 2px; height: 300px; overflow:overlay;">
+        <span style="    margin-top: 1px;
+    float: left;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    padding: 2px;
+    padding-top: 6px;
+    padding-left:10px;
+    overflow: hidden;
+    border: 1px solid #B9B9B9;
+    border-radius:2px;" ng-repeat="(name, partition) in partitions"
+        ng-click="itemClick(partition)"
+        ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected}">
+
+
+                <!--<label style="font-weight: normal; font-size:23px;">-->
+                    <input type="radio" ng-model="selected"
+                    ng-value="name"
+                    ng-disabled=""
+                    style="display: none;"
+                    />
+                    <i ng-class="{'fa fa-check text-success':true}"
+                        style="font-size:20px;">
+                    </i>
+                    <span style="width:25%;display:inline-block;font-weight:bold">{{name}}</span> <small style=""><!-- Estimation --></small>
+                    <div class="container-fluid" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
+                        <!--
+                        style="    color: #E0E0E0;
+background-color: #737373;
+padding: 2px;
+border-radius: 5px;
+font-style: normal;"-->
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                Temps limite : <em><span class="">{{partition.MaxTime == 'UNLIMITED' ? '&infin;' : partition.MaxTime}}</span></em>
+                            </div>
+                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                Noeud min-max : <em><span class="">{{partition.MinNodes}} à {{partition.MaxNodes == 'UNLIMITED' ? '&infin;' : partition.MaxNodes}}</span></em>
+                            </div>
+                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                CPUs/noeud max : <em><span class="">{{partition.MaxCPUsPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxCPUsPerNode}}</span></em>
+                            </div>
+                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                Mémoire/noeud : <em><span class="">{{partition.MaxMemPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxMemPerNode}}</span></em>
+                            </div>
+                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                CPUs Total : <em><span class="">{{partition.TotalCPUs}}</span></em>
+                            </div>
+
+                        </div>
+                    </div>
+    </span>
+    </div>
+</div>
