@@ -39,7 +39,6 @@ function(result, exitcode, clientCallback){
                     splited.length >= 2 ? splited[1] : undefined;
             }
         }
-        console.log(infos);
 
         partitionsListParsed[partitionObject['PartitionName']] = partitionObject;
     });
