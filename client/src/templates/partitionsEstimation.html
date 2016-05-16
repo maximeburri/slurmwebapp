@@ -5,13 +5,15 @@
     ">
     <div style="padding:5px;border-bottom: 1px dashed #A2A2A2;
     background-color: #DEDEDE;border-radius: 5px;">
-                <span style="margin-left:6px;">{{currentDir}}</span>
-                <i class="fa fa-cog fa-spin" ng-show="loading"></i>
+                <i class="fa fa-cog fa-spin" ng-show="loadingEstimation"></i>
                 <button class="btn btn-default btn-xs"
-                    ng-click="actualiseListFiles()"
-                    ng-hide="loading">
+                    ng-click="actualiseEstimation()"
+                    ng-hide="loadingEstimation">
                     <i class="fa fa-refresh"></i>
                 </button>
+                Estimation : <i ng-if="estimation == false">Aucune estimation</i>
+                <i ng-if="estimation != false"><span am-time-ago="estimation.estimatedTime*1000"></span>
+                    <br>avec {{estimation.nbProcessors}} processeurs ({{estimation.nodes}}) </i>
     </div>
     <div style="width:100%; margin-top:1x;padding: 2px; height: 300px; overflow:overlay;">
         <span style="    margin-top: 1px;

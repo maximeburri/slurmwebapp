@@ -37,21 +37,20 @@
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
                             <label class="col-sm-3 control-label">Nombre de tâche </label>
                             <div class="col-sm-3">
-                              <input type="number" class="form-control" id="jobTaskNumber" placeholder="">
+                              <input type="number" class="form-control" ng-model="job.nbTasks" placeholder="">
                             </div>
                             <label class="col-sm-3 control-label">CPU par tâche </label>
                             <div class="col-sm-3">
-                              <input type="number" class="form-control" id="jobCpuPerTask" placeholder="">
+                              <input type="number" class="form-control" ng-model="job.nbCPUsPerTasks" placeholder="">
                             </div>
                         </div>
                         <div class="form-group animate-hide">
                             <label class="col-sm-3 control-label">Temps limite </label>
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" id="jobTimeLimit" placeholder="Ex: 2-12:00:00">
+                              <input type="text" class="form-control" ng-model="job.timeLimit" placeholder="Ex: 2-12:00:00">
                             </div>
                         </div>
-
-                        <swa-partitions-estimation selected="partitionSelected" ></swa-partitions-estimation>
+                        <swa-partitions-estimation selected="job.partition" job-to-estimate="job"></swa-partitions-estimation>
                         <!--<div class="form-group animate-hide">
                             <label class="col-sm-3 control-label">Partition </label>
                             <div class="col-sm-9">
@@ -69,26 +68,26 @@
                         <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Nom du job </label>
                             <div class="col-sm-9">
-                              <input type="name" class="form-control" id="jobName" placeholder="Nom">
+                              <input type="name" class="form-control" ng-model="job.name" placeholder="Nom">
                             </div>
                         </div>
 
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Fichier sortie standard</label>
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" id="jobFileStdOut" placeholder="slurm.o">
+                              <input type="text" class="form-control" ng-model="job.fileStdOut" placeholder="slurm.o">
                             </div>
                         </div>
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Fichier sortie erreur</label>
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" id="jobFileStdErr" placeholder="slurm.e">
+                              <input type="text" class="form-control" ng-model="job.fileStdErr" placeholder="slurm.e">
                             </div>
                         </div>
                         <div class="form-group animate-hide"  ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Modules </label>
                             <div class="col-sm-9">
-                              <ol id="values-example" class="nya-bs-select"  data-live-search="true" ng-model="jobModules" data-selected-text-format="values" multiple>
+                              <ol class="nya-bs-select"  data-live-search="true" ng-model="job.modules" data-selected-text-format="values" multiple>
                                 <li nya-bs-option="option in modules">
                                   <a>
                                     {{option.name}}
@@ -101,7 +100,7 @@
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
-                              <ol id="values-example" class="nya-bs-select" ng-model="jobLicenses" data-selected-text-format="values"  data-live-search="true" multiple>
+                              <ol class="nya-bs-select" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
                                 <li nya-bs-option="(name, license) in licenses">
                                   <a>
                                     <span>{{name}}
@@ -122,10 +121,10 @@
                             <div class="col-sm-9">
                                <div class="input-group">
                                    <span class="input-group-addon">
-                                       <input type="checkbox" id="jobNotification">
+                                       <input type="checkbox" ng-model="job.notification">
                                    </span>
-                                   <input type="text" style="" class="form-control" id="jobNotificationEmail" placeholder="email">
-                                    <ol id="values-example" class="nya-bs-select" ng-model="jobNotificationEvents" data-selected-text-format="values" multiple>
+                                   <input type="text" style="" class="form-control" ng-model="job.notificationEmail" placeholder="email">
+                                    <ol class="nya-bs-select" ng-model="job.notificationEvents" data-selected-text-format="values" multiple>
                                      <li nya-bs-option="option in notificationEvents">
                                        <a>
                                          {{option.name}}
@@ -158,26 +157,26 @@
                             </div>
                         </div>
                         <div class="form-group" ng-show="parameters.execFileType == 'paste'">
-                          <label for="jobScript">Coller votre script :</label>
-                          <textarea class="form-control" rows="10" id="jobScript"></textarea>
+                          <label for="job.script">Coller votre script :</label>
+                          <textarea class="form-control" rows="10" ng-model="job.script"></textarea>
                         </div>
 
                         <div class="form-group" ng-show="parameters.execFileType == 'select'" >
                             <label>Fichier séléctionné : </label>
-                            <span ng-if="jobFileSelected == undefined">
+                            <span ng-if="job.fileSelected == undefined">
                                 <i>aucun</i>
                             </span>
-                            <span ng-if="jobFileSelected != undefined">
+                            <span ng-if="job.fileSelected != undefined">
                                 {{jobFileSelected}}
                             </span>
 
-                            <swa-files-browser selectable="true" selected="jobFileSelected" tableStyle="height:50px;overflow:scroll" ></swa-files-browser>
+                            <swa-files-browser selectable="true" selected="job.fileSelected" tableStyle="height:50px;overflow:scroll" ></swa-files-browser>
                         </div>
 
                         <div class="form-group animate-hide">
                             <label class="col-sm-2 control-label">Arguments </label>
                             <div class="col-sm-6">
-                              <input type="name" class="form-control" id="jobExecArguments" placeholder="Ex: arg1 arg2 arg3">
+                              <input type="name" class="form-control" ng-model="job.execArguments" placeholder="Ex: arg1 arg2 arg3">
                             </div>
                         </div>
                         <div class="form-group animate-hide">

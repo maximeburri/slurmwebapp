@@ -6,6 +6,8 @@ angular.module('RDash')
     .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', SubmissionCtrl]);
 
 function SubmissionCtrl($scope, $rootScope, User) {
+    $scope.job = {};
+    
     $scope.jobFileSelected = undefined;
 
     $scope.parameters = {
@@ -53,20 +55,6 @@ function SubmissionCtrl($scope, $rootScope, User) {
                 i++;
             });
             $scope.licenses = data.licenses;
-        },
-
-        function(data){
-            console.error(data);
-        }
-    );
-
-    $scope.partitions = [
-    ];
-
-    User.get('partitions').then(
-        // Success
-        function(data){
-            $scope.partitions = data.partitions;
         },
 
         function(data){
