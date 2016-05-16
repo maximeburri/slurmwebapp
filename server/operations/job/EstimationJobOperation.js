@@ -25,7 +25,7 @@ inherits(EstimationJobOperation, Operation);
 // Overwrite
 EstimationJobOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
-    var cmd = "srun --test-only";
+    var cmd = "env SLURM_TIME_FORMAT=\"%s\" srun --test-only";
 
     this.valuesParamsArgs.forEach(function(paramArg){
         if(operationInfo.params[paramArg.paramName] !== undefined){
