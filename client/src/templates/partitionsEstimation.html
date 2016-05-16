@@ -53,16 +53,21 @@
     border: 1px solid #B9B9B9;
     border-radius:2px;" ng-repeat="(name, partition) in partitions"
         ng-click="itemClick(partition)"
-        ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected}">
+        ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected, 'striped' : partition.error}">
 
-
+                    {{partition.error =
+                        (jobToEstimate.nbTasks * jobToEstimate.nbCPUsPerTasks)
+                            > partition.TotalCPUs
+                        || jobToEstimate.nbTasks > partition.TotalCPUs
+                        || jobToEstimate.nbCPUsPerTasks > partition.TotalCPUs
+                        ;""}}
                 <!--<label style="font-weight: normal; font-size:23px;">-->
                     <input type="radio" ng-model="selected"
                     ng-value="name"
-                    ng-disabled=""
+                    ng-disabled="partition.error"
                     style="display: none;"
                     />
-                    <i ng-class="{'fa fa-check text-success':true}"
+                    <i ng-class="{'fa fa-check text-success' : !partition.error, 'fa fa-times text-danger' : partition.error}"
                         style="font-size:20px;">
                     </i>
                     <span style="width:25%;display:inline-block;font-weight:bold">{{name}}</span> <small style=""><!-- Estimation --></small>
@@ -89,7 +94,6 @@ font-style: normal;"-->
                             <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
                                 CPUs Total : <em><span class="">{{partition.TotalCPUs}}</span></em>
                             </div>
-
                         </div>
                     </div>
     </span>

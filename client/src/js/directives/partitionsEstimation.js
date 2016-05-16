@@ -30,8 +30,10 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                 }
             );
             scope.itemClick = function(partition){
-                scope.selected = partition.PartitionName;
-                scope.estimation = false;
+                if(!partition.error){
+                    scope.selected = partition.PartitionName;
+                    scope.estimation = false;
+                }
             }
 
             scope.actualiseEstimation = function(){
