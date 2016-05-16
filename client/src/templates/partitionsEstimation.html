@@ -13,27 +13,21 @@
                 </button>
                 Estimation : <i ng-if="estimation == false">Aucune estimation</i>
                 <i ng-if="estimation != false">
+                    <i class="fa fa-hourglass-start"></i>
                     <span ng-if="estimation.timeAgo <= 0"> Maintenant </span>
-                    <span ng-if="estimation.timeAgo > 0"> dans
-                            <span ng-if="estimation.timeAgoDays > 0">
-                                {{estimation.timeAgoDays}}
-                                jour<span ng-if="estimation.timeAgoDays >= 1">
-                                    s
-                                </span>
-                            </span>
-                            <span ng-if="estimation.timeAgoHours >= 0">
-                                {{estimation.timeAgoHours}}
-                                heure<span ng-if="estimation.timeAgoHours >= 1">
-                                    s
-                                </span>
-                            </span>
-                            <span ng-if="estimation.timeAgoMinutes >= 0">
-                                {{estimation.timeAgoMinutes}}
-                                minutes<span ng-if="estimation.timeAgoMinutes >= 1">
-                                    s
-                                </span>
-                            </span>
-                        avec {{estimation.nbProcessors}} processeurs ({{estimation.nodes}})
+                    <span ng-if="estimation.timeAgo > 0">
+                        <timer end-time="estimation.estimatedTime.toString()*1000" interval="1000">
+                            <span ng-show="days">{{days}}j </span>
+                            <span ng-show="hours">{{hhours}}h </span>
+                            <span ng-show="minutes">{{mminutes}}m </span>
+                            <!--<span ng-show="seconds">{{sseconds}}s</span>-->
+                        </timer>
+                    </span>
+                    <span style="margin-left:10px;">
+                        <i class="fa fa-circle"></i> {{estimation.nbProcessors}} CPUs
+                    </span>
+                    <span style="margin-left:10px;">
+                        <i class="fa fa-clone"></i> {{estimation.nodes}}
                     </span>
                 </i>
                 <i ng-if="estimationError" class="text-danger">

@@ -54,11 +54,6 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                         loadingEstimation = false;
                         scope.estimation = data;
                         scope.estimation.timeAgo  = data.estimatedTime - Math.round(new Date().getTime()/1000) ;
-
-                        scope.estimation.timeAgoSeconds = scope.estimation.timeAgo%60;
-                        scope.estimation.timeAgoMinutes = Math.floor((scope.estimation.timeAgo - scope.estimation.timeAgoSeconds) / 60) % 60;
-                        scope.estimation.timeAgoHours = Math.floor((scope.estimation.timeAgo - scope.estimation.timeAgoMinutes*60) / 3600) % 60;
-                        scope.estimation.timeAgoDays = Math.floor((scope.estimation.timeAgo - scope.estimation.timeAgoHours*3600) / (3600*24));
                     },
 
                     function(data){
