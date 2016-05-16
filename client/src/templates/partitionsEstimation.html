@@ -12,8 +12,33 @@
                     <i class="fa fa-refresh"></i>
                 </button>
                 Estimation : <i ng-if="estimation == false">Aucune estimation</i>
-                <i ng-if="estimation != false"><span am-time-ago="estimation.estimatedTime*1000"></span>
-                    <br>avec {{estimation.nbProcessors}} processeurs ({{estimation.nodes}}) </i>
+                <i ng-if="estimation != false">
+                    <span ng-if="estimation.timeAgo <= 0"> Maintenant </span>
+                    <span ng-if="estimation.timeAgo > 0"> dans
+                            <span ng-if="estimation.timeAgoDays > 0">
+                                {{estimation.timeAgoDays}}
+                                jour<span ng-if="estimation.timeAgoDays >= 1">
+                                    s
+                                </span>
+                            </span>
+                            <span ng-if="estimation.timeAgoHours >= 0">
+                                {{estimation.timeAgoHours}}
+                                heure<span ng-if="estimation.timeAgoHours >= 1">
+                                    s
+                                </span>
+                            </span>
+                            <span ng-if="estimation.timeAgoMinutes >= 0">
+                                {{estimation.timeAgoMinutes}}
+                                minutes<span ng-if="estimation.timeAgoMinutes >= 1">
+                                    s
+                                </span>
+                            </span>
+                        avec {{estimation.nbProcessors}} processeurs ({{estimation.nodes}})
+                    </span>
+                </i>
+                <i ng-if="estimationError" class="text-danger">
+                    (erreur lors de l'estimation)
+                </i>
     </div>
     <div style="width:100%; margin-top:1x;padding: 2px; height: 300px; overflow:overlay;">
         <span style="    margin-top: 1px;
