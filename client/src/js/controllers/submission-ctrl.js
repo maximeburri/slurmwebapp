@@ -7,7 +7,13 @@ angular.module('RDash')
 
 function SubmissionCtrl($scope, $rootScope, User) {
     $scope.job = {};
-    
+    $scope.job.timeLimit = {
+        days:0,
+        hours : 1,
+        minutes : 0,
+        seconds : 0,
+
+    }
     $scope.jobFileSelected = undefined;
 
     $scope.parameters = {

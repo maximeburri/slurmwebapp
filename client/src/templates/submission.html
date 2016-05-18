@@ -47,7 +47,15 @@
                         <div class="form-group animate-hide">
                             <label class="col-sm-3 control-label">Temps limite </label>
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" ng-model="job.timeLimit" placeholder="Ex: 2-12:00:00">
+                              <!--<input type="text" class="form-control" ng-model="job.timeLimit" placeholder="Ex: 2-12:00:00" uib-datepicker-popup="d-H:m:s" datepicker-popup="d-H:m:s">-->
+                              <table class="table-responsive">
+                                  <tr>
+                                      <td><input type="number" class="form-control" ng-model="job.timeLimit.days" placeholder="" style="max-width:100px;margin:1px;"> Jours</td>
+                                      <td><input type="number" class="form-control" ng-model="job.timeLimit.hours" placeholder="" style="max-width:100px;margin:1px;"> Heures</td>
+                                      <td><input type="number" class="form-control" ng-model="job.timeLimit.minutes" placeholder="" style="max-width:100px;margin:1px;"> Minutes</td>
+                                      <td><input type="number" class="form-control" ng-model="job.timeLimit.seconds" placeholder="" style="max-width:100px;margin:1px;"> Secondes</td>
+                                  </tr>
+                              </table>
                             </div>
                         </div>
                         <swa-partitions-estimation selected="job.partition" job-to-estimate="job"></swa-partitions-estimation>

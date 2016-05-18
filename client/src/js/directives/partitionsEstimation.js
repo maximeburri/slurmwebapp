@@ -43,10 +43,25 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                 }
 
                 loadingEstimation = true;
+
+                function twoDigits(n){
+                    return (n < 10 ? '0' : '') + n.toFixed();
+                }
+
+                estimatedTime =
+                        twoDigits(scope.jobToEstimate.timeLimit.days) +
+                        "-" +
+                        twoDigits(scope.jobToEstimate.timeLimit.hours) +
+                        ":" +
+                        twoDigits(scope.jobToEstimate.timeLimit.minutes) +
+                        ":" +
+                        twoDigits(scope.jobToEstimate.timeLimit.seconds);
+                console.log(estimatedTime);
                 User.operation({verb:"estimate", object:"job", params:{
                     partition:scope.jobToEstimate.partition,
                     nbTasks:scope.jobToEstimate.nbTasks,
-                    nbCPUsPerTasks:scope.jobToEstimate.nbCPUsPerTasks}}).then(
+                    nbCPUsPerTasks:scope.jobToEstimate.nbCPUsPerTasks,
+                    estimatedTime :estimatedTime}}).then(
                     // Success
                     function(data){
                         scope.estimationError = false;

@@ -54,8 +54,14 @@
                             > partition.TotalCPUs
                         || jobToEstimate.nbTasks > partition.TotalCPUs
                         || jobToEstimate.nbCPUsPerTasks > partition.TotalCPUs
+
+                        || (!partition.MaxTime.Unlimited &&
+                        (jobToEstimate.timeLimit.seconds +
+                        jobToEstimate.timeLimit.minutes * 60 +
+                        jobToEstimate.timeLimit.hours * 60 * 60 +
+                        jobToEstimate.timeLimit.days * 60 * 60 * 24) >
+                        partition.MaxTime.Timestamp)
                         ;""}}
-                <!--<label style="font-weight: normal; font-size:23px;">-->
                     <input type="radio" ng-model="selected"
                     ng-value="name"
                     ng-disabled="partition.error"
@@ -66,15 +72,20 @@
                     </i>
                     <span style="width:25%;display:inline-block;font-weight:bold">{{name}}</span> <small style=""><!-- Estimation --></small>
                     <div class="container-fluid" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
-                        <!--
-                        style="    color: #E0E0E0;
-background-color: #737373;
-padding: 2px;
-border-radius: 5px;
-font-style: normal;"-->
                         <div class="row">
                             <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                Temps limite : <em><span class="">{{partition.MaxTime == 'UNLIMITED' ? '&infin;' : partition.MaxTime}}</span></em>
+                                Temps limite :
+                                <em>
+                                    <span class="">
+                                        <span ng-if="partition.MaxTime.Unlimited">&infin;</span>
+                                        <span ng-if="!partition.MaxTime.Unlimited">
+                                            <span ng-show="partition.MaxTime.Days">{{partition.MaxTime.Days}}j </span>
+                                            <span ng-show="partition.MaxTime.Hours">{{partition.MaxTime.Hours}}h </span>
+                                            <span ng-show="partition.MaxTime.Minutes">{{partition.MaxTime.Minutes}}m </span>
+                                            <span ng-show="partition.MaxTime.Seconds">{{partition.MaxTime.Seconds}}m </span>
+                                        </span>
+                                    </span>
+                                </em>
                             </div>
                             <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
                                 Noeud min-max : <em><span class="">{{partition.MinNodes}} à {{partition.MaxNodes == 'UNLIMITED' ? '&infin;' : partition.MaxNodes}}</span></em>
