@@ -17,6 +17,10 @@ function EstimationJobOperation() {
         {
             paramName : "nbCPUsPerTasks",
             args : "--cpus-per-task"
+        },
+        {
+            paramName : "estimatedTime",
+            args : "--time"
         }
     ]
 }
