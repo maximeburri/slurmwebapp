@@ -95,10 +95,10 @@
                         <div class="form-group animate-hide"  ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Modules </label>
                             <div class="col-sm-9">
-                              <ol class="nya-bs-select"  data-live-search="true" ng-model="job.modules" data-selected-text-format="values" multiple>
+                              <ol class="nya-bs-select"  data-live-search="true" ng-model="job.modules" data-selected-text-format="values" multiple data-size="5">
                                 <li nya-bs-option="option in modules">
                                   <a>
-                                    {{option.name}}
+                                    {{option}}
                                     <span class="glyphicon glyphicon-ok check-mark"></span>
                                   </a>
                                 </li>
@@ -108,7 +108,7 @@
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
-                              <ol class="nya-bs-select" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
+                              <ol class="nya-bs-select" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true">
                                 <li nya-bs-option="(name, license) in licenses">
                                   <a>
                                     <span>{{name}}

@@ -68,6 +68,17 @@ function SubmissionCtrl($scope, $rootScope, User) {
         }
     );
 
+    User.get('modules').then(
+        // Success
+        function(data){
+            $scope.modules = data.modules;
+            console.log(data);
+        },
+
+        function(data){
+            console.error(data);
+        }
+    );
 
     $scope.notificationEvents = [
       {name: 'Commence'},
