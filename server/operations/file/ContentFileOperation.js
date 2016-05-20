@@ -61,7 +61,8 @@ ContentFileOperation.prototype.executeFilesizeRequest =
 function(client, filename, callbackError, callbackResult){
     //(command, dataCallback, exitCallback, endCallback, stdErrCallbak)
     var filesize = null;
-    client.executeCustomCommand(shellescape(['stat', '-c%s',filename]),
+    finalExitcode = 0;
+    client.executeCustomCommand(shellescape(['stat', '-c%s', filename]),
         // data
         function(data) {
             if(filesize == null){
@@ -70,11 +71,14 @@ function(client, filename, callbackError, callbackResult){
         },
         // exit
         function(exitcode) {
+            console.log("stat exit code : " + exitcode);
+            finalExitcode = exitcode
             callbackError(exitcode);
         },
         // end
         function(){
-            callbackResult(filesize, filename);
+            if(finalExitcode == 0)
+                callbackResult(filesize, filename);
         }
     );
 }
