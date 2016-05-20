@@ -24,4 +24,14 @@ config.general.max_filesize_transfer = 100000;
 config.jobs = {}
 config.jobs.interval_update = 5000
 
+// Configuration files on cluster
+config.configuration_files = {};
+config.configuration_files.max_filesize_transfer =
+    config.general.max_filesize_transfer;
+config.configuration_files.paths = {};
+config.configuration_files.paths.partitions_rules =
+    ".slurmwebapp/partitionsRules.js"; // relative to HOME
+                                       // $HOME and ~ dosn't work before
+                                       // escaped
+
 module.exports = config;
