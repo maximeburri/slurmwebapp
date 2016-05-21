@@ -14,21 +14,115 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             scope.partitions = [];
             scope.loadingEstimation = false;
             scope.estimation = false;
+            scope.rules = {};
 
             if(scope.selectable == undefined)
                 scope.selectable = false;
+
+            function isNbCPUsInsufficient(job, partition){
+                return (job.nbTasks > partition.TotalCPUs ||
+                    job.nbCPUsPerTasks > partition.TotalCPUs ||
+                    (job.nbTasks * job.nbCPUsPerTasks)
+                        > partition.TotalCPUs)
+                    ? "Trop de CPUs demandés" : false;
+            }
+
+            function isTimeLimitExceed(job, partition){
+                return (!partition.MaxTime.Unlimited &&
+                    (job.timeLimit.seconds +
+                    job.timeLimit.minutes * 60 +
+                    job.timeLimit.hours * 60 * 60 +
+                    job.timeLimit.days * 60 * 60 * 24) >
+                    partition.MaxTime.Timestamp)
+                    ? "Temps demandé trop grand" : false;
+            }
+
+            function isDiscouraged(job, partition){
+                /*partitionRules[partition.PartitionName] != undefined &&
+                         partitionRules[partition.PartitionName].discouraged != undefined
+                         discouraged = partitionRules[partition.PartitionName].discouraged;*/
+                return false;
+            }
+
+            function isDisabled(job, partition){
+                // Default fnc to disabled
+                disabledDefaultsFnc = [isNbCPUsInsufficient, isTimeLimitExceed];
+                for(i = 0;i<disabledDefaultsFnc.length; i++){
+                    fnc = disabledDefaultsFnc[i];
+                    result = fnc(job, partition);
+                    console.log(result);
+                    if(result)
+                        return result;
+                }
+
+                return false;
+            }
+
+            function updatePartitionByRules(){
+                console.log("=== Memory change 2");
+                job = scope.jobToEstimate;
+                partitionRules = scope.rules != undefined &&
+                                 scope.rules.partitions != undefined ?
+                                 scope.rules.partitions : [];
+
+                angular.forEach(scope.partitions, function(partition){
+                    // Disabled ?
+                    if((result = isDisabled(job, partition))){
+                        partition.advice = {};
+                        partition.advice.type = "disabled";
+                        partition.advice.reason = result === true ? "" : result;
+                    }
+                    // So discouraged ?
+                    else if((result = isDiscouraged(job, partition))){
+                        partition.advice = {};
+                        partition.advice.type = "discouraged";
+                        partition.advice.reason = result === true ? "" : result;
+                    }
+                    // So enabled
+                    else{
+                        partition.advice = {};
+                        partition.advice.type = "enabled";
+                        partition.advice.reason = "";
+                    }
+                });
+            }
+
+            scope.$watch("jobToEstimate.memory +  \
+                        jobToEstimate.nbTasks +  \
+                        jobToEstimate.nbCPUsPerTasks + \
+                        jobToEstimate.timeLimit.days  + \
+                        jobToEstimate.timeLimit.hours  + \
+                        jobToEstimate.timeLimit.minutes  + \
+                        jobToEstimate.timeLimit.seconds",
+                updatePartitionByRules
+            );
 
             User.get('partitions').then(
                 // Success
                 function(data){
                     console.log(data);
                     scope.partitions = data.partitions;
+                    updatePartitionByRules();
                 },
 
                 function(data){
                     console.error(data);
                 }
             );
+
+            User.get('configuration', {type:"partitions_rules"}).then(
+                // Success
+                function(data){
+                    scope.rules = data;
+                    console.log("Configuration partitions_rules");
+                    console.log(data);
+                },
+
+                function(data){
+                    console.error(data);
+                }
+            );
+
             scope.itemClick = function(partition){
                 if(!partition.error){
                     scope.selected = partition.PartitionName;

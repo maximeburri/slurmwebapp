@@ -6,7 +6,12 @@ angular.module('RDash')
     .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', SubmissionCtrl]);
 
 function SubmissionCtrl($scope, $rootScope, User) {
-    $scope.job = {};
+    $scope.job = {
+        memory:0,
+        nbTasks:1,
+        nbCPUsPerTasks:1,
+    };
+
     $scope.job.timeLimit = {
         days:0,
         hours : 1,
@@ -18,7 +23,7 @@ function SubmissionCtrl($scope, $rootScope, User) {
 
     $scope.parameters = {
         submissionType : "submission",
-        userType : "novice",
+        userType : "expert",
         execFileType : "paste"
     };
 

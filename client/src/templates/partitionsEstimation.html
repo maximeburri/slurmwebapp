@@ -47,30 +47,19 @@
     border: 1px solid #B9B9B9;
     border-radius:2px;" ng-repeat="(name, partition) in partitions"
         ng-click="itemClick(partition)"
-        ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected, 'striped' : partition.error}">
+        ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected, 'striped' : partition.advice.type == 'disabled'}">
 
-                    {{partition.error =
-                        (jobToEstimate.nbTasks * jobToEstimate.nbCPUsPerTasks)
-                            > partition.TotalCPUs
-                        || jobToEstimate.nbTasks > partition.TotalCPUs
-                        || jobToEstimate.nbCPUsPerTasks > partition.TotalCPUs
-
-                        || (!partition.MaxTime.Unlimited &&
-                        (jobToEstimate.timeLimit.seconds +
-                        jobToEstimate.timeLimit.minutes * 60 +
-                        jobToEstimate.timeLimit.hours * 60 * 60 +
-                        jobToEstimate.timeLimit.days * 60 * 60 * 24) >
-                        partition.MaxTime.Timestamp)
-                        ;""}}
                     <input type="radio" ng-model="selected"
                     ng-value="name"
-                    ng-disabled="partition.error"
+                    ng-disabled="partition.advice.type == 'disabled'"
                     style="display: none;"
                     />
-                    <i ng-class="{'fa fa-check text-success' : !partition.error, 'fa fa-times text-danger' : partition.error}"
+                    <i ng-class="{'fa fa-check text-success' : partition.advice.type == 'enabled',
+                                  'fa fa-times text-danger' : partition.advice.type == 'disabled',
+                                  'fa fa-times text-warning' : partition.advice.type == 'discouraged'}"
                         style="font-size:20px;">
                     </i>
-                    <span style="width:25%;display:inline-block;font-weight:bold">{{name}}</span> <small style=""><!-- Estimation --></small>
+                    <span style="/*width:25%;*/display:inline-block;font-weight:bold">{{name}}</span> <small style="" ng-if="partition.advice.reason !== ''"> - {{partition.advice.reason}}</small>
                     <div class="container-fluid" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
                         <div class="row">
                             <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
