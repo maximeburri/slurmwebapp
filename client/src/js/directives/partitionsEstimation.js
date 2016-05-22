@@ -16,6 +16,9 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             scope.estimation = false;
             scope.rules = {};
 
+            scopeRules = scope.$new(true);
+            scopeRules.job = scope.jobToEstimate;
+
             if(scope.selectable == undefined)
                 scope.selectable = false;
 
@@ -37,11 +40,36 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                     ? "Temps demandé trop grand" : false;
             }
 
-            function isDiscouraged(job, partition){
-                /*partitionRules[partition.PartitionName] != undefined &&
-                         partitionRules[partition.PartitionName].discouraged != undefined
-                         discouraged = partitionRules[partition.PartitionName].discouraged;*/
+            function executeRules(attributeType, job, partition){
+                partitionsRules = scope.rules != undefined &&
+                                  scope.rules.partitions != undefined ?
+                                  scope.rules.partitions : [];
+                partitionRules = [];
+                if(partitionsRules[partition.PartitionName] != undefined &&
+                    partitionsRules[partition.PartitionName][attributeType] != undefined)
+                    partitionRules = partitionsRules[partition.PartitionName][attributeType];
+
+
+                scopeRules.partition = partition;
+                console.log(scopeRules.partition);
+                console.log(scopeRules.job);
+                for(i = 0;i<partitionRules.length;i++){
+                    rule = partitionRules[i];
+
+                    // Predefined type
+                    if(rule.type != undefined){
+
+                    }
+                    else if(rule.rule != undefined && typeof rule.rule == "string"){
+                        if(scopeRules.$eval(rule.rule))
+                            return rule.reason != undefined ? rule.reason : true;
+                    }
+                }
                 return false;
+            }
+
+            function isDiscouraged(job, partition){
+                return executeRules("discouraged", job, partition);
             }
 
             function isDisabled(job, partition){
@@ -50,20 +78,15 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                 for(i = 0;i<disabledDefaultsFnc.length; i++){
                     fnc = disabledDefaultsFnc[i];
                     result = fnc(job, partition);
-                    console.log(result);
                     if(result)
                         return result;
                 }
 
-                return false;
+                return executeRules("disabled", job, partition);
             }
 
             function updatePartitionByRules(){
-                console.log("=== Memory change 2");
                 job = scope.jobToEstimate;
-                partitionRules = scope.rules != undefined &&
-                                 scope.rules.partitions != undefined ?
-                                 scope.rules.partitions : [];
 
                 angular.forEach(scope.partitions, function(partition){
                     // Disabled ?
@@ -114,6 +137,7 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                 // Success
                 function(data){
                     scope.rules = data;
+                    updatePartitionByRules();
                     console.log("Configuration partitions_rules");
                     console.log(data);
                 },
@@ -124,7 +148,7 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             );
 
             scope.itemClick = function(partition){
-                if(!partition.error){
+                if(partition.advice.type != "disabled"){
                     scope.selected = partition.PartitionName;
                     scope.estimation = false;
                 }
