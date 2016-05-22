@@ -45,7 +45,8 @@
     padding-left:10px;
     overflow: hidden;
     border: 1px solid #B9B9B9;
-    border-radius:2px;" ng-repeat="(name, partition) in partitions"
+    border-radius:2px;" ng-repeat="partition in (partitions | orderBy : partitionOrder)"
+        ng-init="name = partition.PartitionName"
         ng-click="itemClick(partition)"
         ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected, 'striped' : partition.advice.type == 'disabled'}">
 

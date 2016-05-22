@@ -197,6 +197,12 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                     }
                 );
             }
+            scope.partitionOrder = function(partition){
+                if (partition.advice.type == "enabled") return 1;
+                if (partition.advice.type == "discouraged") return 2;
+                if (partition.advice.type == "disabled") return 3;
+            }
+
         }
     };
     return directive;
