@@ -24,7 +24,7 @@ function(result, exitcode, clientCallback){
     }
 
     partitionsListString = result.split("\n");
-    partitionsListParsed = {};
+    partitionsListParsed = [];
 
     partitionsListString.forEach( function(partitionString){
         partitionObject = {};
@@ -76,7 +76,7 @@ function(result, exitcode, clientCallback){
             }
             partitionObject['MaxTime'] = MaxTime;
         }
-        partitionsListParsed[partitionObject['PartitionName']] = partitionObject;
+        partitionsListParsed.push(partitionObject);
     });
 
 
