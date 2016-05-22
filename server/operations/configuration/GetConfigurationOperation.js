@@ -47,7 +47,6 @@ function(client, operationInfo, clientCallback) {
                             console.log("Bad configuration file type")
                             console.log(e);
                         }
-                        console.log(resultFinal)
                         clientCallback(resultFinal);
                     }
                 });
