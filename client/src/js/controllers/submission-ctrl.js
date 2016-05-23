@@ -10,7 +10,8 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         memory:{
             value:0,
             unit:'MB',
-            bytesValue:0
+            bytesValue:0,
+            default:true
         },
         nbTasks:1,
         nbCPUsPerTasks:1,
@@ -100,7 +101,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         function(){
             $scope.job.memory.bytesValue = Memory.toBytes($scope.job.memory.value,
                                                       $scope.job.memory.unit);
-            console.log($scope.job.memory.bytesValue);                                
+            console.log($scope.job.memory.bytesValue);
         }
     );
 }

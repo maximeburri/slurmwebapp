@@ -45,11 +45,16 @@
                             </div>
                         </div>
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
+
                             <label class="col-sm-3 control-label">Mémoire </label>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
+                              <input type="checkbox" id="memoryDefault" ng-click="job.memory.value=0" ng-model="job.memory.default">
+                              <label class="control-label" for="memoryDefault">Défaut</label>
+                            </div>
+                            <div class="col-sm-3" ng-hide="job.memory.default">
                               <input type="number" class="form-control" ng-model="job.memory.value" placeholder="">
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-3" ng-hide="job.memory.default">
                                 <ol id="singleSelection" class="nya-bs-select" ng-model="job.memory.unit">
                                     <li class="nya-bs-option" data-value="">
                                         <a>o</a>
