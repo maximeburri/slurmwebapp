@@ -147,7 +147,7 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                 });
             }
 
-            scope.$watch("jobToEstimate.memory +  \
+            scope.$watch("jobToEstimate.memory.bytesValue +  \
                         jobToEstimate.nbTasks +  \
                         jobToEstimate.nbCPUsPerTasks + \
                         jobToEstimate.timeLimit.days  + \

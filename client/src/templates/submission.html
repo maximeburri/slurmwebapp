@@ -47,7 +47,23 @@
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
                             <label class="col-sm-3 control-label">Mémoire </label>
                             <div class="col-sm-3">
-                              <input type="number" class="form-control" ng-model="job.memory" placeholder="">
+                              <input type="number" class="form-control" ng-model="job.memory.value" placeholder="">
+                            </div>
+                            <div class="col-sm-3">
+                                <ol id="singleSelection" class="nya-bs-select" ng-model="job.memory.unit">
+                                    <li class="nya-bs-option" data-value="">
+                                        <a>o</a>
+                                    </li>
+                                    <li class="nya-bs-option" data-value="KB">
+                                        <a>Ko</a>
+                                    </li>
+                                    <li class="nya-bs-option" data-value="MB">
+                                        <a>Mo</a>
+                                    </li>
+                                    <li class="nya-bs-option" data-value="GB">
+                                        <a>Go</a>
+                                    </li>
+                                </ol>
                             </div>
                         </div>
 

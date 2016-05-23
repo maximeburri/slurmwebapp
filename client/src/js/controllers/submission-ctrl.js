@@ -3,11 +3,15 @@
  */
 
 angular.module('RDash')
-    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', SubmissionCtrl]);
+    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory', SubmissionCtrl]);
 
-function SubmissionCtrl($scope, $rootScope, User) {
+function SubmissionCtrl($scope, $rootScope, User, Memory) {
     $scope.job = {
-        memory:0,
+        memory:{
+            value:0,
+            unit:'MB',
+            bytesValue:0
+        },
         nbTasks:1,
         nbCPUsPerTasks:1,
     };
@@ -91,4 +95,12 @@ function SubmissionCtrl($scope, $rootScope, User) {
       {name: 'Échoue'},
       {name: 'Temps limite atteint'}
     ];
+
+    $scope.$watch("job.memory.value + job.memory.unit",
+        function(){
+            $scope.job.memory.bytesValue = Memory.toBytes($scope.job.memory.value,
+                                                      $scope.job.memory.unit);
+            console.log($scope.job.memory.bytesValue);                                
+        }
+    );
 }
