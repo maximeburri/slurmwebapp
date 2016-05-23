@@ -1,8 +1,8 @@
 angular
     .module('RDash')
-    .directive('swaPartitionsEstimation', ['User', '$modal','$compile', swaPartitionsEstimation]);
+    .directive('swaPartitionsEstimation', ['User', 'Memory', '$modal','$compile', swaPartitionsEstimation]);
 
-function swaPartitionsEstimation(User, $modal, $compile) {
+function swaPartitionsEstimation(User, Memory, $modal, $compile) {
     var directive = {
         restrict: 'AE',
         scope: { selected:'=', jobToEstimate:'='},
@@ -20,7 +20,7 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             scopeRules = scope.$new(true);
             scopeRules.job = scope.jobToEstimate;
             var fncScopeRules = {
-                "toBytes": toBytes
+                "toBytes": Memory.toBytes
             };
 
             scopeRules.tools = fncScopeRules;
@@ -44,29 +44,6 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                     job.timeLimit.days * 60 * 60 * 24) >
                     partition.MaxTime.Timestamp)
                     ? "Temps demandé trop grand" : false;
-            }
-
-            function toBytes(number, stringUnit){
-                factorUnit = 1;
-                switch (stringUnit) {
-                    case "KB":
-                    case "Ko":
-                        factorUnit *= 1024;
-                        break;
-                    case "MB":
-                    case "Mo":
-                        factorUnit *= 1024^2;
-                        break;
-                    case "GB":
-                    case "Go":
-                        factorUnit *= 1024^3;
-                        break;
-                    case "TB":
-                    case "To":
-                        factorUnit *= 1024^4;
-                        break;
-                }
-                return number * factorUnit;
             }
 
             function executeRules(attributeType, job, partition){
