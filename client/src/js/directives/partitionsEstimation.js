@@ -19,6 +19,11 @@ function swaPartitionsEstimation(User, $modal, $compile) {
 
             scopeRules = scope.$new(true);
             scopeRules.job = scope.jobToEstimate;
+            var fncScopeRules = {
+                "toBytes": toBytes
+            };
+
+            scopeRules.tools = fncScopeRules;
 
             if(scope.selectable == undefined)
                 scope.selectable = false;
@@ -39,6 +44,29 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                     job.timeLimit.days * 60 * 60 * 24) >
                     partition.MaxTime.Timestamp)
                     ? "Temps demandé trop grand" : false;
+            }
+
+            function toBytes(number, stringUnit){
+                factorUnit = 1;
+                switch (stringUnit) {
+                    case "KB":
+                    case "Ko":
+                        factorUnit *= 1024;
+                        break;
+                    case "MB":
+                    case "Mo":
+                        factorUnit *= 1024^2;
+                        break;
+                    case "GB":
+                    case "Go":
+                        factorUnit *= 1024^3;
+                        break;
+                    case "TB":
+                    case "To":
+                        factorUnit *= 1024^4;
+                        break;
+                }
+                return number * factorUnit;
             }
 
             function executeRules(attributeType, job, partition){
@@ -68,13 +96,12 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                         if(definedRule.parameters != undefined){
                             parameters = definedRule.parameters;
                         }
-                        console.log(parameters);
+
                         // Check parameter rules in partitions
                         if(rule.parameters != undefined)
                             mergeDictionary(parameters, rule.parameters);
-                        console.log(parameters);
                         scopeRules.parameters = parameters;
-                        console.log(scopeRules.parameters);
+
                         if(scopeRules.$eval(definedRule.rule)){
                             var reason = rule.reason;
 
