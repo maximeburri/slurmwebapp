@@ -14,6 +14,7 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             scope.partitions = [];
             scope.loadingEstimation = false;
             scope.estimation = false;
+            scope.partitionsRules = {};
             scope.rules = {};
 
             scopeRules = scope.$new(true);
@@ -41,9 +42,7 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             }
 
             function executeRules(attributeType, job, partition){
-                partitionsRules = scope.rules != undefined &&
-                                  scope.rules.partitions != undefined ?
-                                  scope.rules.partitions : [];
+                partitionsRules = scope.partitionsRules;
                 partitionRules = [];
                 if(partitionsRules[partition.PartitionName] != undefined &&
                     partitionsRules[partition.PartitionName][attributeType] != undefined)
@@ -51,16 +50,43 @@ function swaPartitionsEstimation(User, $modal, $compile) {
 
 
                 scopeRules.partition = partition;
-                console.log(scopeRules.partition);
-                console.log(scopeRules.job);
+
+
                 for(i = 0;i<partitionRules.length;i++){
-                    rule = partitionRules[i];
+                    var rule = partitionRules[i];
+                    var parameters = {};
 
                     // Predefined type
                     if(rule.type != undefined){
+                        definedRule = scope.rules[rule.type];
+                        if(definedRule == undefined){
+                            console.error("No rule of "+rule.type);
+                            return false;
+                        }
 
+                        // Check parameters rules
+                        if(definedRule.parameters != undefined){
+                            parameters = definedRule.parameters;
+                        }
+                        console.log(parameters);
+                        // Check parameter rules in partitions
+                        if(rule.parameters != undefined)
+                            mergeDictionary(parameters, rule.parameters);
+                        console.log(parameters);
+                        scopeRules.parameters = parameters;
+                        console.log(scopeRules.parameters);
+                        if(scopeRules.$eval(definedRule.rule)){
+                            var reason = rule.reason;
+
+                            if(reason == undefined)
+                                reason = definedRule.reason;
+
+                            return reason != undefined ? reason : true;
+                        }
                     }
                     else if(rule.rule != undefined && typeof rule.rule == "string"){
+                        scopeRules.parameters = rule.parameters;
+
                         if(scopeRules.$eval(rule.rule))
                             return rule.reason != undefined ? rule.reason : true;
                     }
@@ -83,6 +109,13 @@ function swaPartitionsEstimation(User, $modal, $compile) {
                 }
 
                 return executeRules("disabled", job, partition);
+            }
+
+            function mergeDictionary(dict1, dict2){
+                angular.forEach(dict2, function(object, name){
+                    dict1[name] = object;
+                });
+                return dict1;
             }
 
             function updatePartitionByRules(){
@@ -123,7 +156,6 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             User.get('partitions').then(
                 // Success
                 function(data){
-                    console.log(data);
                     scope.partitions = data.partitions;
                     updatePartitionByRules();
                 },
@@ -136,10 +168,12 @@ function swaPartitionsEstimation(User, $modal, $compile) {
             User.get('configuration', {type:"partitions_rules"}).then(
                 // Success
                 function(data){
-                    scope.rules = data;
+                    scope.partitionsRules = data.partitions != undefined ?
+                                            data.partitions : [];
+                    if(data.rules != undefined)
+                        mergeDictionary(scope.rules, data.rules);
+
                     updatePartitionByRules();
-                    console.log("Configuration partitions_rules");
-                    console.log(data);
                 },
 
                 function(data){
