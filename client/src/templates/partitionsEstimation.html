@@ -57,7 +57,7 @@
                     />
                     <i ng-class="{'fa fa-check text-success' : partition.advice.type == 'enabled',
                                   'fa fa-times text-danger' : partition.advice.type == 'disabled',
-                                  'fa fa-check text-warning' : partition.advice.type == 'discouraged'}"
+                                  'fa fa-check text-danger' : partition.advice.type == 'discouraged'}"
                         style="font-size:20px;">
                     </i>
                     <span style="/*width:25%;*/display:inline-block;font-weight:bold">{{name}}</span> <small style="" ng-if="partition.advice.reason !== ''"> - {{partition.advice.reason}}</small>
