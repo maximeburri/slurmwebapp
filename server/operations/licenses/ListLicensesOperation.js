@@ -24,7 +24,7 @@ function(result, exitcode, clientCallback){
     }
 
     licensesListString = result.split("\n");
-    licensesListParsed = {};
+    licensesListParsed = [];
 
     licensesListString.forEach( function(licenseString){
         licenseObject = {};
@@ -40,11 +40,12 @@ function(result, exitcode, clientCallback){
             }
         }
 
-        dictName = licenseObject['LicenseName'] ? licenseObject['LicenseName'].split('@') : '';
-        if(dictName && dictName.length >= 1 )
-            dictName = dictName[0];
+        shortName = licenseObject['LicenseName'] ? licenseObject['LicenseName'].split('@') : '';
+        if(shortName && shortName.length >= 1 )
+            shortName = shortName[0];
 
-        licensesListParsed[dictName] = licenseObject;
+        licenseObject.ShortName = shortName;
+        licensesListParsed.push(licenseObject);
     });
 
     clientCallback({licenses:licensesListParsed}, false)
