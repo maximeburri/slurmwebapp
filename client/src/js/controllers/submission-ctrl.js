@@ -124,7 +124,20 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             }
         }
 
-        angular.extend($scope.job, predefinedSubmission.job);
+        // Merge between job and predefined submission
+        replaceInsteadMerge = ['notificationEvents', 'licenses', 'modules'];
+
+        angular.forEach(predefinedSubmission.job, function (attr, nameAttr){
+            if(nameAttr != "predefinedSubmission" &&
+                predefinedSubmission.job[nameAttr] != undefined){
+                if(replaceInsteadMerge.indexOf(nameAttr) >= 0)
+                    $scope.job[nameAttr] = predefinedSubmission.job[nameAttr];
+                else
+                    $scope.job[nameAttr] = angular.merge({},
+                        $scope.job[nameAttr],
+                        predefinedSubmission.job[nameAttr]);
+            }
+        });
     }
 
     $scope.notificationEvents = [
