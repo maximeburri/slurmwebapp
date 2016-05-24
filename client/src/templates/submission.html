@@ -23,9 +23,9 @@
                         <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Soumission préfédinie </label>
                             <ol class="nya-bs-select" ng-model="job.predefinedSubmission" data-live-search="true" style="margin-left:15px;">
-                              <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group" ng-hide="predefinedSubmission.hide">
+                              <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group">
                                 <span class="dropdown-header" ng-if="$group"}}>{{$group}}</span>
-                                <a ng-click="updateJobByPredefinedSubmission(predefinedSubmission)">
+                                <a ng-click="updateJobByPredefinedSubmission(predefinedSubmission)" ng-hide="predefinedSubmission.hide">
                                   <span>{{ predefinedSubmission.name }}</span>
                                   <span class="small">{{ predefinedSubmission.subtitle }}</span>
                                   <span class="glyphicon glyphicon-ok check-mark"></span>
