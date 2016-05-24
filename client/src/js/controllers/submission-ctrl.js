@@ -32,8 +32,14 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         execFileType : "paste"
     };
 
+    // Predefined submissions for select option
     $scope.predefinedSubmissions = [
     ];
+
+    // Dictionnary predefined submissions by "name" : predefined_submissions of
+    // $scope.predefinedSubmissions
+    predefinedSubmissionsDictionnary = {
+    };
 
     $scope.modules = [
     ];
@@ -72,6 +78,8 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             angular.forEach(data.predefinedSubmissions, function(submission){
                 if(submission.group == undefined)
                     submission.group = "Défaut";
+
+                predefinedSubmissionsDictionnary[submission.name] = submission;
             });
 
             // Store in scope
@@ -86,6 +94,17 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
     );
 
     $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){
+        // Has parent paramters ? recursive merge
+        if(predefinedSubmission.parent != undefined){
+            try {
+                $scope.updateJobByPredefinedSubmission
+                    (predefinedSubmissionsDictionnary[predefinedSubmission.parent]);
+            }
+            catch(err){
+                console.error("Parent predefined submission dosen't exist");
+            }
+        }
+
         angular.merge($scope.job, predefinedSubmission.job)
     }
 
