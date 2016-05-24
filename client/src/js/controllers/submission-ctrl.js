@@ -128,9 +128,9 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         replaceInsteadMerge = ['notificationEvents', 'licenses', 'modules'];
 
         angular.forEach(predefinedSubmission.job, function (attr, nameAttr){
-            if(nameAttr != "predefinedSubmission" &&
-                predefinedSubmission.job[nameAttr] != undefined){
-                if(replaceInsteadMerge.indexOf(nameAttr) >= 0)
+            if(predefinedSubmission.job[nameAttr] != undefined){
+                if(typeof attr !== 'object' ||
+                    replaceInsteadMerge.indexOf(nameAttr) >= 0)
                     $scope.job[nameAttr] = predefinedSubmission.job[nameAttr];
                 else
                     $scope.job[nameAttr] = angular.merge({},
