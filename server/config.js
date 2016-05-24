@@ -29,9 +29,10 @@ config.configuration_files = {};
 config.configuration_files.max_filesize_transfer =
     config.general.max_filesize_transfer;
 config.configuration_files.paths = {};
+// path relative to HOME
+// $HOME and ~ doesn't work because it's escaped
 config.configuration_files.paths.partitions_rules =
-    ".slurmwebapp/partitionsRules.js"; // relative to HOME
-                                       // $HOME and ~ dosn't work before
-                                       // escaped
-
+    ".slurmwebapp/partitionsRules.js";
+config.configuration_files.paths.predefined_submissions =
+    ".slurmwebapp/predefinedSubmissions.js";  
 module.exports = config;
