@@ -49,27 +49,12 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
 
     $scope.licenses = [
     ];
+    $scope.licensesArray = [];
 
     User.get('licenses').then(
         // Success
         function(data){
             var i = 0;
-            angular.forEach(data.licenses, function(license){
-                switch (i) {
-                    case 0:
-                        license.Free = 0;
-                        break;
-                    case 1:
-                        license.Used = license.Total - 1;
-                        license.Free = 1;
-                        break;
-                    case 2:
-                        license.Used = license.Total / 2;
-                        license.Free = license.Total / 2;
-                        break;
-                }
-                i++;
-            });
             $scope.licenses = data.licenses;
         },
 

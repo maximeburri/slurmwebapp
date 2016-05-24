@@ -137,9 +137,9 @@
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
                               <ol class="nya-bs-select" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
-                                <li nya-bs-option="(name, license) in licenses">
+                                <li nya-bs-option="license in licenses track by license.LicenseName" value="license.LicenseName">
                                   <a>
-                                    <span>{{name}}
+                                    <span>{{license.ShortName}}
                                         <small ng-class="{'text-danger' : license.Free <= 0, 'text-warning' : (license.Used / license.Total) >= 0.5, 'text-muted' : (license.Used / license.Total) < 0.5}">
                                             {{ license.Free }} sur {{ license.Total }}  restant<span ng-if="license.Free > 1">s</span>
                                         </small>
