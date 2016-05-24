@@ -136,7 +136,7 @@
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
-                              <ol class="nya-bs-select" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true">
+                              <ol class="nya-bs-select" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
                                 <li nya-bs-option="(name, license) in licenses">
                                   <a>
                                     <span>{{name}}
