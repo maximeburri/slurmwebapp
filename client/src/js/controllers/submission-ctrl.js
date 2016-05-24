@@ -105,7 +105,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             }
         }
 
-        angular.merge($scope.job, predefinedSubmission.job)
+        angular.extend($scope.job, predefinedSubmission.job);
     }
 
     $scope.notificationEvents = [
