@@ -32,24 +32,14 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         execFileType : "paste"
     };
 
-    $scope.options = [
-      {name: 'MPI/gcc', subtitle: '', group: 'Défaut'},
-      {name: 'C', subtitle: '', group: 'Défaut'},
-      {name: 'Matlab', subtitle: '', group: 'Défaut'},
-      {name: 'Stat', subtitle: '', group: 'Défaut'},
-      {name: 'Tetras', subtitle: '', group: 'Personnalisé'}
+    $scope.predefinedSubmissions = [
     ];
 
     $scope.modules = [
-      {name: 'MPI'},
-      {name: 'gcc'},
-      {name: 'R'},
-      {name: 'Matlab'}
     ];
 
     $scope.licenses = [
     ];
-    $scope.licensesArray = [];
 
     User.get('licenses').then(
         // Success
@@ -74,6 +64,30 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             console.error(data);
         }
     );
+
+    User.get('configuration', {type:"predefined_submissions"}).then(
+        // Success
+        function(data){
+            // Check if no group, group 'default'
+            angular.forEach(data.predefinedSubmissions, function(submission){
+                if(submission.group == undefined)
+                    submission.group = "Défaut";
+            });
+
+            // Store in scope
+            $scope.predefinedSubmissions =
+                data.predefinedSubmissions != undefined ?
+                data.predefinedSubmissions : [];
+        },
+
+        function(data){
+            console.error(data);
+        }
+    );
+
+    $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){
+        angular.merge($scope.job, predefinedSubmission.job)
+    }
 
     $scope.notificationEvents = [
       {name: 'Commence'},

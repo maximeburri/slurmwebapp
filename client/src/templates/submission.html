@@ -22,12 +22,12 @@
                         </div>
                         <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Soumission préfédinie </label>
-                            <ol class="nya-bs-select" ng-model="submissionPredefined" data-live-search="true" style="margin-left:15px;">
-                              <li nya-bs-option="option in options group by option.group">
-                                <span class="dropdown-header">{{$group}}</span> <!-- group header cannot be searched -->
-                                <a>
-                                  <span>{{ option.name }}</span> <!-- this content will be search first -->
-                                  <span class="small">{{ option.subtitle }}</span> <!-- if the name failed, this will be used -->
+                            <ol class="nya-bs-select" ng-model="job.predefinedSubmission" data-live-search="true" style="margin-left:15px;">
+                              <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group" ng-hide="predefinedSubmission.hide">
+                                <span class="dropdown-header" ng-if="$group"}}>{{$group}}</span>
+                                <a ng-click="updateJobByPredefinedSubmission(predefinedSubmission)">
+                                  <span>{{ predefinedSubmission.name }}</span>
+                                  <span class="small">{{ predefinedSubmission.subtitle }}</span>
                                   <span class="glyphicon glyphicon-ok check-mark"></span>
                                 </a>
                               </li>
