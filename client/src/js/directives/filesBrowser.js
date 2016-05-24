@@ -13,7 +13,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             };
         },
         link: function(scope, element, attrs){
-            console.log(scope.selectable)
             scope.options = {};
             scope.options.showHiddenFiles = false;
             if(scope.selectable == undefined)
@@ -22,8 +21,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 scope.selectableTypes = ["executable", 'file', 'symboliclink'];
             else
                 scope.selectableTypes = JSON.parse(scope.selectableTypes);
-            console.log("typeSelectable : ");
-            console.log(scope.selectableTypes.indexOf('executable'));
 
             scope.fileViewer = {
                 content : "",
@@ -50,8 +47,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                     function(data){
                         scope.currentDir = data.path;
                         scope.files = data.files;
-                        console.log("Operation effectued");
-                        console.log(JSON.stringify(data));
                         scope.loading = false;
                     }
                 );
@@ -60,13 +55,11 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             scope.goToFile = function(file){
                 scope.stopFollowFileContent();
                 futurDir = scope.currentDir + file.filename;
-                console.log("Go to:"+futurDir);
 
                 if(file.type == "folder" || file.type == "symboliclink"){
                     scope.fileViewer.show = false;
                     scope.updateFiles(futurDir).catch(
                         function(err){
-                            console.log(err);
                             scope.loading = false;
                             if(err.type == "ACCESS_DENIED"){
                                 scope.showAlertAccessFailed(futurDir);
