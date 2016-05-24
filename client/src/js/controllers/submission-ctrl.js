@@ -15,15 +15,15 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         },
         nbTasks:1,
         nbCPUsPerTasks:1,
+        timeLimit :{
+            days:0,
+            hours : 1,
+            minutes : 0,
+            seconds : 0
+        }
     };
+    $scope.defaultJob = {};
 
-    $scope.job.timeLimit = {
-        days:0,
-        hours : 1,
-        minutes : 0,
-        seconds : 0,
-
-    }
     $scope.jobFileSelected = undefined;
 
     $scope.parameters = {
@@ -86,6 +86,20 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             $scope.predefinedSubmissions =
                 data.predefinedSubmissions != undefined ?
                 data.predefinedSubmissions : [];
+
+            // Update field to default
+            console.log(data.default);
+            try {
+                $scope.defaultJob =
+                    predefinedSubmissionsDictionnary[data.default]
+
+                $scope.job.predefinedSubmission = $scope.defaultJob;
+                $scope.updateJobByPredefinedSubmission($scope.defaultJob);
+            }
+            catch(err){
+                console.error("Default predefined submission dosn't exist");
+            }
+
         },
 
         function(data){
@@ -94,14 +108,19 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
     );
 
     $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){
-        // Has parent paramters ? recursive merge
+        // Has parent parameters ? recursive merge
         if(predefinedSubmission.parent != undefined){
-            try {
-                $scope.updateJobByPredefinedSubmission
-                    (predefinedSubmissionsDictionnary[predefinedSubmission.parent]);
-            }
-            catch(err){
-                console.error("Parent predefined submission dosen't exist");
+            if(predefinedSubmission.parent == "default" &&
+                predefinedSubmission.name !== $scope.defaultJob.name){
+                $scope.updateJobByPredefinedSubmission($scope.defaultJob);
+            }else{
+                try {
+                    $scope.updateJobByPredefinedSubmission
+                        (predefinedSubmissionsDictionnary[predefinedSubmission.parent]);
+                }
+                catch(err){
+                    console.error("Parent predefined submission dosen't exist");
+                }
             }
         }
 
