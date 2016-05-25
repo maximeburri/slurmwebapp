@@ -35,62 +35,66 @@
                 </i>
     </div>
     <div style="width:100%; margin-top:1x;padding: 2px; height: auto; overflow:overlay;max-height:400px;">
-        <span style="    margin-top: 1px;
-    float: left;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    padding: 2px;
-    padding-top: 6px;
-    padding-left:10px;
-    overflow: hidden;
-    border: 1px solid #B9B9B9;
-    border-radius:2px;" ng-repeat="partition in (partitions | orderBy : partitionOrder)"
-        ng-init="name = partition.PartitionName"
-        ng-click="itemClick(partition)"
-        ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected, 'striped' : partition.advice.type == 'disabled'}">
 
-                    <input type="radio" ng-model="selected"
-                    ng-value="name"
-                    ng-disabled="partition.advice.type == 'disabled'"
-                    style="display: none;"
-                    />
-                    <i ng-class="{'fa fa-check text-success' : partition.advice.type == 'enabled',
-                                  'fa fa-times text-danger' : partition.advice.type == 'disabled',
-                                  'fa fa-check text-danger' : partition.advice.type == 'discouraged'}"
-                        style="font-size:20px;">
-                    </i>
-                    <span style="/*width:25%;*/display:inline-block;font-weight:bold">{{name}}</span> <small style="" ng-if="partition.advice.reason !== ''"> - {{partition.advice.reason}}</small>
-                    <div class="container-fluid" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                Temps limite :
-                                <em>
-                                    <span class="">
-                                        <span ng-if="partition.MaxTime.Unlimited">&infin;</span>
-                                        <span ng-if="!partition.MaxTime.Unlimited">
-                                            <span ng-show="partition.MaxTime.Days">{{partition.MaxTime.Days}}j </span>
-                                            <span ng-show="partition.MaxTime.Hours">{{partition.MaxTime.Hours}}h </span>
-                                            <span ng-show="partition.MaxTime.Minutes">{{partition.MaxTime.Minutes}}m </span>
-                                            <span ng-show="partition.MaxTime.Seconds">{{partition.MaxTime.Seconds}}m </span>
+        <swa-loading states="loadingStates" state-name="partitions" size="60px"
+                     style="width:100%;text-align: center;">
+            <span style="margin-top: 1px;
+                        float: left;
+                        width: 100%;
+                        text-align: left;
+                        cursor: pointer;
+                        padding: 2px;
+                        padding-top: 6px;
+                        padding-left:10px;
+                        overflow: hidden;
+                        border: 1px solid #B9B9B9;
+                        border-radius:2px;" ng-repeat="partition in (partitions | orderBy : partitionOrder)"
+            ng-init="name = partition.PartitionName"
+            ng-click="itemClick(partition)"
+            ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected, 'striped' : partition.advice.type == 'disabled'}">
+
+                        <input type="radio" ng-model="selected"
+                        ng-value="name"
+                        ng-disabled="partition.advice.type == 'disabled'"
+                        style="display: none;"
+                        />
+                        <i ng-class="{'fa fa-check text-success' : partition.advice.type == 'enabled',
+                                      'fa fa-times text-danger' : partition.advice.type == 'disabled',
+                                      'fa fa-check text-danger' : partition.advice.type == 'discouraged'}"
+                            style="font-size:20px;">
+                        </i>
+                        <span style="/*width:25%;*/display:inline-block;font-weight:bold">{{name}}</span> <small style="" ng-if="partition.advice.reason !== ''"> - {{partition.advice.reason}}</small>
+                        <div class="container-fluid" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                    Temps limite :
+                                    <em>
+                                        <span class="">
+                                            <span ng-if="partition.MaxTime.Unlimited">&infin;</span>
+                                            <span ng-if="!partition.MaxTime.Unlimited">
+                                                <span ng-show="partition.MaxTime.Days">{{partition.MaxTime.Days}}j </span>
+                                                <span ng-show="partition.MaxTime.Hours">{{partition.MaxTime.Hours}}h </span>
+                                                <span ng-show="partition.MaxTime.Minutes">{{partition.MaxTime.Minutes}}m </span>
+                                                <span ng-show="partition.MaxTime.Seconds">{{partition.MaxTime.Seconds}}m </span>
+                                            </span>
                                         </span>
-                                    </span>
-                                </em>
-                            </div>
-                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                Noeud min-max : <em><span class="">{{partition.MinNodes}} à {{partition.MaxNodes == 'UNLIMITED' ? '&infin;' : partition.MaxNodes}}</span></em>
-                            </div>
-                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                CPUs/noeud max : <em><span class="">{{partition.MaxCPUsPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxCPUsPerNode}}</span></em>
-                            </div>
-                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                Mémoire/noeud : <em><span class="">{{partition.MaxMemPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxMemPerNode}}</span></em>
-                            </div>
-                            <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                CPUs Total : <em><span class="">{{partition.TotalCPUs}}</span></em>
+                                    </em>
+                                </div>
+                                <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                    Noeud min-max : <em><span class="">{{partition.MinNodes}} à {{partition.MaxNodes == 'UNLIMITED' ? '&infin;' : partition.MaxNodes}}</span></em>
+                                </div>
+                                <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                    CPUs/noeud max : <em><span class="">{{partition.MaxCPUsPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxCPUsPerNode}}</span></em>
+                                </div>
+                                <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                    Mémoire/noeud : <em><span class="">{{partition.MaxMemPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxMemPerNode}}</span></em>
+                                </div>
+                                <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
+                                    CPUs Total : <em><span class="">{{partition.TotalCPUs}}</span></em>
+                                </div>
                             </div>
                         </div>
-                    </div>
-    </span>
+        </span>
+    </swa-loading>
     </div>
 </div>

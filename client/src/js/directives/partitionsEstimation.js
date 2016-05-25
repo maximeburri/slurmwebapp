@@ -15,6 +15,7 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
             scope.loadingEstimation = false;
             scope.estimation = false;
             scope.partitionsRules = {};
+            scope.loadingStates = {};
             scope.rules = {};
 
             scopeRules = scope.$new(true);
@@ -160,11 +161,13 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
             User.get('partitions').then(
                 // Success
                 function(data){
+                    scope.loadingStates['partitions'] = 'finish';
                     scope.partitions = data.partitions;
                     updatePartitionByRules();
                 },
 
                 function(data){
+                    scope.loadingStates['partitions'] = 'error';
                     console.error(data);
                 }
             );
