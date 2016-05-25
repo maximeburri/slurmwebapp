@@ -10,7 +10,7 @@ inherits(ListModulesOperation, Operation);
 // Overwrite
 ListModulesOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
-    var cmd = "module --terse spider"; //$MODULESHOME/bin/modulecmd sh avail / /opt/modules/Modules/3.2.10/bin/modulecmd sh avail
+    var cmd = "module --terse --ignore_cache spider";
     var resultStderr = ""; // Result in stderr
     var self = this;
 
@@ -43,11 +43,9 @@ function(result, exitcode, clientCallback){
     for(i = 0;i<modulesListString.length-1;i++){
         line = modulesListString[i];
 
-        if(line.length>0 && line[0] == '/'){
-            if(line.includes('version'))
-                i += 2;
-            else
-                i++;
+        if(line.length>0 &&
+            (line[line.length-1] == '/' || line.includes('Rebuilding cache'))){
+                continue;
         }else{
             if(line.length > 1 && line[line.length - 1] != '/')
                 modulesListParsed.push(line);
