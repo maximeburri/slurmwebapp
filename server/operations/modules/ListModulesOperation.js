@@ -10,19 +10,16 @@ inherits(ListModulesOperation, Operation);
 // Overwrite
 ListModulesOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
-    var cmd = "module --terse spider";
-    var resultStderr = ""; // Result in stderr
+    var cmd = "module --terse spider  2>&1 >/dev/null";
     var self = this;
 
     client.executeCommand(
         cmd,
-        function(result, exitcode, clientCallback){
-            self.parseListModules(resultStderr, exitcode, clientCallback);
-        },
+        self.parseListModules,
         clientCallback,
         // STDERR
         function(result, data, clientCallback){
-            resultStderr += data;
+            
         }
     );
 };
