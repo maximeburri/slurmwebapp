@@ -16,7 +16,8 @@ function swaLoading() {
             stateName:'@?',
             size:'@?',
             showSuccessCheck:'@?',
-            stateInit:'@?'
+            stateInit:'@?',
+            style:'@?'
         },
         templateUrl : 'templates/loading.html',
         link: function(scope, element, attrs){
@@ -31,6 +32,9 @@ function swaLoading() {
 
             if(scope.showSuccessCheck == undefined)
                 scope.showSuccessCheck = false;
+
+            if(scope.style == undefined)
+                scope.style = "";
 
             if(scope.size == undefined)
                 scope.size = "auto";
