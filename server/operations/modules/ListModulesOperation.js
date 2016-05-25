@@ -10,7 +10,7 @@ inherits(ListModulesOperation, Operation);
 // Overwrite
 ListModulesOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
-    var cmd = "module --terse --ignore_cache spider";
+    var cmd = "module --terse spider";
     var resultStderr = ""; // Result in stderr
     var self = this;
 
