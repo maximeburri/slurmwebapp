@@ -5,12 +5,36 @@
 
 angular
     .module('RDash')
-    .directive('rdLoading', rdLoading);
+    .directive('swaLoading', swaLoading);
 
-function rdLoading() {
+function swaLoading() {
     var directive = {
-        restrict: 'AE',
-        template: '<div class="loading"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>'
+        restrict: 'E',
+        transclude : true,
+        scope : {
+            states:'=?',
+            stateName:'@?',
+            size:'@?',
+            showSuccessCheck:'@?',
+            stateInit:'@?'
+        },
+        templateUrl : 'templates/loading.html',
+        link: function(scope, element, attrs){
+            if(scope.states == undefined)
+                scope.states = {};
+
+            if(scope.states[scope.stateName] == undefined)
+                scope.states[scope.stateName] = "loading";
+
+            if(scope.stateInit != undefined)
+                scope.states[scope.stateName] = scope.stateInit;
+
+            if(scope.showSuccessCheck == undefined)
+                scope.showSuccessCheck = false;
+
+            if(scope.size == undefined)
+                scope.size = "auto";
+        }
     };
     return directive;
 };
