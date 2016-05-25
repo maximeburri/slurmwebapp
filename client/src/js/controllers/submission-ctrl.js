@@ -44,6 +44,9 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
     $scope.modules = [
     ];
 
+    $scope.moduleDependencies = [
+    ];
+
     $scope.licenses = [
     ];
 
@@ -106,6 +109,22 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             console.error(data);
         }
     );
+
+    $scope.updateModuleDependencies = function(module){
+        User.get('module', {moduleName:module}).then(
+            // Success
+            function(data){
+                $scope.moduleDependencies = data.dependencies;
+
+                // Take first auto if module has dependencies
+                if(data.dependencies.length > 0)
+                    job.moduleDependencies = data.dependencies[0];
+            },
+            function(data){
+                console.error(data);
+            }
+        );
+    }
 
     $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){
         // Has parent parameters ? recursive merge
