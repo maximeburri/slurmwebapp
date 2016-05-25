@@ -22,16 +22,18 @@
                         </div>
                         <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Soumission préfédinie </label>
-                            <ol class="nya-bs-select" ng-model="job.predefinedSubmission" data-live-search="true" style="margin-left:15px;">
-                              <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group">
-                                <span class="dropdown-header" ng-if="$group"}}>{{$group}}</span>
-                                <a ng-click="updateJobByPredefinedSubmission(predefinedSubmission)" ng-hide="predefinedSubmission.hide">
-                                  <span>{{ predefinedSubmission.name }}</span>
-                                  <span class="small">{{ predefinedSubmission.subtitle }}</span>
-                                  <span class="glyphicon glyphicon-ok check-mark"></span>
-                                </a>
-                              </li>
-                            </ol>
+                            <div class=" col-sm-6">
+                                <ol class="nya-bs-select form-control" ng-model="job.predefinedSubmission" data-live-search="true">
+                                  <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group">
+                                    <span class="dropdown-header" ng-if="$group"}}>{{$group}}</span>
+                                    <a ng-click="updateJobByPredefinedSubmission(predefinedSubmission)" ng-hide="predefinedSubmission.hide">
+                                      <span>{{ predefinedSubmission.name }}</span>
+                                      <span class="small">{{ predefinedSubmission.subtitle }}</span>
+                                      <span class="glyphicon glyphicon-ok check-mark"></span>
+                                    </a>
+                                  </li>
+                                </ol>
+                            </div>
                         </div>
 
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
@@ -122,8 +124,8 @@
                         </div>
                         <div class="form-group animate-hide"  ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Modules </label>
-                            <div class="col-sm-3">
-                              <ol class="nya-bs-select"  data-live-search="true" ng-model="job.module"
+                            <div class="col-sm-4">
+                              <ol class="nya-bs-select form-control"  data-live-search="true" ng-model="job.module"
                                   data-selected-text-format="values"
                                   data-size="5" >
                                 <li nya-bs-option="module in modules"
@@ -135,25 +137,36 @@
                                 </li>
                               </ol>
                           </div>
-                          <label class="col-sm-3 control-label" ng-show="moduleDependencies.length > 0">Dépendances</label>
-                          <div class="col-sm-3" ng-show="moduleDependencies.length > 0">
-                            <ol class="nya-bs-select"
-                                ng-model="job.moduleDependencies"
-                                data-selected-text-format="values"
-                                data-size="5" >
-                              <li nya-bs-option="dep in moduleDependencies">
-                                <a>
-                                  {{dep}}
-                                  <span class="glyphicon glyphicon-ok check-mark"></span>
-                                </a>
-                              </li>
-                            </ol>
-                        </div>
+                          <div class="col-sm-5" ng-show="moduleDependencies.length > 1">
+                                <ol class="nya-bs-select form-control"
+                                    ng-model="job.moduleDependencies"
+                                    data-selected-text-format="values"
+                                    data-size="5" >
+                                  <li nya-bs-option="dep in moduleDependencies">
+                                    <a>
+                                      {{dep}}
+                                      <span class="glyphicon glyphicon-ok check-mark"></span>
+                                    </a>
+                                  </li>
+                                </ol>
+                          </div>
+                          <div class="col-sm-5" ng-show="moduleDependencies.length <= 1">
+                                <small class="control-label"
+                                    style="display: block;float: left;"
+                                    ng-show="moduleDependencies.length == 0">
+                                    Pas de dépendances
+                                </small>
+                                <small class="control-label"
+                                    style="display: block;float: left;"
+                                    ng-show="moduleDependencies.length == 1">
+                                    {{job.moduleDependencies}}
+                                </small>
+                          </div>
                         </div>
                         <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
-                              <ol class="nya-bs-select" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
+                              <ol class="nya-bs-select form-control" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
                                 <li nya-bs-option="license in licenses track by license.LicenseName" value="license.LicenseName">
                                   <a>
                                     <span>{{license.ShortName}}
@@ -177,7 +190,7 @@
                                        <input type="checkbox" ng-model="job.notification">
                                    </span>
                                    <input type="text" style="" class="form-control" ng-model="job.notificationEmail" placeholder="email">
-                                    <ol class="nya-bs-select" ng-model="job.notificationEvents" data-selected-text-format="values" multiple>
+                                    <ol class="nya-bs-select form-control" ng-model="job.notificationEvents" data-selected-text-format="values" multiple>
                                      <li nya-bs-option="option in notificationEvents">
                                        <a>
                                          {{option.name}}
