@@ -57,6 +57,9 @@ function(result, exitcode, clientCallback){
         }
         line = line.slice(j);
 
+        // Remove double space
+        line = line.replace('  ', ' ');
+
         dependencies.push(line);
     }
 
