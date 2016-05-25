@@ -27,6 +27,7 @@ var FileObject = require('./objects/FileObject.js');
 var PartitionsObject = require('./objects/PartitionsObject.js');
 var LicensesObject = require('./objects/LicensesObject.js');
 var ModulesObject = require('./objects/ModulesObject.js');
+var ModuleObject = require('./objects/ModuleObject.js');
 var ConfigurationObject = require('./objects/ConfigurationObject.js');
 
 var objectsOperations = new ObjectController({
@@ -37,6 +38,7 @@ var objectsOperations = new ObjectController({
     "partitions" : new PartitionsObject(),
     "licenses" : new LicensesObject(),
     "modules" : new ModulesObject(),
+    "module" : new ModuleObject(),
     "configuration" : new ConfigurationObject()
 });
 
