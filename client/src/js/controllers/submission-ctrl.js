@@ -6,6 +6,8 @@ angular.module('RDash')
     .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory', SubmissionCtrl]);
 
 function SubmissionCtrl($scope, $rootScope, User, Memory) {
+    $scope.loadings = {};
+
     $scope.job = {
         memory:{
             value:0,
@@ -53,11 +55,13 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
     User.get('licenses').then(
         // Success
         function(data){
+            $scope.loadings['licenses'] = 'finish';
             var i = 0;
             $scope.licenses = data.licenses;
         },
 
         function(data){
+            $scope.loadings['licenses'] = 'error';
             console.error(data);
         }
     );
@@ -67,16 +71,20 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         function(data){
             $scope.modules = data.modules;
             console.log(data);
+            $scope.loadings['modules'] = 'finish';
         },
 
         function(data){
             console.error(data);
+            $scope.loadings['modules'] = 'error';
         }
     );
 
     User.get('configuration', {type:"predefined_submissions"}).then(
         // Success
         function(data){
+            $scope.loadings['predefinedSubmissions'] = 'finish';
+
             // Check if no group, group 'default'
             angular.forEach(data.predefinedSubmissions, function(submission){
                 if(submission.group == undefined)
@@ -106,14 +114,18 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         },
 
         function(data){
+            $scope.loadings['predefinedSubmissions'] = 'error';
             console.error(data);
         }
     );
 
     $scope.updateModuleDependencies = function(module){
+        $scope.loadings['moduleDependencies'] = 'loading';
         User.get('module', {moduleName:module}).then(
             // Success
             function(data){
+                $scope.loadings['moduleDependencies'] = 'finish';
+
                 $scope.moduleDependencies = data.dependencies;
 
                 // Take first auto if module has dependencies
@@ -121,6 +133,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
                     job.moduleDependencies = data.dependencies[0];
             },
             function(data){
+                $scope.loadings['moduleDependencies'] = 'error';
                 console.error(data);
             }
         );
