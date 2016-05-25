@@ -1,0 +1,12 @@
+<i ng-show="states[stateName] == 'loading'" style="font-size:{{size}}"
+   class="fa fa-spinner fa-pulse fa-{{size}} fa-fw"></i>
+
+<i ng-show="states[stateName] == 'error'"
+    style="font-size:{{size}}"
+   class="fa fa-times fa-{{size}} text-danger"></i>
+
+<i ng-show="states[stateName] == 'finish' && showSuccessCheck"
+   style="font-size:{{size}}"
+  class="fa fa-check fa-{{size}} text-success" ></i>
+<div ng-show="states[stateName] == 'finish'"
+        ng-transclude></div>
