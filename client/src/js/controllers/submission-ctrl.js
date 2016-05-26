@@ -6,6 +6,8 @@ angular.module('RDash')
     .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory', SubmissionCtrl]);
 
 function SubmissionCtrl($scope, $rootScope, User, Memory) {
+    $scope.projectBrowserSelectableTypes = ["folder"];
+
     $scope.loadings = {};
 
     $scope.job = {
@@ -31,7 +33,8 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
     $scope.parameters = {
         submissionType : "submission",
         userType : "expert",
-        execFileType : "paste"
+        execFileType : "paste",
+        projectType : 'new'
     };
 
     // Predefined submissions for select option
