@@ -29,6 +29,7 @@
     height: 20px;
     overflow: hidden; " ng-repeat="file in filteredFiles = (files | filterHiddenFilename :options.showHiddenFiles)"
         ng-click="itemClick(file)"
+        ng-dblclick="itemDoubleClick(file)"
         ng-hide="file.filename == '.' || file.filename == '..'"
         ng-class="{'bg-primary' : currentDir + file.filename == selected}">
 

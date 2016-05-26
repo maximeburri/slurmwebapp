@@ -78,9 +78,14 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             scope.itemClick = function(file){
                 if(scope.selectable && scope.isSelectableFile(file))
                     scope.selected = scope.currentDir + file.filename;
-                else{
+                else if(scope.fileReadContent){
                     scope.goToFile(file);
                 }
+            }
+
+            scope.itemDoubleClick = function(file){
+                if(file.type == 'folder' && scope.selectableTypes.indexOf('folder'))
+                    scope.goToFile(file);
             }
 
             scope.actualiseListFiles = function(){
