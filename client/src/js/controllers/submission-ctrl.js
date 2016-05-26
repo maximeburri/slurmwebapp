@@ -24,7 +24,8 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             hours : 1,
             minutes : 0,
             seconds : 0
-        }
+        },
+        module: null
     };
     $scope.defaultJob = {};
 
@@ -189,4 +190,23 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             console.log($scope.job.memory.bytesValue);
         }
     );
+
+    $scope.$watch("job.module",
+        function(){
+            $scope.updateModuleDependencies($scope.job.module);
+        }
+    );
+
+    $scope.submitJob = function(){
+        User.operation({verb:"submit", object:"job", params:{job:$scope.job}}).then(
+            // Success
+            function(successMessage){
+                console.log("Job submitted");
+            },
+            // Error
+            function(err){
+                console.error("Job no submitted");
+            }
+        );
+    }
 }
