@@ -25,7 +25,8 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             minutes : 0,
             seconds : 0
         },
-        module: null
+        module: null,
+        moduleDependencies:null
     };
     $scope.defaultJob = {};
 
@@ -193,7 +194,15 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
 
     $scope.$watch("job.module",
         function(){
-            $scope.updateModuleDependencies($scope.job.module);
+            if($scope.job.module)
+                $scope.updateModuleDependencies($scope.job.module);
+        }
+    );
+
+    $scope.$watch("job.predefinedSubmission",
+        function(){
+            if($scope.job.predefinedSubmission)
+                $scope.updateJobByPredefinedSubmission($scope.job.predefinedSubmission);
         }
     );
 

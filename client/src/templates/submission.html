@@ -76,7 +76,7 @@
                                     <ol class="nya-bs-select form-control" ng-model="job.predefinedSubmission" data-live-search="true">
                                       <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group">
                                         <span class="dropdown-header" ng-if="$group"}}>{{$group}}</span>
-                                        <a ng-click="updateJobByPredefinedSubmission(predefinedSubmission)" ng-hide="predefinedSubmission.hide">
+                                        <a ng-hide="predefinedSubmission.hide">
                                           <span>{{ predefinedSubmission.name }}</span>
                                           <span class="small">{{ predefinedSubmission.subtitle }}</span>
                                           <span class="glyphicon glyphicon-ok check-mark"></span>
@@ -181,8 +181,7 @@
                                   <ol class="nya-bs-select form-control"  data-live-search="true" ng-model="job.module"
                                       data-selected-text-format="values"
                                       data-size="5" >
-                                    <li nya-bs-option="module in modules"
-                                        ng-click="updateModuleDependencies(module)">
+                                    <li nya-bs-option="module in modules">
                                       <a>
                                         {{module}}
                                         <span class="glyphicon glyphicon-ok check-mark"></span>
