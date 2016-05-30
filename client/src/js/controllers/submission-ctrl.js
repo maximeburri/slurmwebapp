@@ -25,9 +25,12 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             minutes : 0,
             seconds : 0
         },
-        module: null,
-        moduleDependencies:null
+        modules : {
+            module : null,
+            dependencies : null
+        }
     };
+
     $scope.defaultJob = {};
 
     $scope.jobFileSelected = undefined;
@@ -135,7 +138,9 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
 
                 // Take first auto if module has dependencies
                 if(data.dependencies.length > 0)
-                    job.moduleDependencies = data.dependencies[0];
+                    job.modules.dependencies = data.dependencies[0];
+                else
+                    job.modules.dependencies = null;
             },
             function(data){
                 $scope.loadings['moduleDependencies'] = 'error';
@@ -192,10 +197,10 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         }
     );
 
-    $scope.$watch("job.module",
+    $scope.$watch("job.modules.module",
         function(){
-            if($scope.job.module)
-                $scope.updateModuleDependencies($scope.job.module);
+            if($scope.job.modules.module)
+                $scope.updateModuleDependencies($scope.job.modules.module);
         }
     );
 

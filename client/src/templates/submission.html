@@ -178,7 +178,7 @@
                             </label>
                             <div class="col-sm-4">
                                 <swa-loading states="loadings" state-name="modules">
-                                  <ol class="nya-bs-select form-control"  data-live-search="true" ng-model="job.module"
+                                  <ol class="nya-bs-select form-control"  data-live-search="true" ng-model="job.modules.module"
                                       data-selected-text-format="values"
                                       data-size="5" >
                                     <li nya-bs-option="module in modules">
@@ -192,9 +192,9 @@
                           </div>
                           <div class="col-sm-5">
                               <swa-loading states="loadings" state-name="moduleDependencies" state-init="nothing">
-                                  <div ng-show="moduleDependencies.length > 1">
+                                  <div ng-show="job.modules.dependencies.length > 1">
                                         <ol class="nya-bs-select form-control"
-                                            ng-model="job.moduleDependencies"
+                                            ng-model="job.modules.dependencies"
                                             data-selected-text-format="values"
                                             data-size="5" >
                                           <li nya-bs-option="dep in moduleDependencies">
