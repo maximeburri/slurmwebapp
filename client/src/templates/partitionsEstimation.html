@@ -49,7 +49,7 @@
                         overflow: hidden;
                         border: 1px solid #B9B9B9;
                         border-radius:2px;" ng-repeat="partition in (partitions | orderBy : partitionOrder)"
-            ng-init="name = partition.PartitionName"
+            ng-init="name = partition.partitionName"
             ng-click="itemClick(partition)"
             ng-class="{'bg-primary' : name == selected, 'item-selected' : name != selected, 'striped' : partition.advice.type == 'disabled'}">
 
@@ -70,27 +70,27 @@
                                     Temps limite :
                                     <em>
                                         <span class="">
-                                            <span ng-if="partition.MaxTime.Unlimited">&infin;</span>
-                                            <span ng-if="!partition.MaxTime.Unlimited">
-                                                <span ng-show="partition.MaxTime.Days">{{partition.MaxTime.Days}}j </span>
-                                                <span ng-show="partition.MaxTime.Hours">{{partition.MaxTime.Hours}}h </span>
-                                                <span ng-show="partition.MaxTime.Minutes">{{partition.MaxTime.Minutes}}m </span>
-                                                <span ng-show="partition.MaxTime.Seconds">{{partition.MaxTime.Seconds}}m </span>
+                                            <span ng-if="partition.maxTime.unlimited">&infin;</span>
+                                            <span ng-if="!partition.maxTime.unlimited">
+                                                <span ng-show="partition.maxTime.days">{{partition.maxTime.days}}j </span>
+                                                <span ng-show="partition.maxTime.hours">{{partition.maxTime.hours}}h </span>
+                                                <span ng-show="partition.maxTime.minutes">{{partition.maxTime.minutes}}m </span>
+                                                <span ng-show="partition.maxTime.seconds">{{partition.maxTime.seconds}}m </span>
                                             </span>
                                         </span>
                                     </em>
                                 </div>
                                 <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                    Noeud min-max : <em><span class="">{{partition.MinNodes}} à {{partition.MaxNodes == 'UNLIMITED' ? '&infin;' : partition.MaxNodes}}</span></em>
+                                    Noeud min-max : <em><span class="">{{partition.minNodes}} à {{partition.maxNodes == 'UNLIMITED' ? '&infin;' : partition.maxNodes}}</span></em>
                                 </div>
                                 <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                    CPUs/noeud max : <em><span class="">{{partition.MaxCPUsPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxCPUsPerNode}}</span></em>
+                                    CPUs/noeud max : <em><span class="">{{partition.maxCPUsPerNode == 'UNLIMITED' ? '&infin;' : partition.maxCPUsPerNode}}</span></em>
                                 </div>
                                 <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                    Mémoire/noeud : <em><span class="">{{partition.MaxMemPerNode == 'UNLIMITED' ? '&infin;' : partition.MaxMemPerNode}}</span></em>
+                                    Mémoire/noeud : <em><span class="">{{partition.maxMemPerNode == 'UNLIMITED' ? '&infin;' : partition.maxMemPerNode}}</span></em>
                                 </div>
                                 <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">
-                                    CPUs Total : <em><span class="">{{partition.TotalCPUs}}</span></em>
+                                    CPUs Total : <em><span class="">{{partition.totalCPUs}}</span></em>
                                 </div>
                             </div>
                         </div>

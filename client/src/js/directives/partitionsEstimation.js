@@ -30,29 +30,29 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                 scope.selectable = false;
 
             function isNbCPUsInsufficient(job, partition){
-                return (job.nbTasks > partition.TotalCPUs ||
-                    job.nbCPUsPerTasks > partition.TotalCPUs ||
+                return (job.nbTasks > partition.totalCPUs ||
+                    job.nbCPUsPerTasks > partition.totalCPUs ||
                     (job.nbTasks * job.nbCPUsPerTasks)
-                        > partition.TotalCPUs)
+                        > partition.totalCPUs)
                     ? "Trop de CPUs demandés" : false;
             }
 
             function isTimeLimitExceed(job, partition){
-                return (!partition.MaxTime.Unlimited &&
+                return (!partition.maxTime.unlimited &&
                     (job.timeLimit.seconds +
                     job.timeLimit.minutes * 60 +
                     job.timeLimit.hours * 60 * 60 +
                     job.timeLimit.days * 60 * 60 * 24) >
-                    partition.MaxTime.Timestamp)
+                    partition.maxTime.timestamp)
                     ? "Temps demandé trop grand" : false;
             }
 
             function executeRules(attributeType, job, partition){
                 partitionsRules = scope.partitionsRules;
                 partitionRules = [];
-                if(partitionsRules[partition.PartitionName] != undefined &&
-                    partitionsRules[partition.PartitionName][attributeType] != undefined)
-                    partitionRules = partitionsRules[partition.PartitionName][attributeType];
+                if(partitionsRules[partition.partitionName] != undefined &&
+                    partitionsRules[partition.partitionName][attributeType] != undefined)
+                    partitionRules = partitionsRules[partition.partitionName][attributeType];
 
 
                 scopeRules.partition = partition;
@@ -190,7 +190,7 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
 
             scope.itemClick = function(partition){
                 if(partition.advice.type != "disabled"){
-                    scope.selected = partition.PartitionName;
+                    scope.selected = partition.partitionName;
                     scope.estimation = false;
                 }
             }
