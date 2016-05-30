@@ -32,19 +32,20 @@ function(result, exitcode, clientCallback){
         if(!infos)
             return;
         for(i=0;i<infos.length;i++){
-            //infos[i] = infos[i].charAt(0).toLowerCase() + infos[i].slice(1);
             var splited = infos[i].split('=');
             if(splited.length >= 1){
-                licenseObject[splited[0]] =
+                key = splited[0];
+                key = key[0].toLowerCase() + key.slice(1);
+                licenseObject[key] =
                     splited.length >= 2 ? splited[1] : undefined;
             }
         }
 
-        shortName = licenseObject['LicenseName'] ? licenseObject['LicenseName'].split('@') : '';
+        shortName = licenseObject['licenseName'] ? licenseObject['licenseName'].split('@') : '';
         if(shortName && shortName.length >= 1 )
             shortName = shortName[0];
 
-        licenseObject.ShortName = shortName;
+        licenseObject.shortName = shortName;
         licensesListParsed.push(licenseObject);
     });
 

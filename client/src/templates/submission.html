@@ -225,11 +225,13 @@
                             <div class="col-sm-9">
                               <swa-loading states="loadings" state-name="licenses">
                                   <ol class="nya-bs-select form-control" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
-                                    <li nya-bs-option="license in licenses track by license.LicenseName" value="license.LicenseName">
+                                    <li nya-bs-option="license in licenses track by license.licenseName" value="license.licenseName">
                                       <a>
-                                        <span>{{license.ShortName}}
-                                            <small ng-class="{'text-danger' : license.Free <= 0, 'text-warning' : (license.Used / license.Total) >= 0.5, 'text-muted' : (license.Used / license.Total) < 0.5}">
-                                                {{ license.Free }} sur {{ license.Total }}  restant<span ng-if="license.Free > 1">s</span>
+                                        <span>{{license.shortName}}
+                                            <small ng-class="{'text-danger' : license.free <= 0,
+                                                            'text-warning' : (license.used / license.total) >= 0.5,
+                                                            'text-muted' : (license.used / license.total) < 0.5}">
+                                                {{ license.free }} sur {{ license.total }}  restant<span ng-if="license.free > 1">s</span>
                                             </small>
                                         </span>
                                         <span class="glyphicon glyphicon-ok check-mark"></span>
