@@ -36,7 +36,6 @@ function(client, operationInfo, clientCallback) {
                     if(result == null)
                         clientCallback(null, {type:"bad_file"});
                     else{
-                        console.log(result.data);
                         var job = {};
                         try{
                             job = ScriptSubmission.load(result.data);
