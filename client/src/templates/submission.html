@@ -193,7 +193,7 @@
                           </div>
                           <div class="col-sm-5">
                               <swa-loading states="loadings" state-name="moduleDependencies" state-init="nothing">
-                                  <div ng-show="job.modules.dependencies.length > 1">
+                                  <div ng-show="moduleDependencies.length > 1">
                                         <ol class="nya-bs-select form-control"
                                             ng-model="job.modules.dependencies"
                                             data-selected-text-format="values"
@@ -215,7 +215,7 @@
                                         <small class="control-label"
                                             style="display: block;float: left;"
                                             ng-show="moduleDependencies.length == 1">
-                                            {{job.moduleDependencies}}
+                                            {{moduleDependencies[0]}}
                                         </small>
                                   </div>
                               </swa-loading>
