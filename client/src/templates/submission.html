@@ -30,7 +30,8 @@
                                     ng-if="parameters.projectType == 'load'"
                                     selectable="true"
                                     selected="job.batchFile"
-                                    tableStyle="height:50px;overflow:scroll" >
+                                    tableStyle="height:50px;overflow:scroll"
+                                    on-file-selected="loadSubmissionScript">
                                 </swa-files-browser>
                             </div>
                         </div>
@@ -311,7 +312,7 @@
                         <div class="form-group animate-hide">
                             <div class="col-md-5 col-sm-5">
                                 <label class="btn btn-primary" ng-show="parameters.submissionType == 'submission'"
-                                        ng-click="submitJob()">Soumettre</label>
+                                        ng-click="submitJob">Soumettre</label>
                             </div>
                         </div>
                     </form>

@@ -191,15 +191,17 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
 
     $scope.$watch("job.memory.value + job.memory.unit",
         function(){
-            $scope.job.memory.bytesValue = Memory.toBytes($scope.job.memory.value,
-                                                      $scope.job.memory.unit);
-            console.log($scope.job.memory.bytesValue);
+            if($scope.job.memory){
+                $scope.job.memory.bytesValue =
+                        Memory.toBytes($scope.job.memory.value,
+                                     $scope.job.memory.unit);
+            }
         }
     );
 
     $scope.$watch("job.modules.module",
         function(){
-            if($scope.job.modules.module)
+            if($scope.job.modules && $scope.job.modules.module)
                 $scope.updateModuleDependencies($scope.job.modules.module);
         }
     );
@@ -220,6 +222,23 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             // Error
             function(err){
                 console.error("Job no submitted");
+            }
+        );
+    }
+
+    $scope.loadSubmissionScript = function(fileObject){
+        User.operation({verb:"load", object:"submissionScript",
+            params:{scriptFile:fileObject.filepath}}).then(
+            // Success
+            function(result){
+                console.log(result.job);
+                if(!angular.equals({}, result.job)){
+                    $scope.job = result.job;
+                }
+            },
+            // Error
+            function(err){
+                console.error(err);
             }
         );
     }
