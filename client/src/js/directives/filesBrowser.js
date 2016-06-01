@@ -5,7 +5,7 @@ angular
 function swaFilesBrowser(User, Files, $modal, $compile) {
     var directive = {
         restrict: 'AE',
-        scope: {selectable:'@', selectableTypes:'@', selected:'=', tableStyle:'@'},
+        scope: {selectable:'@', selectableTypes:'@', selected:'=', tableStyle:'@', onFileSelected:'&?'},
         templateUrl: 'templates/filesBrowser.html',
         controller: function(){
             this.actualiseListFiles = function(){
@@ -71,13 +71,22 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                         }
                     );
                 }else{
-                    scope.viewFile(futurDir);
+
                 }
             }
 
             scope.itemClick = function(file){
-                if(scope.selectable && scope.isSelectableFile(file))
+                if(scope.selectable && scope.isSelectableFile(file)){
                     scope.selected = scope.currentDir + file.filename;
+                    if(scope.onFileSelected)
+                        scope.onFileSelected()(
+                            {
+                                filename: file.filename,
+                                dir: scope.currentDir,
+                                filepath: scope.currentDir + file.filename
+                            }
+                        );
+                }
                 else if(scope.fileReadContent){
                     scope.goToFile(file);
                 }
