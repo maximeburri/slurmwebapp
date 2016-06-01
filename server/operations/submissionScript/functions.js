@@ -1,6 +1,6 @@
 // Index by attributes
 var directivesByAttributes = {
-    "jobName" : {
+    "name" : {
         "directives" : ["-J", "--job-name"],
         "dataType" : "string",
     },
