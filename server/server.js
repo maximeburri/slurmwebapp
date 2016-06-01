@@ -29,6 +29,8 @@ var LicensesObject = require('./objects/LicensesObject.js');
 var ModulesObject = require('./objects/ModulesObject.js');
 var ModuleObject = require('./objects/ModuleObject.js');
 var ConfigurationObject = require('./objects/ConfigurationObject.js');
+var SubmissionScriptObject = require('./objects/SubmissionScriptObject.js');
+
 
 var objectsOperations = new ObjectController({
     "job" : new JobObject(),
@@ -39,7 +41,8 @@ var objectsOperations = new ObjectController({
     "licenses" : new LicensesObject(),
     "modules" : new ModulesObject(),
     "module" : new ModuleObject(),
-    "configuration" : new ConfigurationObject()
+    "configuration" : new ConfigurationObject(),
+    "submissionScript" : new SubmissionScriptObject()
 });
 
 var optionsServer = {
