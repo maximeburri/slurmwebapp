@@ -148,6 +148,35 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         );
     }
 
+    changeJob = function(newJob, oldJob){
+        // Merge between job and predefined submission
+        replaceInsteadMerge = ['notificationEvents', 'licenses', 'modules', 'memory'];
+
+        angular.forEach(newJob, function (attr, nameAttr){
+            if(newJob[nameAttr] != undefined){
+                if(typeof attr !== 'object'){
+                    newJob[nameAttr] =
+                        oldJob[nameAttr];
+                }else{
+                    if(replaceInsteadMerge.indexOf(nameAttr) >= 0){
+                        angular.copy(newJob[nameAttr],
+                            oldJob[nameAttr]);
+                    }
+                    else{
+                        oldJob[nameAttr] = angular.merge({},
+                            oldJob[nameAttr],
+                            newJob[nameAttr]);
+                    }
+                }
+            }
+        });
+
+        console.log(newJob)
+
+        if(newJob.modules && newJob.modules.module)
+            $scope.updateModuleDependencies(newJob.modules.module);
+    }
+
     $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){
         // Has parent parameters ? recursive merge
         if(predefinedSubmission.parent != undefined){
@@ -165,20 +194,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             }
         }
 
-        // Merge between job and predefined submission
-        replaceInsteadMerge = ['notificationEvents', 'licenses', 'modules'];
-
-        angular.forEach(predefinedSubmission.job, function (attr, nameAttr){
-            if(predefinedSubmission.job[nameAttr] != undefined){
-                if(typeof attr !== 'object' ||
-                    replaceInsteadMerge.indexOf(nameAttr) >= 0)
-                    angular.copy(predefinedSubmission.job[nameAttr], $scope.job[nameAttr]);
-                else
-                    $scope.job[nameAttr] = angular.merge({},
-                        $scope.job[nameAttr],
-                        predefinedSubmission.job[nameAttr]);
-            }
-        });
+        changeJob(predefinedSubmission.job, $scope.job);
     }
 
     $scope.notificationEvents = [
@@ -202,8 +218,6 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         function(){
             if($scope.job.predefinedSubmission)
                 $scope.updateJobByPredefinedSubmission($scope.job.predefinedSubmission);
-            if($scope.job.modules.module)
-                $scope.updateModuleDependencies($scope.job.modules.module)
         }
     );
 
@@ -226,14 +240,16 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             // Success
             function(result){
                 if(!angular.equals({}, result.job)){
-                    $scope.job = result.job;
+                    angular.copy(result.job, $scope.job);
+                    
                     if(!$scope.job.memory)
-                        $scope.job.memory = {default:true};
+                        $scope.job.memory = {default:true, value:0, unit:null};
 
                     // Update dependencies but no choose the first
                     $scope.updateModuleDependencies(
                         $scope.job.modules.module, false);
                 }
+
             },
             // Error
             function(err){
