@@ -278,35 +278,48 @@
                 </rd-widget-header>
                 <rd-widget-body classes="">
                     <form class="form-horizontal">
+                        {{job.execution}}
                         <div class="form-group animate-hide">
                             <div class="col-md-5 col-sm-5">
                                 <div class="btn-group" style="margin:2px;">
-                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'paste'" >Coller</label>
-                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'select'" >Selectionner</label>
+                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'command'" >Commande</label>
+                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'select'" >Executable</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" ng-show="parameters.execFileType == 'paste'">
-                          <label for="job.script">Coller votre script :</label>
-                          <textarea class="form-control" rows="10" ng-model="job.script"></textarea>
+                        <div class="form-group" ng-if="parameters.execFileType == 'command'">
+                          <label for="job.script" class="col-sm-2 control-label">Commande</label>
+
+                          <div class="col-sm-6">
+                            <input type="name" class="form-control" ng-model="job.execution.executable" placeholder="R">
+                          </div>
                         </div>
 
-                        <div class="form-group" ng-show="parameters.execFileType == 'select'" >
-                            <label>Fichier séléctionné : </label>
-                            <span ng-if="job.fileSelected == undefined">
-                                <i>aucun</i>
-                            </span>
-                            <span ng-if="job.fileSelected != undefined">
-                                {{jobFileSelected}}
-                            </span>
+                        <div class="form-group" ng-if="parameters.execFileType == 'select'" >
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label>Fichier séléctionné : </label>
+                                    <span ng-if="job.fileSelected == undefined">
+                                        <i>aucun</i>
+                                    </span>
+                                    <span ng-if="job.fileSelected != undefined">
+                                        {{jobFileSelected}}
+                                    </span>
 
-                            <swa-files-browser ng-if="parameters.execFileType == 'select'" selectable="true" selected="job.fileSelected" tableStyle="height:50px;overflow:scroll" ></swa-files-browser>
+
+                                    <swa-files-browser ng-if="parameters.execFileType == 'select'"
+                                    ng-init="job.execution.executable = undefined"
+                                    selectable="true"
+                                    selected="job.execution.executable"
+                                    tableStyle="height:50px;overflow:scroll" ></swa-files-browser>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group animate-hide">
                             <label class="col-sm-2 control-label">Arguments </label>
                             <div class="col-sm-6">
-                              <input type="name" class="form-control" ng-model="job.execArguments" placeholder="Ex: arg1 arg2 arg3">
+                              <input type="name" class="form-control" ng-model="job.execution.arguments" placeholder="Ex: arg1 arg2 arg3">
                             </div>
                         </div>
                         <div class="form-group animate-hide">
