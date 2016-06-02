@@ -171,8 +171,6 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             }
         });
 
-        console.log(newJob)
-
         if(newJob.modules && newJob.modules.module)
             $scope.updateModuleDependencies(newJob.modules.module);
     }
@@ -241,7 +239,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             function(result){
                 if(!angular.equals({}, result.job)){
                     angular.copy(result.job, $scope.job);
-                    
+
                     if(!$scope.job.memory)
                         $scope.job.memory = {default:true, value:0, unit:null};
 
