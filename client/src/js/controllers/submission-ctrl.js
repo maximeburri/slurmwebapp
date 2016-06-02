@@ -110,7 +110,6 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
                 $scope.defaultJob =
                     predefinedSubmissionsDictionnary[data.default]
 
-                $scope.job.predefinedSubmission = $scope.defaultJob;
                 $scope.updateJobByPredefinedSubmission($scope.defaultJob);
             }
             catch(err){
@@ -173,7 +172,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             if(predefinedSubmission.job[nameAttr] != undefined){
                 if(typeof attr !== 'object' ||
                     replaceInsteadMerge.indexOf(nameAttr) >= 0)
-                    $scope.job[nameAttr] = predefinedSubmission.job[nameAttr];
+                    angular.copy(predefinedSubmission.job[nameAttr], $scope.job[nameAttr]);
                 else
                     $scope.job[nameAttr] = angular.merge({},
                         $scope.job[nameAttr],
@@ -203,6 +202,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         function(){
             if($scope.job.predefinedSubmission)
                 $scope.updateJobByPredefinedSubmission($scope.job.predefinedSubmission);
+            $scope.updateModuleDependencies($scope.job.modules.module)
         }
     );
 
