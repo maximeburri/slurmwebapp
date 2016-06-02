@@ -202,7 +202,8 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         function(){
             if($scope.job.predefinedSubmission)
                 $scope.updateJobByPredefinedSubmission($scope.job.predefinedSubmission);
-            $scope.updateModuleDependencies($scope.job.modules.module)
+            if($scope.job.modules.module)
+                $scope.updateModuleDependencies($scope.job.modules.module)
         }
     );
 
