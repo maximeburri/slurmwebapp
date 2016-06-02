@@ -180,8 +180,8 @@
                             <div class="col-sm-4">
                                 <swa-loading states="loadings" state-name="modules">
                                   <ol class="nya-bs-select form-control"  data-live-search="true" ng-model="job.modules.module"
-                                      data-selected-text-format="values"
-                                      data-size="5" >
+                                      data-size="5"
+                                      ng-change="updateModuleDependencies(job.modules.module, true)" >
                                     <li nya-bs-option="module in modules">
                                       <a>
                                         {{module}}
@@ -196,9 +196,9 @@
                                   <div ng-show="moduleDependencies.length > 1">
                                         <ol class="nya-bs-select form-control"
                                             ng-model="job.modules.dependencies"
-                                            data-selected-text-format="values"
+                                            title="{{job.modules.dependencies}}"
                                             data-size="5" >
-                                          <li nya-bs-option="dep in moduleDependencies">
+                                          <li nya-bs-option="dep in moduleDependencies" data-value="dep">
                                             <a>
                                               {{dep}}
                                               <span class="glyphicon glyphicon-ok check-mark"></span>
@@ -225,7 +225,7 @@
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
                               <swa-loading states="loadings" state-name="licenses">
-                                  <ol class="nya-bs-select form-control" ng-model="job.licenses" data-selected-text-format="values"  data-live-search="true" multiple>
+                                  <ol class="nya-bs-select form-control" ng-model="job.licenses"  data-live-search="true" multiple>
                                     <li nya-bs-option="license in licenses track by license.licenseName" value="license.licenseName">
                                       <a>
                                         <span>{{license.shortName}}
@@ -252,7 +252,7 @@
                                        <input type="checkbox" ng-model="job.notification">
                                    </span>
                                    <input type="text" style="" class="form-control" ng-model="job.notificationEmail" placeholder="email">
-                                    <ol class="nya-bs-select form-control" ng-model="job.notificationEvents" data-selected-text-format="values" multiple>
+                                    <ol class="nya-bs-select form-control" ng-model="job.notificationEvents" multiple>
                                      <li nya-bs-option="option in notificationEvents">
                                        <a>
                                          {{option.name}}

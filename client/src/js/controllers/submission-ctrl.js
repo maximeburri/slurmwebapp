@@ -78,7 +78,6 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         // Success
         function(data){
             $scope.modules = data.modules;
-            console.log(data);
             $scope.loadings['modules'] = 'finish';
         },
 
@@ -107,7 +106,6 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
                 data.predefinedSubmissions : [];
 
             // Update field to default
-            console.log(data.default);
             try {
                 $scope.defaultJob =
                     predefinedSubmissionsDictionnary[data.default]
@@ -127,7 +125,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         }
     );
 
-    $scope.updateModuleDependencies = function(module){
+    $scope.updateModuleDependencies = function(module, autoFirst){
         $scope.loadings['moduleDependencies'] = 'loading';
         User.get('module', {moduleName:module}).then(
             // Success
@@ -137,10 +135,12 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
                 $scope.moduleDependencies = data.dependencies;
 
                 // Take first auto if module has dependencies
-                if(data.dependencies.length > 0)
-                    job.modules.dependencies = data.dependencies[0];
-                else
-                    job.modules.dependencies = null;
+                if(autoFirst){
+                    if(data.dependencies.length > 0)
+                        $scope.job.modules.dependencies = data.dependencies[0];
+                    else
+                        $scope.job.modules.dependencies = null;
+                }
             },
             function(data){
                 $scope.loadings['moduleDependencies'] = 'error';
@@ -199,13 +199,6 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         }
     );
 
-    $scope.$watch("job.modules.module",
-        function(){
-            if($scope.job.modules && $scope.job.modules.module)
-                $scope.updateModuleDependencies($scope.job.modules.module);
-        }
-    );
-
     $scope.$watch("job.predefinedSubmission",
         function(){
             if($scope.job.predefinedSubmission)
@@ -231,9 +224,14 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
             params:{scriptFile:fileObject.filepath}}).then(
             // Success
             function(result){
-                console.log(result.job);
                 if(!angular.equals({}, result.job)){
                     $scope.job = result.job;
+                    if(!$scope.job.memory)
+                        $scope.job.memory = {default:true};
+
+                    // Update dependencies but no choose the first
+                    $scope.updateModuleDependencies(
+                        $scope.job.modules.module, false);
                 }
             },
             // Error
