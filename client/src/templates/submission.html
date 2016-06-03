@@ -74,7 +74,7 @@
                             <label class="col-sm-3 control-label">Soumission préfédinie </label>
                             <div class=" col-sm-6">
                                 <swa-loading states="loadings" state-name="predefinedSubmissions">
-                                    <ol class="nya-bs-select form-control" ng-model="job.predefinedSubmission" data-live-search="true">
+                                    <ol class="nya-bs-select form-control" ng-model="job.predefinedSubmission" data-live-search="true" ng-change="predefinedSubmissionChange()">
                                       <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group">
                                         <span class="dropdown-header" ng-if="$group"}}>{{$group}}</span>
                                         <a ng-hide="predefinedSubmission.hide">
@@ -225,7 +225,9 @@
                             <label class="col-sm-3 control-label">Licences </label>
                             <div class="col-sm-9">
                               <swa-loading states="loadings" state-name="licenses">
-                                  <ol class="nya-bs-select form-control" ng-model="job.licenses"  data-live-search="true" multiple>
+                                  <ol class="nya-bs-select form-control" ng-model="job.licenses"
+                                  data-live-search="true" multiple
+                                  >
                                     <li nya-bs-option="license in licenses track by license.licenseName" value="license.licenseName">
                                       <a>
                                         <span>{{license.shortName}}
@@ -239,7 +241,7 @@
                                       </a>
                                     </li>
                                   </ol>
-                              </swa-loading>
+                             </swa-loading>
                             </div>
                         </div>
 

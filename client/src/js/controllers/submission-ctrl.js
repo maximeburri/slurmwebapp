@@ -28,7 +28,8 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         modules : {
             module : null,
             dependencies : null
-        }
+        },
+        licenses : []
     };
 
     $scope.defaultJob = {};
@@ -154,12 +155,17 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
 
         angular.forEach(newJob, function (attr, nameAttr){
             if(newJob[nameAttr] != undefined){
+
                 if(typeof attr !== 'object'){
                     newJob[nameAttr] =
                         oldJob[nameAttr];
                 }else{
                     if(replaceInsteadMerge.indexOf(nameAttr) >= 0){
-                        angular.copy(newJob[nameAttr],
+                        if(Array.isArray(attr)){
+                            oldJob[nameAttr] = newJob[nameAttr].slice();
+                        }else
+                        oldJob[nameAttr] =
+                          angular.copy(newJob[nameAttr],
                             oldJob[nameAttr]);
                     }
                     else{
@@ -212,12 +218,11 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
         }
     );
 
-    $scope.$watch("job.predefinedSubmission",
-        function(){
-            if($scope.job.predefinedSubmission)
-                $scope.updateJobByPredefinedSubmission($scope.job.predefinedSubmission);
-        }
-    );
+    $scope.predefinedSubmissionChange = function(){
+        if($scope.job.predefinedSubmission)
+            $scope.updateJobByPredefinedSubmission($scope.job.predefinedSubmission);
+    }
+
 
     $scope.submitJob = function(){
         User.operation({verb:"submit", object:"job", params:{job:$scope.job}}).then(
