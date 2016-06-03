@@ -11,16 +11,27 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             this.actualiseListFiles = function(){
                 console.log('test');
             };
-        },
+        },/*
+        compile: function compile(tElement, tAttrs, transclude) {
+              return {
+                pre: function preLink(scope, iElement, iAttrs, controller) { ... },
+                post: function postLink(scope, iElement, iAttrs, controller) { ... }
+              }
+              // or
+              // return function postLink( ... ) { ... }
+          },*/
         link: function(scope, element, attrs){
+            console.log(scope.selectableTypes);
             scope.options = {};
             scope.options.showHiddenFiles = false;
-            if(scope.selectable == undefined)
+            if(scope.selectable === undefined)
                 scope.selectable = false;
-            if(scope.selectableTypes == undefined)
-                scope.selectableTypes = ["executable", 'file', 'symboliclink'];
-            else
-                scope.selectableTypes = JSON.parse(scope.selectableTypes);
+            if(scope.selectableTypes === undefined)
+                scope.selectableTypesArray = ["executable", 'file', 'symboliclink'];
+            else{
+                console.log("INIT");
+                scope.selectableTypesArray = JSON.parse(scope.selectableTypes);
+            }
 
             scope.fileViewer = {
                 content : "",
@@ -93,7 +104,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             }
 
             scope.itemDoubleClick = function(file){
-                if(file.type == 'folder' && scope.selectableTypes.indexOf('folder'))
+                if(file.type == 'folder' && scope.selectableTypesArray.indexOf('folder'))
                     scope.goToFile(file);
             }
 
@@ -166,7 +177,8 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
 
             // Check if file is selectable if type is in selectableTypes
             scope.isSelectableFile = function(file) {
-                if(scope.selectableTypes.indexOf(file.type) > -1) { //test the Status
+                console.log("isSelectableFile");
+                if(scope.selectableTypesArray.indexOf(file.type) > -1) { //test the Status
                    return true;
                 }
                 return false;
