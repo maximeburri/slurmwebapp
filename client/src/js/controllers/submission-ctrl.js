@@ -3,9 +3,9 @@
  */
 
 angular.module('RDash')
-    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory', SubmissionCtrl]);
+    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory','$modal', SubmissionCtrl]);
 
-function SubmissionCtrl($scope, $rootScope, User, Memory) {
+function SubmissionCtrl($scope, $rootScope, User, Memory, $modal) {
     $scope.projectBrowserSelectableTypes = ["folder"];
 
     $scope.loadings = {};
@@ -253,6 +253,31 @@ function SubmissionCtrl($scope, $rootScope, User, Memory) {
                         $scope.job.modules.module, false);
                 }
 
+            },
+            // Error
+            function(err){
+                console.error(err);
+            }
+        );
+    }
+
+    $scope.visualizeScript = function(){
+        params = {
+            rewriteScriptFilePath : '/home/burrimax/test_output/test.sh' /*$scope.job.batchFile*/,
+            job : $scope.job
+        }
+        console.log($scope.job);
+        User.operation({verb:"save", object:"submissionScript",
+            params:params}).then(
+            // Success
+            function(result){
+                scope = $scope.$new(true);
+                scope.script = result.script;
+                $modal.open({
+                    template:"<pre>{{script}}</pre>",
+                    scope:scope
+                });
+                console.log(result);
             },
             // Error
             function(err){
