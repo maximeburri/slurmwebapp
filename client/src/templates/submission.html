@@ -29,7 +29,7 @@
                                 <swa-files-browser
                                     ng-if="parameters.projectType == 'load'"
                                     selectable="true"
-                                    selected="job.batchFile"
+                                    selected="parameters.batchFile"
                                     tableStyle="height:50px;overflow:scroll"
                                     on-file-selected="loadSubmissionScript">
                                 </swa-files-browser>
@@ -39,8 +39,8 @@
                             <label class="col-sm-3 control-label">Nom du fichier </label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control"
-                                    ng-model="job.batchFile" placeholder=""
-                                    ng-init="job.batchFile='job.sh'">
+                                    ng-model="parameters.batchFile" placeholder=""
+                                    ng-init="parameters.batchFile='job.sh'">
                             </div>
                         </div>
                     </form>
@@ -280,7 +280,6 @@
                 </rd-widget-header>
                 <rd-widget-body classes="">
                     <form class="form-horizontal">
-                        {{job.execution}}
                         <div class="form-group animate-hide">
                             <div class="col-md-5 col-sm-5">
                                 <div class="btn-group" style="margin:2px;">

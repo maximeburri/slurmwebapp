@@ -263,7 +263,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal) {
 
     $scope.visualizeScript = function(){
         params = {
-            rewriteScriptFilePath : '/home/burrimax/test_output/test.sh' /*$scope.job.batchFile*/,
+            rewriteScriptFilePath : $scope.parameters.batchFile,
             job : $scope.job
         }
         console.log($scope.job);
