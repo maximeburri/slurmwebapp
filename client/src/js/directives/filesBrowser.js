@@ -177,7 +177,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
 
             // Check if file is selectable if type is in selectableTypes
             scope.isSelectableFile = function(file) {
-                console.log("isSelectableFile");
                 if(scope.selectableTypesArray.indexOf(file.type) > -1) { //test the Status
                    return true;
                 }

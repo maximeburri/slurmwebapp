@@ -82,7 +82,6 @@ function(result, exitcode, clientCallback){
     });
 
 
-    console.log(partitionsListParsed);
     clientCallback({partitions:partitionsListParsed}, false)
 }
 
