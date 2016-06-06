@@ -3,9 +3,10 @@
  */
 
 angular.module('RDash')
-    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory','$modal', SubmissionCtrl]);
+    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory',
+        '$modal', '$location', SubmissionCtrl]);
 
-function SubmissionCtrl($scope, $rootScope, User, Memory, $modal) {
+function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
     $scope.projectBrowserSelectableTypes = ["folder"];
 
     $scope.loadings = {};
@@ -225,24 +226,28 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal) {
 
 
     $scope.submitJob = function(){
+        script = $scope.parameters.batchFile;
         params = {
-            readScriptFilePath : $scope.parameters.batchFile,
+            readScriptFilePath : script,
             job : $scope.job
         }
         User.operation({verb:"save", object:"submissionScript",
             params:params}).then(
             // Success
             function(result){
-                /*User.operation({verb:"submit", object:"job", params:{job:$scope.job}}).then(
+                User.operation({verb:"submit", object:"job", params:{scriptPath:script}}).then(
                     // Success
                     function(successMessage){
                         console.log("Job submitted");
+                        if(successMessage.id){
+                            $location.path('/job/'+successMessage.id);
+                        }
                     },
                     // Error
                     function(err){
                         console.error("Job no submitted");
                     }
-                );*/
+                );
                 console.log(result);
             },
             // Error
