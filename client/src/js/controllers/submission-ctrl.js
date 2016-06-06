@@ -180,6 +180,12 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
 
         if(newJob.modules && newJob.modules.module)
             $scope.updateModuleDependencies(newJob.modules.module);
+        else{
+            newJob.modules = {
+                module : null,
+                dependencies : null
+            }
+        }
     }
 
     $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){
@@ -269,8 +275,9 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
                         $scope.job.memory = {default:true, value:0, unit:null};
 
                     // Update dependencies but no choose the first
-                    $scope.updateModuleDependencies(
-                        $scope.job.modules.module, false);
+                    if($scope.job.modules && $scope.job.modules.module)
+                        $scope.updateModuleDependencies(
+                            $scope.job.modules.module, false);
                 }
 
             },
