@@ -225,14 +225,29 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal) {
 
 
     $scope.submitJob = function(){
-        User.operation({verb:"submit", object:"job", params:{job:$scope.job}}).then(
+        params = {
+            readScriptFilePath : $scope.parameters.batchFile,
+            job : $scope.job
+        }
+        User.operation({verb:"save", object:"submissionScript",
+            params:params}).then(
             // Success
-            function(successMessage){
-                console.log("Job submitted");
+            function(result){
+                /*User.operation({verb:"submit", object:"job", params:{job:$scope.job}}).then(
+                    // Success
+                    function(successMessage){
+                        console.log("Job submitted");
+                    },
+                    // Error
+                    function(err){
+                        console.error("Job no submitted");
+                    }
+                );*/
+                console.log(result);
             },
             // Error
             function(err){
-                console.error("Job no submitted");
+                console.error(err);
             }
         );
     }
@@ -263,10 +278,10 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal) {
 
     $scope.visualizeScript = function(){
         params = {
-            rewriteScriptFilePath : $scope.parameters.batchFile,
-            job : $scope.job
+            readScriptFilePath : $scope.parameters.batchFile,
+            job : $scope.job,
+            onlyVisualization : true
         }
-        console.log($scope.job);
         User.operation({verb:"save", object:"submissionScript",
             params:params}).then(
             // Success
