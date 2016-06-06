@@ -25,7 +25,6 @@ function JobCtrl($stateParams, $scope, $rootScope, $interval, Files, $interpolat
         promise : false
     };
 
-    firstActualisation = true;
     updateInterval = undefined;
 
 
@@ -52,11 +51,10 @@ function JobCtrl($stateParams, $scope, $rootScope, $interval, Files, $interpolat
                 $scope.job.id = $scope.job.jobId;
                 console.log($scope.job);
 
-                if(firstActualisation){
-                    firstActualisation = false;
-                    $scope.viewFile($scope.job.stdOut, $scope.fileStdOut);
-                    $scope.viewFile($scope.job.stdErr, $scope.fileStdErr);
-                }
+
+                $scope.viewFile($scope.job.stdOut, $scope.fileStdOut);
+                $scope.viewFile($scope.job.stdErr, $scope.fileStdErr);
+
 
                 if($scope.job.jobState == "COMPLETED"){
                     $interval.cancel(updateInterval);
@@ -73,37 +71,39 @@ function JobCtrl($stateParams, $scope, $rootScope, $interval, Files, $interpolat
     }
 
     $scope.viewFile = function(filePath, file){
-        file.content = "";
-        file.modified = false;
-        file.promise = Files.getFileContent(filePath, true);
-        file.not_exist = false;
-        file.too_big = false;
-        file.promise.then(
-            // Success
-            function(successMessage){
-                console.log("Success");
-                console.log(successMessage);
-            },
-            // Error
-            function(err){
-                console.log("Fail");
-                console.log(err);
-                if(err.type == "not_exist"){
-                    file.not_exist = true;
-                }else if(err.type == "too_big"){
-                    file.too_big = true;
-                }else{
-                    file.modified = true;
+        if(!file.promise){
+            file.content = "";
+            file.modified = false;
+            file.promise = Files.getFileContent(filePath, true);
+            file.not_exist = false;
+            file.too_big = false;
+            file.promise.then(
+                // Success
+                function(successMessage){
+                    console.log("Success");
+                    console.log(successMessage);
+                },
+                // Error
+                function(err){
+                    console.log("Fail");
+                    console.log(err);
+                    if(err.type == "not_exist"){
+                        file.not_exist = true;
+                    }else if(err.type == "too_big"){
+                        file.too_big = true;
+                    }else{
+                        file.modified = true;
+                    }
+                    $scope.stopFollowFileContent(file);
+                },
+                // Progress
+                function(notificationMessage){
+                    console.log("Notification");
+                    console.log(notificationMessage);
+                    file.content += notificationMessage.data;
                 }
-                $scope.stopFollowFileContent(file);
-            },
-            // Progress
-            function(notificationMessage){
-                console.log("Notification");
-                console.log(notificationMessage);
-                file.content += notificationMessage.data;
-            }
-        );
+            );
+        }
     }
 
     $scope.stopFollowFileContent = function(file){
