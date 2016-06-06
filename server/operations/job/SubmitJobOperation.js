@@ -1,6 +1,7 @@
 var Operation = require('../Operation.js');
 var shellescape = require('shell-escape');
 var inherits = require('util').inherits;
+var path = require('path');
 
 function SubmitJobOperation() {
     Operation.call(this);
@@ -11,10 +12,13 @@ inherits(SubmitJobOperation, Operation);
 SubmitJobOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
     scriptPath = operationInfo.params.scriptPath;
+    scriptDirname = path.dirname(scriptPath);
+    scriptBasename = path.basename(scriptPath);
 
     client.executeCommand(
-        shellescape(["chmod", "+x", scriptPath]) + " && " +
-        shellescape(["sbatch", "--parsable", scriptPath]),
+        shellescape(["cd", scriptDirname]) + " && " +
+        shellescape(["chmod", "+x", scriptBasename]) + " && " +
+        shellescape(["sbatch", "--parsable", scriptBasename]),
         function(result, exitcode, clientCallback){
             if(exitcode != 0){
                 clientCallback(null, {error:"SUBMIT_FAIL"});
