@@ -100,7 +100,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             }
 
             scope.itemDoubleClick = function(file){
-                if(file.type == 'folder' && scope.selectableTypesArray.indexOf('folder'))
+                if(file.type == 'folder')
                     scope.goToFile(file);
             }
 
