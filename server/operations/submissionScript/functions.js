@@ -87,9 +87,14 @@ var directivesByAttributes = {
     "licenses" : {
         "directives" : ["-L", "--licenses"],
         "objectToValue"  : function(object){
+            if(!object ||
+                object.length == 0)
+                return null;
             return "" + object.join(',');
         },
         "valueToObject" : function(value){
+            if(!value)
+                return null;
             return value.split(',');
         },
     },
@@ -291,7 +296,7 @@ save = function (job, script){
         // On find command
         function (value, fncDelete, fncUpdate, directive){
             // If not already added
-            if(job[directive.attribute] !== undefined){
+            if(job[directive.attribute] !== undefined && value !== null){
                 // Update command
                 fncUpdate(job[directive.attribute]);
 
@@ -486,16 +491,22 @@ function parse(script, fnc, fncEnd) {
             if(part.options){
                 //if(part.options.)
                 if(directivesByAttributes[attributeName]){
-                    addRow(partsInfo[partNum].begin, partNum, part.commandStr+
-                        directivesByAttributes[attributeName].directives[0] +" "+
-                            objectToValue(directivesByAttributes[attributeName],
-                                object))
+                    value = objectToValue(directivesByAttributes[attributeName],
+                        object);
+
+                    if(value)
+                        addRow(partsInfo[partNum].begin, partNum, part.commandStr+
+                            directivesByAttributes[attributeName].directives[0] +" "+
+                            value    )
                 }
             }else{
                 if(part.attribute == attributeName){
-                    addRow(partsInfo[partNum].begin, partNum, part.commandStr+
-                        objectToValue(part,
-                            object))
+                    value = objectToValue(part,
+                        object);
+
+                    if(value)
+                        addRow(partsInfo[partNum].begin, partNum, part.commandStr+
+                            value)
                 }
             }
         }
