@@ -232,8 +232,6 @@ var commands = [
 
 
 
-//console.log(directivesByAttributes);
-//console.log(attributesByDirectives);
 var shebangBinBashArray = ["#!/bin/sh", "#!/bin/bash"];
 var directiveBeginStr = "#SBATCH ";
 var moduleLoadStr = "module load ";
@@ -244,7 +242,7 @@ var runExecutableStr = "srun ";
 function objectToValue(directiveOrAttribute, object){
     if(directiveOrAttribute.objectToValue){
         return directiveOrAttribute.objectToValue(object);
-    }else if (directiveOrAttribute.dataType == "string"){
+    }else if (directiveOrAttribute.dataType == "string" && object.length != 0){
         return object;
     }else if (directiveOrAttribute.dataType == "integer"){
         return ""+object;
