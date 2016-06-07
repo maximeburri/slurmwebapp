@@ -1,3 +1,50 @@
+var units = [
+    ["MB", "Mo"],
+    ["GB", "Go"],
+    ["TB", "To"],
+];
+
+var base = 1024;
+var posMB = 0;
+
+toMegaBytes = function(number, stringUnit) {
+    for(i = 0;i<units.length;i++){
+        for(j = 0;j<units[i].length;j++){
+            if(stringUnit == units[i][j]){
+                if(i < posMB){
+                    return number / Math.pow(base, Math.abs(posMB-i));
+                }else if (i > posMB){
+                    return number * Math.pow(base, i-posMB);
+                }else{
+                    return number;
+                }
+
+            }
+        }
+    }
+    return number;
+};
+
+toBestMemoryUnit = function(object) {
+    for(i = posMB + 1;i<units.length;i++){
+        if(object.value > base){
+            // Check if division is integer
+            if(object.value % base == 0){
+                // So division by 1024, change unit
+                object.value = object.value / base;
+                object.unit = units[i][0];
+            }else{
+                break;
+            }
+        }
+        else {
+            break;
+        }
+    }
+    return object;
+};
+
+
 // Index by attributes
 var directivesByAttributes = {
     "name" : {
@@ -15,6 +62,27 @@ var directivesByAttributes = {
     "partition" : {
         "directives" : ["-p", "--partition"],
         "dataType" : "string",
+    },
+    "fileStdOut" : {
+        "directives" : ["-o", "--output"],
+        "dataType" : "string",
+    },
+    "fileStdErr" : {
+        "directives" : ["-e", "--error"],
+        "dataType" : "string",
+    },
+    "memory" : {
+        "directives" : ["--mem"],
+        "objectToValue"  : function(object){
+            return "" + toMegaBytes(object.value, object.unit);
+        },
+        "valueToObject" : function(value){
+            object = {};
+            object.unit = "MB";
+            object.value = parseInt(value);
+            object.default = false;
+            return toBestMemoryUnit(object);
+        },
     },
     "timeLimit" : {
         "directives" : ["-t", "--time"],
