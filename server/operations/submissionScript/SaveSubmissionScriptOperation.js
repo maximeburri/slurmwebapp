@@ -78,7 +78,7 @@ function(client, clientCallback, file, finishCallback){
                 clientCallback(null, {type:"too_big"});
             else{
                 self.executeReadFileCat(client, file, function(result){
-                    if(result == null && ! result.data)
+                    if(result == null || ! result.data)
                         clientCallback(null, {type:"bad_file"});
                     else{
                         finishCallback(result.data);
