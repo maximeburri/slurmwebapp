@@ -245,11 +245,19 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
 
 
     $scope.submitJob = function(){
-        script = $scope.parameters.batchFile;
+        script = "";
         params = {
-            readScriptFilePath : script,
             job : $scope.job
+        };
+
+        if($scope.parameters.projectType == "load"){
+            script = $scope.parameters.batchFile;
+            params.readScriptFilePath = script;
+        }else{
+            script = job.folderSelected + "/" + $scope.parameters.batchFile;
+            params.saveScriptFilePath = script;
         }
+        
         User.operation({verb:"save", object:"submissionScript",
             params:params}).then(
             // Success
@@ -310,7 +318,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
         if($scope.parameters.proojectType == "load"){
             params.readScriptFilePath = $scope.parameters.batchFile;
         }
-        
+
         User.operation({verb:"save", object:"submissionScript",
             params:params}).then(
             // Success
