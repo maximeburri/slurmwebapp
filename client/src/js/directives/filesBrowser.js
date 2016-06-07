@@ -8,9 +8,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
         scope: {selectable:'@', selectableTypes:'@', selected:'=', tableStyle:'@', onFileSelected:'&?'},
         templateUrl: 'templates/filesBrowser.html',
         controller: function(){
-            this.actualiseListFiles = function(){
-                console.log('test');
-            };
         },/*
         compile: function compile(tElement, tAttrs, transclude) {
               return {
@@ -21,7 +18,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
               // return function postLink( ... ) { ... }
           },*/
         link: function(scope, element, attrs){
-            console.log(scope.selectableTypes);
             scope.options = {};
             scope.options.showHiddenFiles = false;
             if(scope.selectable === undefined)
@@ -29,7 +25,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             if(scope.selectableTypes === undefined)
                 scope.selectableTypesArray = ["executable", 'file', 'symboliclink'];
             else{
-                console.log("INIT");
                 scope.selectableTypesArray = JSON.parse(scope.selectableTypes);
             }
 
