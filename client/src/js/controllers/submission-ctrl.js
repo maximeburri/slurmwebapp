@@ -303,10 +303,14 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
 
     $scope.visualizeScript = function(){
         params = {
-            readScriptFilePath : $scope.parameters.batchFile,
             job : $scope.job,
             onlyVisualization : true
+        };
+
+        if($scope.parameters.proojectType == "load"){
+            params.readScriptFilePath = $scope.parameters.batchFile;
         }
+        
         User.operation({verb:"save", object:"submissionScript",
             params:params}).then(
             // Success
