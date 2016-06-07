@@ -84,6 +84,15 @@ var directivesByAttributes = {
             return toBestMemoryUnit(object);
         },
     },
+    "licenses" : {
+        "directives" : ["-L", "--licenses"],
+        "objectToValue"  : function(object){
+            return "" + object.join(',');
+        },
+        "valueToObject" : function(value){
+            return value.split(',');
+        },
+    },
     "timeLimit" : {
         "directives" : ["-t", "--time"],
         "objectToValue"  : function(object){
@@ -304,7 +313,7 @@ save = function (job, script){
                     fncAdd(key, value);
                 }
             }
-            
+
             // Get the complet script
             script = fncComplete()
         }
