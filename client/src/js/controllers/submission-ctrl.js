@@ -196,6 +196,11 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
         $scope.updateModuleDependencies($scope.job.modules.module);
     }
 
+    $scope.resetNotifications = function(){
+        job.notificationEvents = [];
+        job.notificationEmail = "";
+    }
+
     $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){
         // Has parent parameters ? recursive merge
         if(predefinedSubmission.parent != undefined){
@@ -217,10 +222,10 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
     }
 
     $scope.notificationEvents = [
-      {name: 'Commence'},
-      {name: 'Termine'},
-      {name: 'Échoue'},
-      {name: 'Temps limite atteint'}
+      {name: 'Commence', value : 'BEGIN'},
+      {name: 'Termine', value : 'END'},
+      {name: 'Échoue', value : 'FAIL'},
+      {name: 'Temps limite atteint', value : 'TIME_LIMIT'}
     ];
 
     $scope.$watch("job.memory.value + job.memory.unit",

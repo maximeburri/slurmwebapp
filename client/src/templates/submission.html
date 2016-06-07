@@ -174,7 +174,7 @@
                         <div class="form-group animate-hide"  ng-hide="parameters.userType == 'novice' || parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Modules {{loadings['modules'].state}}
                             </label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <swa-loading states="loadings" state-name="modules">
                                     <div class="input-group">
 
@@ -196,7 +196,7 @@
                                       </div>
                               </swa-loading>
                           </div>
-                          <div class="col-sm-5">
+                          <div class="col-sm-4">
                               <swa-loading states="loadings" state-name="moduleDependencies" state-init="nothing"
                                  ng-if="job.modules.module">
                                   <div ng-if="moduleDependencies && moduleDependencies.length > 1">
@@ -254,20 +254,23 @@
 
                         <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Notification email</label>
-                            <div class="col-sm-9">
+                            <div class="col-sm-5">
                                <div class="input-group">
-                                   <span class="input-group-addon">
-                                       <input type="checkbox" ng-model="job.notification">
-                                   </span>
                                    <input type="text" style="" class="form-control" ng-model="job.notificationEmail" placeholder="email">
                                     <ol actions-box="true" class="nya-bs-select form-control" ng-model="job.notificationEvents" multiple>
-                                     <li nya-bs-option="option in notificationEvents">
+                                     <li nya-bs-option="option in notificationEvents track by option.value"
+                                         value="option.value">
                                        <a>
                                          {{option.name}}
                                          <span class="glyphicon glyphicon-ok check-mark"></span>
                                        </a>
                                      </li>
                                    </ol>
+                                   <span class="input-group-btn">
+                                       <button class="btn btn-default" type="button"
+                                       style="margin-top: 0px;height: 69px;margin-bottom: 0px;"
+                                          ng-click="resetNotifications()"><i class="fa fa-times"></i></button>
+                                   </span>
                                </div>
                             </div>
                         </div>
