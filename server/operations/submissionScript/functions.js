@@ -178,6 +178,9 @@ var moduleLoad = {
     "attribute" : "modules",
     "commandStr" : "module load ",
     "objectToValue"  : function(object){
+        if(!object.module)
+            return null;
+        
         str = "";
         if(object.dependencies)
             str = object.dependencies + " ";
