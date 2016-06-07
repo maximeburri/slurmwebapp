@@ -503,7 +503,7 @@ function parse(script, fnc, fncEnd) {
     fncComplete = function(){
         finalScript = "";
         for(var i = 0;i<lines.length;i++){
-            if(!lines[i]){
+            if(!lines[i] && i<lines.length-1 && !lines[i+1]){
                 continue;
             }else{
                 finalScript += lines[i];
