@@ -21,7 +21,7 @@ function(client, operationInfo, clientCallback) {
 
     self = this;
 
-    if(!readScriptFilePath && !saveScriptFilePath){
+    if(!readScriptFilePath && !saveScriptFilePath && !onlyVisualization){
         clientCallback(null, {type:"bad_parameters",
             description:
                 "readScriptFilePath or saveScriptFilePath must be specified"});
