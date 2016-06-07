@@ -224,7 +224,7 @@ var moduleLoadStr = "module load ";
 var runExecutableStr = "srun ";
 
 
-
+// Transform object attribute to value
 function objectToValue(directiveOrAttribute, object){
     if(directiveOrAttribute.objectToValue){
         return directiveOrAttribute.objectToValue(object);
@@ -238,6 +238,7 @@ function objectToValue(directiveOrAttribute, object){
     return null;
 }
 
+// Transform value attribute to object
 function valueToObject(directiveOrAttribute, value){
     if(directiveOrAttribute.valueToObject){
         return directiveOrAttribute.valueToObject(value);
@@ -254,8 +255,12 @@ function valueToObject(directiveOrAttribute, value){
 // Return job
 load = function(script){
     job = {};
+
+    // Parse the script
     parse(script,
+        // Find a command
         function (value, fncDelete, fncUpdate, directive){
+            // Save it
             if(directive.attribute)
                 job[directive.attribute] = value;
         }
@@ -263,28 +268,44 @@ load = function(script){
     return job;
 }
 
+// Save a job with a script already written
 save = function (job, script){
+    // New script, add shebang
     if(!script)
         script = "#!/bin/bash";
 
+    // Save all attribute already reaplced
     replacedAttributes = {};
 
+    // Parse
     parse(script,
+        // On find command
         function (value, fncDelete, fncUpdate, directive){
+            // If not already added
             if(job[directive.attribute] !== undefined){
+                // Update command
                 fncUpdate(job[directive.attribute]);
+
+                // Save as replaced attributes
                 replacedAttributes[directive.attribute] = true;
             }
             else
                 fncDelete();
         },
+
+        // On end
         function(fncAdd, fncComplete){
+            // Foreach attribute of job to write
             for (var key in job) {
+                // If attribute was not written
                 if(!replacedAttributes[key]){
+                    // Add the attribute to the script
                     var value = job[key];
                     fncAdd(key, value);
                 }
             }
+            
+            // Get the complet script
             script = fncComplete()
         }
     );
