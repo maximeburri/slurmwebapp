@@ -415,6 +415,7 @@ function parse(script, fnc, fncEnd) {
                             partsInfo[commandNum].begin = (numLine-0);
                         partsInfo[commandNum].end = (numLine-0);
 
+                        // Update the command
                         fncUpdate = function(object){
                             valueToUpdate = objectToValue(attributeObject, object);
                             if(valueToUpdate !== null)
@@ -444,6 +445,7 @@ function parse(script, fnc, fncEnd) {
         }
     }
 
+    // Add a new row
     function addRow(row, part, str){
         lines.splice(row, 0, str);
 
@@ -476,6 +478,7 @@ function parse(script, fnc, fncEnd) {
         }
     }
 
+    // Add a new command
     fncAdd = function(attributeName, object){
         for(var partNum = 0; partNum < commands.length; partNum ++){
             part = commands[partNum];
@@ -505,6 +508,7 @@ function parse(script, fnc, fncEnd) {
         }
     }
 
+    // Complete
     fncComplete = function(){
         finalScript = "";
         for(var i = 0;i<lines.length;i++){
