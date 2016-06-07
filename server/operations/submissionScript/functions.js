@@ -352,7 +352,7 @@ function parse(script, fnc, fncEnd) {
 
         // Create function to delete line
         var fncDelete = function(){
-            lines[numLine] = "";
+            lines[numLine] = undefined;
         }
 
         // Test shebang
@@ -517,7 +517,17 @@ function parse(script, fnc, fncEnd) {
     }
 
     fncComplete = function(){
-        return lines.join('\n');
+        finalScript = "";
+        for(var i = 0;i<lines.length;i++){
+            if(!lines[i]){
+                continue;
+            }else{
+                finalScript += lines[i];
+                if(i<lines.length-1)
+                    finalScript += "\n";
+            }
+        }
+        return finalScript;
     }
 
     if(typeof fncEnd === "function")
