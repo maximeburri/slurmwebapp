@@ -137,20 +137,11 @@
                               </table>
                             </div>
                         </div>
-                        <swa-partitions-estimation selected="job.partition" job-to-estimate="job"></swa-partitions-estimation>
-                        <!--<div class="form-group animate-hide">
-                            <label class="col-sm-3 control-label">Partition </label>
-                            <div class="col-sm-9">
-                              <ol id="values-example" class="nya-bs-select"  data-live-search="true" ng-model="jobPartition" data-selected-text-format="values">
-                                <li nya-bs-option="(name, partition) in partitions">
-                                  <a>
-                                    {{name}}
-                                    <span class="glyphicon glyphicon-ok check-mark"></span>
-                                  </a>
-                                </li>
-                              </ol>
+                        <div class="form-group animate-hide">
+                            <div class="col-sm-12">
+                                <swa-partitions-estimation selected="job.partition" job-to-estimate="job"></swa-partitions-estimation>
                             </div>
-                        </div>-->
+                        </div>
 
                         <div class="form-group animate-hide" ng-hide="parameters.submissionType == 'estimation'">
                             <label class="col-sm-3 control-label">Nom du job </label>
