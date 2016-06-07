@@ -472,7 +472,7 @@ function parse(script, fnc, fncEnd) {
             partsInfo[partNum].end = partsInfo[partNum].begin;
         }
     }
-    console.log(partsInfo);
+
     fncAdd = function(attributeName, object){
         for(var partNum = 0; partNum < commands.length; partNum ++){
             part = commands[partNum];
