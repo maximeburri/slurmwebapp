@@ -74,6 +74,8 @@ var directivesByAttributes = {
     "memory" : {
         "directives" : ["--mem"],
         "objectToValue"  : function(object){
+            if(object.default)
+                return null;
             return "" + toMegaBytes(object.value, object.unit);
         },
         "valueToObject" : function(value){
