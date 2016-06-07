@@ -88,18 +88,8 @@ var directivesByAttributes = {
     },
     "licenses" : {
         "directives" : ["-L", "--licenses"],
-        "objectToValue"  : function(object){
-            if(!object ||
-                object.length == 0)
-                return null;
-            return "" + object.join(',');
-        },
-        "valueToObject" : function(value){
-            if(!value)
-                return null;
-            return value.split(',');
-        },
-    },
+        "dataType" : "array_string_comma"
+     },
     "timeLimit" : {
         "directives" : ["-t", "--time"],
         "objectToValue"  : function(object){
@@ -146,6 +136,16 @@ var directivesByAttributes = {
                             0;
             return object;
         },
+    },
+
+    "notificationEmail" : {
+        "directives" : ["--mail-user"],
+        "dataType" : "string"
+    },
+
+    "notificationEvents" : {
+        "directives" : ["--mail-type"],
+        "dataType" : "array_string_comma"
     }
 }
 
@@ -246,8 +246,11 @@ function objectToValue(directiveOrAttribute, object){
         return object;
     }else if (directiveOrAttribute.dataType == "integer"){
         return ""+object;
-    }else if (directiveOrAttribute.dataType == "array_string"){
-        return object.join(',');
+    }else if (directiveOrAttribute.dataType == "array_string_comma"){
+        if(!object ||
+            object.length == 0)
+            return null;
+        return "" + object.join(',');
     }
     return null;
 }
@@ -260,7 +263,9 @@ function valueToObject(directiveOrAttribute, value){
         return "" + value;
     }else if (directiveOrAttribute.dataType == "integer"){
         return parseInt(value);
-    }else if (directiveOrAttribute.dataType == "array_string"){
+    }else if (directiveOrAttribute.dataType == "array_string_comma"){
+        if(!value)
+            return null;
         return value.split(',');
     }
     return null;
