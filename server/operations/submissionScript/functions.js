@@ -371,7 +371,7 @@ function parse(script, fnc, fncEnd) {
             }
         }else{
             try{
-                for(commandNum in commands){
+                for(commandNum=0; commandNum<commands.length;commandNum++){
                     command = commands[commandNum];
 
                     valueEndCommand = command.commandStr.length;
@@ -408,10 +408,7 @@ function parse(script, fnc, fncEnd) {
                         // Save the parts info
                         if(partsInfo[commandNum].begin === undefined)
                             partsInfo[commandNum].begin = (numLine-0);
-
-                        /*if((commandNum-1) >= 0 && partsInfo[commandNum-1].end
-                            === undefined && partsInfo[commandNum-1].begin !== undefined)
-                            partsInfo[commandNum-1].end = (numLine-0)-1;*/
+                        partsInfo[commandNum].end = (numLine-0);
 
                         fncUpdate = function(object){
                             valueToUpdate = objectToValue(attributeObject, object);
@@ -459,34 +456,21 @@ function parse(script, fnc, fncEnd) {
 
     // Check all parts are numeroted
     for(var partNum = 0; partNum < commands.length; partNum ++){
-
         // Begin not defined : no parts
         if(partsInfo[partNum].begin === undefined){
-            /*if(partsInfo[partNum].end !== undefined){
-                partsInfo[partNum].begin = partsInfo[partNum].end;
-            }
-            // If precedent has a end part, so this part is end+1
-            else*/ if(partNum-1 >= 0 &&
-                    partsInfo[partNum-1].end !== undefined){
-                partsInfo[partNum].begin = partsInfo[partNum-1].end+1;
-
-            }
-            // If next has a begin part, so this part is begin-1
-            else if (partNum+1 < commands.length &&
-                    partsInfo[partNum+1].begin !== undefined){
-                partsInfo[partNum].begin = partsInfo[partNum+1].begin-1;
-            }
-            // No parts fineded, take first
-            else{
+            if(partNum == 0){
                 partsInfo[partNum].begin = 1;
+            }else if (partNum == commands.length-1){
+                partsInfo[partNum].begin = lines.length-1;
+            }else{
+                partsInfo[partNum].begin = partsInfo[partNum-1].end + 1;
             }
         }
-        // No end defined, so the end is the begining
         if(partsInfo[partNum].end == undefined){
             partsInfo[partNum].end = partsInfo[partNum].begin;
         }
     }
-
+    console.log(partsInfo);
     fncAdd = function(attributeName, object){
         for(var partNum = 0; partNum < commands.length; partNum ++){
             part = commands[partNum];
