@@ -414,8 +414,12 @@ function parse(script, fnc, fncEnd) {
                             partsInfo[commandNum-1].end = (numLine-0)-1;*/
 
                         fncUpdate = function(object){
-                            lines[numLine] = line.substring(0, valueEndCommand)
-                                + objectToValue(attributeObject, object);
+                            valueToUpdate = objectToValue(attributeObject, object);
+                            if(valueToUpdate !== null)
+                                lines[numLine] = line.substring(0, valueEndCommand)
+                                    + valueToUpdate;
+                            else
+                                fncDelete();
                         };
 
                         // If attributeObject finded, call fnc
@@ -494,7 +498,7 @@ function parse(script, fnc, fncEnd) {
                     value = objectToValue(directivesByAttributes[attributeName],
                         object);
 
-                    if(value)
+                    if(value !== null)
                         addRow(partsInfo[partNum].begin, partNum, part.commandStr+
                             directivesByAttributes[attributeName].directives[0] +" "+
                             value    )
@@ -504,7 +508,7 @@ function parse(script, fnc, fncEnd) {
                     value = objectToValue(part,
                         object);
 
-                    if(value)
+                    if(value !== null)
                         addRow(partsInfo[partNum].begin, partNum, part.commandStr+
                             value)
                 }
