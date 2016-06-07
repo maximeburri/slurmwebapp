@@ -67,3 +67,9 @@ console.log(scriptsToJob[0].job);
 console.log("=============== Result =====================");
 scriptToSave = SubmissionScript.save(scriptsToJob[0].job, scriptsToJob[0].script);
 console.log(scriptToSave);
+
+console.log("=============== New of =================")
+console.log(scriptsToJob[0].job);
+console.log("=============== Result =====================");
+scriptToSave = SubmissionScript.save(scriptsToJob[0].job);
+console.log(scriptToSave);

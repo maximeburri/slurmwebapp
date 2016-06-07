@@ -357,7 +357,7 @@ function parse(script, fnc, fncEnd) {
 
         // Create function to delete line
         var fncDelete = function(){
-            lines[numLine] = undefined;
+            lines[numLine] = "";
         }
 
         // Test shebang
@@ -468,7 +468,7 @@ function parse(script, fnc, fncEnd) {
             if(partNum == 0){
                 partsInfo[partNum].begin = 1;
             }else if (partNum == commands.length-1){
-                partsInfo[partNum].begin = lines.length-1;
+                partsInfo[partNum].begin = commands.length-1;
             }else{
                 partsInfo[partNum].begin = partsInfo[partNum-1].end + 1;
             }
