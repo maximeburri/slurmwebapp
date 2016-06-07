@@ -128,26 +128,28 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
 
     $scope.updateModuleDependencies = function(module, autoFirst){
         $scope.loadings['moduleDependencies'] = 'loading';
-        User.get('module', {moduleName:module}).then(
-            // Success
-            function(data){
-                $scope.loadings['moduleDependencies'] = 'finish';
+        if(module){
+            User.get('module', {moduleName:module}).then(
+                // Success
+                function(data){
+                    $scope.loadings['moduleDependencies'] = 'finish';
 
-                $scope.moduleDependencies = data.dependencies;
+                    $scope.moduleDependencies = data.dependencies;
 
-                // Take first auto if module has dependencies
-                if(autoFirst){
-                    if(data.dependencies.length > 0)
-                        $scope.job.modules.dependencies = data.dependencies[0];
-                    else
-                        $scope.job.modules.dependencies = null;
+                    // Take first auto if module has dependencies
+                    if(autoFirst){
+                        if(data.dependencies.length > 0)
+                            $scope.job.modules.dependencies = data.dependencies[0];
+                        else
+                            $scope.job.modules.dependencies = null;
+                    }
+                },
+                function(data){
+                    $scope.loadings['moduleDependencies'] = 'error';
+                    console.error(data);
                 }
-            },
-            function(data){
-                $scope.loadings['moduleDependencies'] = 'error';
-                console.error(data);
-            }
-        );
+            );
+        }
     }
 
     changeJob = function(newJob, oldJob){
@@ -186,6 +188,12 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
                 dependencies : null
             }
         }
+    }
+
+    $scope.resetModule = function(){
+        job.modules.module = null;
+        job.modules.dependencies = null;
+        $scope.updateModuleDependencies($scope.job.modules.module);
     }
 
     $scope.updateJobByPredefinedSubmission = function(predefinedSubmission){

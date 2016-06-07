@@ -176,21 +176,30 @@
                             </label>
                             <div class="col-sm-4">
                                 <swa-loading states="loadings" state-name="modules">
-                                  <ol class="nya-bs-select form-control"  data-live-search="true" ng-model="job.modules.module"
-                                      data-size="5"
-                                      ng-change="updateModuleDependencies(job.modules.module, true)" >
-                                    <li nya-bs-option="module in modules">
-                                      <a>
-                                        {{module}}
-                                        <span class="glyphicon glyphicon-ok check-mark"></span>
-                                      </a>
-                                    </li>
-                                  </ol>
+                                    <div class="input-group">
+
+                                          <ol class="nya-bs-select form-control"  data-live-search="true" ng-model="job.modules.module"
+                                              data-size="5"
+                                              style="z-index:999"
+                                              ng-change="updateModuleDependencies(job.modules.module, true)">
+                                            <li nya-bs-option="module in modules">
+                                              <a>
+                                                {{module}}
+                                                <span class="glyphicon glyphicon-ok check-mark"></span>
+                                              </a>
+                                            </li>
+                                          </ol>
+                                          <span class="input-group-btn">
+                                             <button class="btn btn-default" type="button"
+                                                ng-click="resetModule()"><i class="fa fa-times"></i></button>
+                                         </span>
+                                      </div>
                               </swa-loading>
                           </div>
                           <div class="col-sm-5">
-                              <swa-loading states="loadings" state-name="moduleDependencies" state-init="nothing">
-                                  <div ng-show="moduleDependencies.length > 1">
+                              <swa-loading states="loadings" state-name="moduleDependencies" state-init="nothing"
+                                 ng-if="job.modules.module">
+                                  <div ng-if="moduleDependencies && moduleDependencies.length > 1">
                                         <ol class="nya-bs-select form-control"
                                             ng-model="job.modules.dependencies"
                                             title="{{job.modules.dependencies}}"
@@ -203,18 +212,18 @@
                                           </li>
                                         </ol>
                                   </div>
-                                  <div ng-show="moduleDependencies.length <= 1">
-                                        <small class="control-label"
-                                            style="display: block;float: left;"
-                                            ng-show="moduleDependencies.length == 0">
-                                            Pas de dépendances
-                                        </small>
-                                        <small class="control-label"
-                                            style="display: block;float: left;"
-                                            ng-show="moduleDependencies.length == 1">
-                                            {{moduleDependencies[0]}}
-                                        </small>
-                                  </div>
+
+                                    <small class="control-label"
+                                        style="display: block;float: left;"
+                                        ng-if="moduleDependencies == null || moduleDependencies.length == 0">
+                                        Pas de dépendances
+                                    </small>
+                                    <small class="control-label"
+                                        style="display: block;float: left;"
+                                        ng-if="moduleDependencies && moduleDependencies.length == 1">
+                                        {{moduleDependencies[0]}}
+                                    </small>
+
                               </swa-loading>
                           </div>
                         </div>
@@ -251,7 +260,7 @@
                                        <input type="checkbox" ng-model="job.notification">
                                    </span>
                                    <input type="text" style="" class="form-control" ng-model="job.notificationEmail" placeholder="email">
-                                    <ol class="nya-bs-select form-control" ng-model="job.notificationEvents" multiple>
+                                    <ol actions-box="true" class="nya-bs-select form-control" ng-model="job.notificationEvents" multiple>
                                      <li nya-bs-option="option in notificationEvents">
                                        <a>
                                          {{option.name}}
