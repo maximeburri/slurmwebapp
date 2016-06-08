@@ -72,7 +72,7 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
 
                         // Check parameters rules
                         if(definedRule.parameters != undefined){
-                            parameters = definedRule.parameters;
+                            angular.copy(definedRule.parameters, parameters);
                         }
 
                         // Check parameter rules in partitions
