@@ -318,7 +318,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
             onlyVisualization : true
         };
 
-        if($scope.parameters.proojectType == "load"){
+        if($scope.parameters.projectType == "load"){
             params.readScriptFilePath = $scope.parameters.batchFile;
         }
 
