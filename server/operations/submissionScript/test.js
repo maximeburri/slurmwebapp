@@ -33,15 +33,23 @@ srun matlab arg1 arg2 arg3";
 var scriptsToJob = [
     {
         script:
-        "#!/bin/sh\n"+
-        "#SBATCH --job-name pululagua \n"+
-        "   #SBATCH -n=128 \n"+
-        "#SBATCH -c 1 \n"+
-        "#SBATCH -p cui \n"+
-        "#SBATCH -t 02:00:00 \n"+
-        "#SBATCH -o pululagua.o%j \n"+
-        "\n"+
-        "srun matlab arg1 arg2 arg3",
+        "#!/bin/sh\n\
+\n\
+#SBATCH -J pululagua\n\
+#SBATCH -n 128\n\
+#SBATCH -c 1\n\
+#SBATCH -p cui\n\
+#SBATCH -t 02:00:00\n\
+#SBATCH -o pululagua.o%j\n\
+\n\
+echo $SLURM_NODELIST\n\
+\n\
+module load GCC/4.7.2\n\
+\n\
+echo 'Module loaded'\n\
+cp file file.old\n\
+\n\
+srun ~/GIT/TTM/tetras/tetras -x 30000 -y 30000 -z 30000 \n",
 
         job:
             { jobName: 'pululagua',
