@@ -273,6 +273,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
                     },
                     // Error
                     function(err){
+                        alert("Impossible de soumettre le job, vérifier les ressources utilisées");
                         console.error("Job no submitted");
                     }
                 );
@@ -280,6 +281,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
             },
             // Error
             function(err){
+                alert("Impossible d'écrire le script");
                 console.error(err);
             }
         );
