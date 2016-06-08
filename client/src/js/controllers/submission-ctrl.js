@@ -172,7 +172,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
                             oldJob[nameAttr]);
                     }
                     else{
-                        oldJob[nameAttr] = angular.merge({},
+                        oldJob[nameAttr] = angular.extend({},
                             oldJob[nameAttr],
                             newJob[nameAttr]);
                     }
@@ -217,7 +217,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
                 }
             }
         }
-
+        $scope.job.predefinedSubmission = predefinedSubmission.name;
         changeJob(predefinedSubmission.job, $scope.job);
     }
 
@@ -239,8 +239,9 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
     );
 
     $scope.predefinedSubmissionChange = function(){
-        if($scope.job.predefinedSubmission)
-            $scope.updateJobByPredefinedSubmission($scope.job.predefinedSubmission);
+        predSub = predefinedSubmissionsDictionnary[$scope.job.predefinedSubmission];
+        if(predSub)
+            $scope.updateJobByPredefinedSubmission(predSub);
     }
 
 
@@ -257,7 +258,7 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
             script = job.folderSelected + "/" + $scope.parameters.batchFile;
             params.saveScriptFilePath = script;
         }
-        
+
         User.operation({verb:"save", object:"submissionScript",
             params:params}).then(
             // Success

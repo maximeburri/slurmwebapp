@@ -75,7 +75,8 @@
                             <div class=" col-sm-6">
                                 <swa-loading states="loadings" state-name="predefinedSubmissions">
                                     <ol class="nya-bs-select form-control" ng-model="job.predefinedSubmission" data-live-search="true" ng-change="predefinedSubmissionChange()">
-                                      <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group">
+                                      <li nya-bs-option="predefinedSubmission in predefinedSubmissions group by predefinedSubmission.group track by predefinedSubmission.name"
+                                            value="predefinedSubmission.name">
                                         <span class="dropdown-header" ng-if="$group"}}>{{$group}}</span>
                                         <a ng-hide="predefinedSubmission.hide">
                                           <span>{{ predefinedSubmission.name }}</span>
