@@ -10,18 +10,18 @@ inherits(DetailJobOperation, Operation);
 // Overwrite
 DetailJobOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
-    cmd = "sinfo --format=\"%R|%C|%F\" --noheader -a";
+    cmd = 'sinfo --format="%N|%R|%C|%F" --Node -a -h';
 
     // Parse A/I/O/T
     parseAIOT = function(str){
-        obj = {
+        var obj = {
             allocated : 0,
             idle : 0,
             other : 0,
             total : 0
-        }
+        };
         if(str){
-            infos = str.split('/');
+            var infos = str.split('/');
             obj.allocated = parseInt(infos[0]);
             obj.idle = parseInt(infos[1]);
             obj.other = parseInt(infos[2]);
@@ -45,10 +45,12 @@ function(client, operationInfo, clientCallback) {
             }
             // No error parse
             else{
+                partitionsByName = {};
+
                 // Final result
                 cluster = {
                     statistics : {
-                        partitions : [],
+                        nodes : [],
                         total : {
                             cpus : parseAIOT(),
                             nodes : parseAIOT()
@@ -57,23 +59,30 @@ function(client, operationInfo, clientCallback) {
                 };
                 lines = result.split('\n');
 
-                // Foreach partitions
+                // Foreach nodes
                 for(i = 0;i<lines.length-1;i++){
                     infos = lines[i].split('|');
-                    partition = {
+                    node = {
                         name : infos[0],
-                        cpus : parseAIOT(infos[1]),
-                        nodes : parseAIOT(infos[2])
+                        // Only partition... Why ??
+                        // Maybe the main
+                        partition : infos[1],
+                        cpus : parseAIOT(infos[2]),
+                        aoit : parseAIOT(infos[3])
                     };
 
-                    // Add to partitions
-                    cluster.statistics.partitions.push(partition);
+                    // Add to nodes
+                    cluster.statistics.nodes.push(node);
 
                     // Add to total
-                    addAIOT(cluster.statistics.total.cpus, partition.cpus);
-                    addAIOT(cluster.statistics.total.nodes, partition.nodes);
-                }
+                    addAIOT(cluster.statistics.total.cpus, node.cpus);
+                    addAIOT(cluster.statistics.total.nodes, node.aoit);
 
+                    if(!partitionsByName[node.partition]){
+                        partitionsByName[node.partition] = true;
+                    }
+                }
+                cluster.partitions = Object.keys(partitionsByName);
                 clientCallback({cluster:cluster});
             }
         }, clientCallback);
