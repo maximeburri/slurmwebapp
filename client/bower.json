@@ -36,7 +36,8 @@
     "url": "http://ezgit.unige.ch/slurmwebapp"
   },
   "resolutions": {
-    "angular": "~1.2.21"
+    "angular": "~1.2.21",
+    "angular-cookies": "1.2.29"
   },
   "devDependencies": {
     "angular-cookies": "^1.5.5"
