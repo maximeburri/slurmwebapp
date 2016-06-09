@@ -31,6 +31,7 @@ var ModuleObject = require('./objects/ModuleObject.js');
 var ConfigurationObject = require('./objects/ConfigurationObject.js');
 var SubmissionScriptObject = require('./objects/SubmissionScriptObject.js');
 var UserObject = require('./objects/UserObject.js');
+var ClusterObject = require('./objects/ClusterObject.js');
 
 var objectsOperations = new ObjectController({
     "job" : new JobObject(),
@@ -43,7 +44,8 @@ var objectsOperations = new ObjectController({
     "module" : new ModuleObject(),
     "configuration" : new ConfigurationObject(),
     "submissionScript" : new SubmissionScriptObject(),
-    "user" : new UserObject()
+    "user" : new UserObject(),
+    "cluster" : new ClusterObject()
 });
 
 var optionsServer = {
