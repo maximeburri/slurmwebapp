@@ -85,13 +85,25 @@ function(client, operationInfo, clientCallback) {
                 cluster.partitions = Object.keys(partitionsByName);
 
                 // Make count job
-                cmd = "squeue -a -t RUNNING -h | wc -l";
+                cmd = 'squeue -o "%T" -a -t RUNNING,PENDING -h | uniq -c | awk \'{printf("%s,%s\\n",$2,$1)}\'';
                 client.executeCommand(cmd,
                     function(result, exitcode, clientCallback){
                         if(exitcode != 0){
-                            clientCallback(null, {error:"INFO_CLUSTER_FAIL"});
+                            clientCallback(null, {error:"INFO_CLUSTER_FAIL_JOBS"});
                         }else{
-                            cluster.runningJobsCount = parseInt(result.slice(0, result.length-1));
+                            jobs = {
+                                pending : 0,
+                                running : 0,
+                                total : 0
+                            }
+                            lines = result.split('\n');
+                            for(i = 0;i<lines.length-1;i++){
+                                var infos = lines[i].split(',');
+                                var attribute = infos[0].toLowerCase();
+                                jobs[attribute] = parseInt(infos[1]);
+                                jobs.total += jobs[attribute];
+                            }
+                            cluster.jobs = jobs;
                             clientCallback({cluster:cluster});
                         }
                     },
