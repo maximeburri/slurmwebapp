@@ -83,7 +83,20 @@ function(client, operationInfo, clientCallback) {
                     }
                 }
                 cluster.partitions = Object.keys(partitionsByName);
-                clientCallback({cluster:cluster});
+
+                // Make count job
+                cmd = "squeue -a -t RUNNING -h | wc -l";
+                client.executeCommand(cmd,
+                    function(result, exitcode, clientCallback){
+                        if(exitcode != 0){
+                            clientCallback(null, {error:"INFO_CLUSTER_FAIL"});
+                        }else{
+                            cluster.runningJobsCount = parseInt(result.slice(0, result.length-1));
+                            clientCallback({cluster:cluster});
+                        }
+                    },
+                    clientCallback
+                );
             }
         }, clientCallback);
 };
