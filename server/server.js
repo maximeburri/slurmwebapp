@@ -30,7 +30,7 @@ var ModulesObject = require('./objects/ModulesObject.js');
 var ModuleObject = require('./objects/ModuleObject.js');
 var ConfigurationObject = require('./objects/ConfigurationObject.js');
 var SubmissionScriptObject = require('./objects/SubmissionScriptObject.js');
-
+var UserObject = require('./objects/UserObject.js');
 
 var objectsOperations = new ObjectController({
     "job" : new JobObject(),
@@ -42,7 +42,8 @@ var objectsOperations = new ObjectController({
     "modules" : new ModulesObject(),
     "module" : new ModuleObject(),
     "configuration" : new ConfigurationObject(),
-    "submissionScript" : new SubmissionScriptObject()
+    "submissionScript" : new SubmissionScriptObject(),
+    "user" : new UserObject()
 });
 
 var optionsServer = {
