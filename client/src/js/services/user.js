@@ -3,6 +3,8 @@ angular.module('RDash').service('User', ['$q', '$rootScope', 'Notification', Use
 function User($q, $rootScope, Notification) {
     var that = this;
     var idNotify = 0;
+    var userInfo = null;
+
     this.socket = false;
     this.authenticated = false;
 
@@ -145,6 +147,24 @@ function User($q, $rootScope, Notification) {
     this.get = function(object, params, notify){
         return that.operation({verb:"get", object:object, params:params}, notify);
     };
+
+    this.getUserInfo = function(object){
+        var deferred = $q.defer();
+        if(userInfo !== null){
+            deferred.resolve(userInfo);
+        }else{
+            this.get('user').then(
+                function(data){
+                    userInfo = data;
+                    deferred.resolve(data);
+                },
+                function(error){
+                    deferred.resolve(error);
+                }
+            );
+        }
+        return deferred.promise;
+    }
 
     this.logout = function(){
         that.socket.disconnect();
