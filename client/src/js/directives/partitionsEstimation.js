@@ -20,6 +20,8 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
 
             scopeRules = scope.$new(true);
             scopeRules.job = scope.jobToEstimate;
+            scopeRules.user = {groups:[], user:""};
+
             var fncScopeRules = {
                 "toBytes": Memory.toBytes
             };
@@ -187,6 +189,18 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                     console.error(data);
                 }
             );
+
+            User.getUserInfo().then(
+                function(data){
+                    scopeRules.user = data.user;
+                    console.log(scopeRules);
+                    updatePartitionByRules();
+                },
+
+                function(data){
+                    console.error(data);
+                }
+            )
 
             scope.itemClick = function(partition){
                 if(partition.advice.type != "disabled"){
