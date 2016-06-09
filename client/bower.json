@@ -37,6 +37,9 @@
   },
   "resolutions": {
     "angular": "~1.2.21",
+    "angular": "~1.2.21",
+    "humanize-duration": "^3.6.1",
+    "moment": "^2.11.2",
     "angular-cookies": "1.2.29"
   },
   "devDependencies": {
