@@ -10,7 +10,7 @@ inherits(DetailJobOperation, Operation);
 // Overwrite
 DetailJobOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
-    cmd = "sinfo --format=\"%R|%C|%F\" --noheader";
+    cmd = "sinfo --format=\"%R|%C|%F\" --noheader -a";
 
     // Parse A/I/O/T
     parseAIOT = function(str){
@@ -58,7 +58,7 @@ function(client, operationInfo, clientCallback) {
                 lines = result.split('\n');
 
                 // Foreach partitions
-                for(i = 0;i<lines.length;i++){
+                for(i = 0;i<lines.length-1;i++){
                     infos = lines[i].split('|');
                     partition = {
                         name : infos[0],
