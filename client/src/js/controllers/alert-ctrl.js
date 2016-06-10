@@ -10,7 +10,7 @@ function AlertsCtrl($rootScope, User) {
     if(!$rootScope.cluster){
         $rootScope.nodes = {
             data : [{
-                label:"noeuds utilisés",
+                label:"utilisés",
                 value:0,
                 color: "#ae2323",
                 suffix:'%'
@@ -22,7 +22,7 @@ function AlertsCtrl($rootScope, User) {
             };
         $rootScope.cpus = {
             data : [{
-                label: "CPUs utilisés",
+                label: "utilisés",
                 value: 0,
                 color: "#d3a938",
                 suffix: '%'
