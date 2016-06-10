@@ -13,7 +13,9 @@
 				</div>
                 <div class="title" ng-if="cluster">{{cluster.statistics.jobs.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
-				<div class="comment">Jobs</div>
+				<div class="comment">Jobs
+                    <pie-chart ng-if="cluster" style="min-height:190px;" data="jobs.data" options="jobs.options"></pie-chart>
+                </div>
 			</rd-widget-body>
 		</rd-widget>
 	</div>
@@ -25,7 +27,9 @@
 				</div>
                 <div class="title" ng-if="cluster">{{cluster.statistics.nodes.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
-				<div class="comment">Noeuds</div>
+				<div class="comment">Noeuds
+                    <pie-chart ng-if="cluster" style="min-height:190px;" data="nodes.data" options="nodes.options"></pie-chart>
+                </div>
 			</rd-widget-body>
 		</rd-widget>
 	</div>
@@ -37,7 +41,9 @@
 				</div>
 				<div class="title" ng-if="cluster">{{cluster.statistics.cpus.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
-				<div class="comment">CPUs</div>
+				<div class="comment">CPUs
+                    <pie-chart ng-if="cluster" style="min-height:190px;" data="cpus.data" options="cpus.options"></pie-chart>
+                </div>
 			</rd-widget-body>
 		</rd-widget>
 	</div>
@@ -55,17 +61,6 @@
 	</div>
 </div>
 
-<div class="row">
-	<div class="col-lg-4 col-md-4 col-xs-12">
-		<pie-chart ng-if="cluster" style="min-height:190px;" data="nodes.data" options="nodes.options"></pie-chart>
-	</div>
-    <div class="col-lg-4 col-md-4 col-xs-12">
-        <pie-chart ng-if="cluster" style="min-height:190px;" data="cpus.data" options="cpus.options"></pie-chart>
-    </div>
-    <div class="col-lg-4 col-md-4 col-xs-12">
-        <pie-chart ng-if="cluster" style="min-height:190px;" data="jobs.data" options="jobs.options"></pie-chart>
-    </div>
-</div>
 
 <div class="row">
 	<div class="col-lg-12">
