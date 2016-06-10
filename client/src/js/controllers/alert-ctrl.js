@@ -16,7 +16,7 @@ function AlertsCtrl($rootScope, User) {
                 suffix:'%'
             }],
             options : {
-                thickness: 5,
+                thickness: 12,
                 mode: "gauge",
                 total: 100}
             };
@@ -28,10 +28,25 @@ function AlertsCtrl($rootScope, User) {
                 suffix: '%'
             }],
             options : {
-                thickness: 5,
+                thickness: 12,
                 mode: "gauge",
                 total: 100}
             };
+
+            $rootScope.jobs = {
+                data : [{
+                    label: "",
+                    value: 0,
+                    color: "#2361ae"
+                },{
+                    label: "",
+                    value: 0,
+                    color: "#23ae89"
+                }],
+                options : {
+                    thickness: 12
+                    }
+                };
 
         User.get('cluster').then(
             function(data){
@@ -49,6 +64,10 @@ function AlertsCtrl($rootScope, User) {
 
                 $rootScope.cpus.data[0].value = allocatedCPUs;
 
+                $rootScope.jobs.data[0].value = data.cluster.statistics.jobs.pending;
+                $rootScope.jobs.data[0].label = $rootScope.jobs.data[0].value + " en attente";
+                $rootScope.jobs.data[1].value = data.cluster.statistics.jobs.running;
+                $rootScope.jobs.data[1].label = $rootScope.jobs.data[1].value + " en cours";
 
                 console.log(data);
             },

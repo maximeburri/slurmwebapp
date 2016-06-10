@@ -56,11 +56,14 @@
 </div>
 
 <div class="row">
-	<div class="col-lg-6 col-md-6 col-xs-12">
-		<pie-chart style="min-height:200px;" data="nodes.data" options="nodes.options"></pie-chart>
+	<div class="col-lg-4 col-md-4 col-xs-12">
+		<pie-chart ng-if="cluster" style="min-height:190px;" data="nodes.data" options="nodes.options"></pie-chart>
 	</div>
-    <div class="col-lg-6 col-md-6 col-xs-12">
-        <pie-chart style="min-height:200px;" data="cpus.data" options="cpus.options"></pie-chart>
+    <div class="col-lg-4 col-md-4 col-xs-12">
+        <pie-chart ng-if="cluster" style="min-height:190px;" data="cpus.data" options="cpus.options"></pie-chart>
+    </div>
+    <div class="col-lg-4 col-md-4 col-xs-12">
+        <pie-chart ng-if="cluster" style="min-height:190px;" data="jobs.data" options="jobs.options"></pie-chart>
     </div>
 </div>
 
