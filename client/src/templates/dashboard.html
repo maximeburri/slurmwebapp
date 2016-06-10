@@ -56,8 +56,8 @@
                 <div class="title" ng-if="cluster">{{cluster.statistics.partitions.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
 				<div class="comment">Partitions
-                    <div style="    height: 200px;overflow: auto;width: 100%;margin-top: 20px;">
-                        <table class="table table-hover"  ng-if="cluster">
+                    <div  ng-if="cluster" style="max-height: 200px;overflow: auto;width: 100%;margin-top: 20px;">
+                        <table class="table table-hover">
                             <tbody>
                                 <tr>
                                     <th> Nom
