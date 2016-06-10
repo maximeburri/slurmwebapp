@@ -46,14 +46,16 @@ function(client, operationInfo, clientCallback) {
             // No error parse
             else{
                 partitionsByName = {};
+                nodesByName = {};
 
                 // Final result
                 cluster = {
+                    nodes : {},
                     statistics : {
-                        nodes : [],
-                        total : {
-                            cpus : parseAIOT(),
-                            nodes : parseAIOT()
+                        cpus : parseAIOT(),
+                        nodes : parseAIOT(),
+                        partitions : {
+                            total : 0
                         }
                     }
                 };
@@ -62,27 +64,41 @@ function(client, operationInfo, clientCallback) {
                 // Foreach nodes
                 for(i = 0;i<lines.length-1;i++){
                     infos = lines[i].split('|');
+                    partition = infos[1];
                     node = {
                         name : infos[0],
                         // Only partition... Why ??
                         // Maybe the main
-                        partition : infos[1],
-                        cpus : parseAIOT(infos[2]),
-                        aoit : parseAIOT(infos[3])
+                        partitions : [partition]
                     };
 
-                    // Add to nodes
-                    cluster.statistics.nodes.push(node);
+                    // Node already added ?
+                    if(!nodesByName[node.name]){
+                        // Get cpus and aoit
+                        node.cpus = parseAIOT(infos[2]);
+                        node.aoit = parseAIOT(infos[3]);
 
-                    // Add to total
-                    addAIOT(cluster.statistics.total.cpus, node.cpus);
-                    addAIOT(cluster.statistics.total.nodes, node.aoit);
+                        // Add to nodes
+                        cluster.nodes[node.name] = node;
 
-                    if(!partitionsByName[node.partition]){
-                        partitionsByName[node.partition] = true;
+                        // Add to total
+                        addAIOT(cluster.statistics.cpus, node.cpus);
+                        addAIOT(cluster.statistics.nodes, node.aoit);
+
+                        nodesByName[node.name] = true;
+                    }else{
+                        // Node already added, add partition to list
+                        cluster.nodes[node.name].partitions.push(partition);
+                    }
+
+                    if(!partitionsByName[partition]){
+                        partitionsByName[partition] = [node.name];
+                        cluster.statistics.partitions.total++;
+                    }else{
+                        partitionsByName[partition].push(node.name);
                     }
                 }
-                cluster.partitions = Object.keys(partitionsByName);
+                cluster.partitions = partitionsByName;
 
                 // Make count job
                 cmd = 'squeue -o "%T" -a -t RUNNING,PENDING -h | uniq -c | awk \'{printf("%s,%s\\n",$2,$1)}\'';
@@ -103,7 +119,7 @@ function(client, operationInfo, clientCallback) {
                                 jobs[attribute] = parseInt(infos[1]);
                                 jobs.total += jobs[attribute];
                             }
-                            cluster.jobs = jobs;
+                            cluster.statistics.jobs = jobs;
                             clientCallback({cluster:cluster});
                         }
                     },
