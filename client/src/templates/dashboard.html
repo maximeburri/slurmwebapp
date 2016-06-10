@@ -55,7 +55,28 @@
 				</div>
                 <div class="title" ng-if="cluster">{{cluster.statistics.partitions.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
-				<div class="comment">Partitions</div>
+				<div class="comment">Partitions
+                    <div style="    height: 200px;overflow: auto;width: 100%;margin-top: 20px;">
+                        <table class="table table-hover"  ng-if="cluster">
+                            <tbody>
+                                <tr>
+                                    <th> Nom
+                                    </th>
+                                    <th> Noeuds
+                                    </th>
+                                </tr>
+                                <tr ng-repeat="(partitionName, partition) in cluster.partitions">
+                                    <td>
+                                        <span style="margin-left:6px;">{{partitionName}}</span>
+                                    </td>
+                                    <td>
+                                        <span style="margin-left:6px;">{{partition.length}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 			</rd-widget-body>
 		</rd-widget>
 	</div>
