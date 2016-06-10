@@ -8,8 +8,30 @@ angular
 
 function AlertsCtrl($rootScope, User) {
     if(!$rootScope.cluster){
-        $rootScope.nodes = {data:{}, options:{}};
-        $rootScope.cpus = {data:{}, options:{}};
+        $rootScope.nodes = {
+            data : [{
+                label:"noeuds utilisés",
+                value:0,
+                color: "#ae2323",
+                suffix:'%'
+            }],
+            options : {
+                thickness: 5,
+                mode: "gauge",
+                total: 100}
+            };
+        $rootScope.cpus = {
+            data : [{
+                label: "CPUs utilisés",
+                value: 0,
+                color: "#d3a938",
+                suffix: '%'
+            }],
+            options : {
+                thickness: 5,
+                mode: "gauge",
+                total: 100}
+            };
 
         User.get('cluster').then(
             function(data){
@@ -23,17 +45,9 @@ function AlertsCtrl($rootScope, User) {
                     Math.round((data.cluster.statistics.total.cpus.allocated /
                         data.cluster.statistics.total.cpus.total) * 1000)/10;
 
-                $rootScope.nodes.options = {thickness: 5, mode: "gauge",
-                    total: 100};
-                $rootScope.nodes.data = [
-                  {label: "noeuds utilisés", value:allocatedNode, color: "#ae2323", suffix:'%'},
-                ];
+                $rootScope.nodes.data[0].value = allocatedNode;
 
-                $rootScope.cpus.options = {thickness: 5, mode: "gauge",
-                    total: 100};
-                $rootScope.cpus.data = [
-                  {label: "CPUs utilisés", value:allocatedCPUs, color: "#d3a938", suffix:'%'},
-                ];
+                $rootScope.cpus.data[0].value = allocatedCPUs;
 
 
                 console.log(data);
