@@ -11,7 +11,7 @@
 				<div class="widget-icon green pull-left">
 					<i class="fa fa-cogs"></i>
 				</div>
-                <div class="title" ng-if="cluster">{{cluster.jobs.total}}</div>
+                <div class="title" ng-if="cluster">{{cluster.statistics.jobs.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
 				<div class="comment">Jobs</div>
 			</rd-widget-body>
@@ -23,7 +23,7 @@
 				<div class="widget-icon red pull-left">
 					<i class="fa fa-circle-o"></i>
 				</div>
-                <div class="title" ng-if="cluster">{{cluster.statistics.total.nodes.total}}</div>
+                <div class="title" ng-if="cluster">{{cluster.statistics.nodes.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
 				<div class="comment">Noeuds</div>
 			</rd-widget-body>
@@ -35,7 +35,7 @@
 				<div class="widget-icon orange pull-left">
 					<i class="fa fa-sitemap"></i>
 				</div>
-				<div class="title" ng-if="cluster">{{cluster.statistics.total.cpus.total}}</div>
+				<div class="title" ng-if="cluster">{{cluster.statistics.cpus.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
 				<div class="comment">CPUs</div>
 			</rd-widget-body>
@@ -47,7 +47,7 @@
 				<div class="widget-icon blue pull-left">
 					<i class="fa fa-tasks"></i>
 				</div>
-                <div class="title" ng-if="cluster">{{cluster.partitions.length}}</div>
+                <div class="title" ng-if="cluster">{{cluster.statistics.partitions.total}}</div>
                 <div class="title" ng-if="!cluster">-</div>
 				<div class="comment">Partitions</div>
 			</rd-widget-body>

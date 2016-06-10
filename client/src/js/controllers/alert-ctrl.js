@@ -38,12 +38,12 @@ function AlertsCtrl($rootScope, User) {
                 $rootScope.cluster = data.cluster;
 
                 var allocatedNode =
-                    Math.round((data.cluster.statistics.total.nodes.allocated /
-                        data.cluster.statistics.total.nodes.total) * 1000)/10;
+                    Math.round((data.cluster.statistics.nodes.allocated /
+                        data.cluster.statistics.nodes.total) * 1000)/10;
 
                 var allocatedCPUs =
-                    Math.round((data.cluster.statistics.total.cpus.allocated /
-                        data.cluster.statistics.total.cpus.total) * 1000)/10;
+                    Math.round((data.cluster.statistics.cpus.allocated /
+                        data.cluster.statistics.cpus.total) * 1000)/10;
 
                 $rootScope.nodes.data[0].value = allocatedNode;
 
