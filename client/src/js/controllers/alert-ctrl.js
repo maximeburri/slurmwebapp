@@ -16,7 +16,7 @@ function AlertsCtrl($rootScope, User) {
                 suffix:'%'
             }],
             options : {
-                thickness: 12,
+                thickness: 10,
                 mode: "gauge",
                 total: 100}
             };
@@ -28,7 +28,7 @@ function AlertsCtrl($rootScope, User) {
                 suffix: '%'
             }],
             options : {
-                thickness: 12,
+                thickness: 10,
                 mode: "gauge",
                 total: 100}
             };
@@ -44,7 +44,7 @@ function AlertsCtrl($rootScope, User) {
                     color: "#23ae89"
                 }],
                 options : {
-                    thickness: 12
+                    thickness: 10
                     }
                 };
 
