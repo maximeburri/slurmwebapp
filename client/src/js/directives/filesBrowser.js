@@ -84,7 +84,8 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             scope.itemClick = function(file){
                 if(scope.selectable && scope.isSelectableFile(file)){
                     scope.selected = scope.currentDir + file.filename;
-                    if(scope.onFileSelected() &&
+                    if(typeof scope.onFileSelected === 'function' &&
+                        scope.onFileSelected() &&
                         typeof scope.onFileSelected() === "function")
                         scope.onFileSelected()(
                             {
