@@ -3,10 +3,10 @@
  */
 
 angular.module('RDash')
-    .controller('SubmissionCtrl', ['$scope', '$rootScope', 'User', 'Memory',
+    .controller('SubmissionCtrl', ['$timeout', '$scope', '$rootScope', 'User', 'Memory',
         '$modal', '$location', SubmissionCtrl]);
 
-function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
+function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $location) {
     $scope.projectBrowserSelectableTypes = ["folder"];
 
     $scope.loadings = {};
@@ -339,6 +339,93 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
                 console.error(err);
             }
         );
+    }
+
+    // Position of cursor
+    $scope.argsCursorPos = {
+        blur : true,
+        begin : 0,
+        end : 0
+    };
+
+    // Update cursor pose (on-click or on-keyup)
+    $scope.updateArgsCursorPos = function ($event) {
+        $scope.argsCursorPos = {
+            blur : false,
+            begin : $event.target.selectionStart,
+            end : $event.target.selectionEnd,
+            lastFocus : null
+        }
+        console.log($scope.argsCursorPos);
+    };
+
+    // Create selection for edit or adds args
+    function createSelection(field, start, end) {
+      if( field.createTextRange ) {
+        var selRange = field.createTextRange();
+        selRange.collapse(true);
+        selRange.moveStart('character', start);
+        selRange.moveEnd('character', end);
+        selRange.select();
+        field.focus();
+      } else if( field.setSelectionRange ) {
+        field.focus();
+        field.setSelectionRange(start, end);
+      } else if( typeof field.selectionStart != 'undefined' ) {
+        field.selectionStart = start;
+        field.selectionEnd = end;
+        field.focus();
+      }
+      $scope.argsCursorPos.blur = false;
+      $scope.argsCursorPos.begin = start;
+      $scope.argsCursorPos.end = end;
+    }
+
+    // Edit or add args
+    $scope.editOrAddArgs = function(){
+        newScope = $scope.$new();
+        oldText = document.getElementById("inputArgs").value;
+        newCursorPos = {};
+
+        // Browser files params
+        newScope.browser = {
+            selectable : true,
+            selected : $scope.job.execution.arguments,
+
+            // On file selected, cut string and replace
+            onFileSelected : function(file){
+                console.log($scope.argsCursorPos.begin);
+                console.log($scope.job.execution.arguments);
+                $scope.job.execution.arguments =
+                    oldText.slice(0, $scope.argsCursorPos.begin) +
+                        file.filepath +
+                    oldText.slice($scope.argsCursorPos.end,
+                            oldText.length);
+
+                newCursorPos.begin = $scope.argsCursorPos.begin-1;
+                newCursorPos.end = newCursorPos.begin +file.filepath.length+1;
+            }
+        }
+
+        var modal = $modal.open({
+            templateUrl:"templates/modal/filesBrowser.html",
+            scope:newScope
+        });
+
+        console.log(modal);
+
+        // Modal finish
+        modal.result.then(function(){}, function(){
+            var input = document.getElementById("inputArgs");
+            createSelection(input, newCursorPos.begin+1, newCursorPos.end);
+        });
+    }
+
+    // On blur input args
+    $scope.inputArgsBlur = function(){
+        $timeout(function(){
+            $scope.argsCursorPos.blur = true
+        }, 400);
     }
 
     $scope.editCommand = function(){
