@@ -41,7 +41,7 @@ function(result, exitcode, clientCallback){
         line = modulesListString[i].toString();
 
         if(line.length>0 &&
-            (line[line.length-1] == '/' || line.includes('Rebuilding cache'))){
+            (line[line.length-1] == '/' || line.indexOf('Rebuilding cache'))){
                 continue;
         }else{
             if(line.length > 1 && line[line.length - 1] != '/')
