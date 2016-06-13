@@ -281,41 +281,15 @@
                 </rd-widget-header>
                 <rd-widget-body classes="">
                     <form class="form-horizontal">
-                        <div class="form-group animate-hide">
-                            <div class="col-md-5 col-sm-5">
-                                <div class="btn-group" style="margin:2px;" ng-init="parameters.execFileType='command'">
-                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'command'" >Commande</label>
-                                    <label class="btn btn-primary" ng-model="parameters.execFileType" btn-radio="'select'" >Executable</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" ng-if="parameters.execFileType == 'command'">
+                        <div class="form-group">
                           <label for="job.script" class="col-sm-2 control-label">Commande</label>
 
                           <div class="col-sm-6">
                             <input type="name" class="form-control" ng-model="job.execution.executable" placeholder="R">
                           </div>
-                        </div>
-
-                        <div class="form-group" ng-if="parameters.execFileType == 'select'" >
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <label>Fichier séléctionné : </label>
-                                    <span ng-if="job.fileSelected == undefined">
-                                        <i>aucun</i>
-                                    </span>
-                                    <span ng-if="job.fileSelected != undefined">
-                                        {{jobFileSelected}}
-                                    </span>
-
-
-                                    <swa-files-browser ng-if="parameters.execFileType == 'select'"
-                                    ng-init="job.execution.executable = undefined"
-                                    selectable="true"
-                                    selected="job.execution.executable"
-                                    tableStyle="height:50px;overflow:scroll" ></swa-files-browser>
-                                </div>
-                            </div>
+                          <div class="col-sm-2">
+                              <a class="btn btn-primary" ng-click="editCommand()">Editer</a>
+                          </div>
                         </div>
 
                         <div class="form-group animate-hide">

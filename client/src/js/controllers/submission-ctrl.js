@@ -340,4 +340,20 @@ function SubmissionCtrl($scope, $rootScope, User, Memory, $modal, $location) {
             }
         );
     }
+
+    $scope.editCommand = function(){
+        newScope = $scope.$new();
+        newScope.browser = {
+            selectable : true,
+            selected : $scope.job.execution.executable,
+            onFileSelected : function(file){
+                $scope.job.execution.executable = file.filepath;
+            }
+        }
+
+        $modal.open({
+            templateUrl:"templates/modal/filesBrowser.html",
+            scope:newScope
+        });
+    }
 }
