@@ -19,7 +19,7 @@ function(client, operationInfo, clientCallback) {
         clientCallback,
         // STDERR
         function(result, data, clientCallback){
-            
+
         }
     );
 };
@@ -38,7 +38,7 @@ function(result, exitcode, clientCallback){
     version = false;
 
     for(i = 0;i<modulesListString.length-1;i++){
-        line = modulesListString[i];
+        line = modulesListString[i].toString();
 
         if(line.length>0 &&
             (line[line.length-1] == '/' || line.includes('Rebuilding cache'))){
