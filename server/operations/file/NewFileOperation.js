@@ -13,7 +13,7 @@ function(client, operationInfo, clientCallback) {
     newFilepath = operationInfo.params.newFilepath;
     type = operationInfo.params.type;
 
-    if(!newFilepath && !type)
+    if(!newFilepath || !type)
         clientCallback(null, {type:"REQUIRED_PARAMETERS", operationInfo:operationInfo});
 
     var cmd = "";
