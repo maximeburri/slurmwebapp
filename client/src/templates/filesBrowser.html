@@ -26,8 +26,14 @@
                 <label class="btn btn-default btn-xs btn-file">
                     <i class="fa fa-upload"></i>
                     <input type="file" style="display: none;"
-                        swa-files-upload="filesToUpload" swa-files-folder="currentDir" swa-on-finish="onUploadFinish(files)" multiple="true"/>
+                        swa-files-upload="filesToUpload" swa-files-folder="currentDir"
+                        swa-on-finish="onUploadFinish"
+                        swa-on-begin="onUploadBegin"
+                        multiple="true"/>
                 </label>
+                <span ng-if="uploadLoading"> <i class="fa fa-cog fa-spin"></i> Upload des fichiers</span>
+                <span ng-if="uploadSuccess" class="text-success"> <i class="fa fa-check"></i> Les fichiers ont été uploadés</span>
+                <span ng-if="uploadError" class="text-danger"> <i class="fa fa-times"></i> Une erreur est survenue sur l'un des fichiers</span>
     </div>
     <div style="width:100%; margin-top:5x;padding: 10px;
                 height: 300px; overflow:overlay;

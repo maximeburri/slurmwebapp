@@ -8,7 +8,8 @@ function swaFilesUpload(User) {
         scope: {
           swaFilesUpload: "=",
           swaFilesFolder: "=",
-          swaOnFinish: "&?"
+          swaOnFinish: "&?",
+          swaOnBegin : "&?"
         },
 
         link: function (scope, element, attributes) {
@@ -16,6 +17,11 @@ function swaFilesUpload(User) {
                 var readers = [] ,
                     files = changeEvent.target.files ,
                     datas = [] ;
+
+                if(scope.swaOnBegin !== undefined){
+                    scope.swaOnBegin(files);
+                }
+                error = false;
                 for ( var i = 0 ; i < files.length ; i++ ) {
                     readers[ i ] = new FileReader();
                     readers[ i ].filename = files[i].name;
@@ -37,8 +43,9 @@ function swaFilesUpload(User) {
 
                                 if ( datas.length === files.length ){
                                     scope.swaFilesUpload = datas;
-                                    if(scope.swaOnFinish !== undefined){
-                                        scope.swaOnFinish(files);
+                                    if(scope.swaOnFinish !== undefined &&
+                                        scope.swaOnFinish() !== undefined){
+                                        scope.swaOnFinish()(files, error);
                                     }
                                 }
                             },
@@ -46,10 +53,14 @@ function swaFilesUpload(User) {
                             function(err){
                                 console.error("Error upload");
                                 console.error(err);
+                                error = true;
 
-                                scope.swaFilesUpload = datas;
-                                if(scope.swaOnFinish !== undefined){
-                                    scope.swaOnFinish(datas[i], false);
+                                if ( datas.length === files.length ){
+                                    scope.swaFilesUpload = datas;
+                                    if(scope.swaOnFinish !== undefined &&
+                                        scope.swaOnFinish() !== undefined){
+                                        scope.swaOnFinish()(files, error);
+                                    }
                                 }
                             }
                         );

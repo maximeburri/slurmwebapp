@@ -5,7 +5,12 @@ angular
 function swaFilesBrowser(User, Files, $modal, $compile) {
     var directive = {
         restrict: 'AE',
-        scope: {selectable:'@', selectableTypes:'@', selected:'=', tableStyle:'@', onFileSelected:'&?'},
+        scope: {
+            selectable:'@',
+            selectableTypes:'@',
+            selected:'=',
+            tableStyle:'@',
+            onFileSelected:'&?'},
         templateUrl: 'templates/filesBrowser.html',
         link: function(scope, element, attrs){
             scope.options = {};
@@ -171,9 +176,23 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             }
 
 
-            scope.onUploadFinish = function(files){
+            scope.onUploadFinish = function(files, error){
+                if(error){
+                    scope.uploadError = true;
+                    scope.uploadSuccess = false;
+                }else{
+                    scope.uploadSuccess = true;
+                    scope.uploadError = false;
+                }
+                scope.uploadLoading = false;
                 scope.updateFiles(scope.currentDir);
             };
+
+            scope.onUploadBegin = function(files){
+                scope.uploadLoading = true;
+                scope.uploadSuccess = false;
+                scope.uploadError = false;
+            }
 
             scope.updateFiles(scope.currentDir);
         }
