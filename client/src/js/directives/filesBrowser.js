@@ -67,69 +67,92 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 }
             }
 
+            // Context menu icon and name to html
+            toHTMLItem = function(icon, name, subicon){
+                return '<a tabindex="-1" href="#" style="padding-right: 8px;">\
+                            <i class="fa fa-'+icon+'" style="width:20px"></i> ' +
+                            name +
+                        '</a>';
+            }
             // Context menu to folder
             scope.menuOptionsCurrentFolder = [
-                ['Nouveau fichier', function ($itemScope) {
-                    scope.newFilePrompt("file");
-                }],
-                ['Nouveau dossier', function ($itemScope) {
-                    scope.newFilePrompt("folder");
-                }],
+                {
+                    html: toHTMLItem('file-o', "Nouveau fichier"),
+                    enabled: function() {return true},
+                    click: function () {
+                        scope.newFilePrompt("file");
+                    }
+                },
+                {
+                    html: toHTMLItem('folder-open', "Nouveau dossier"),
+                    enabled: function() {return true},
+                    click: function () {
+                        scope.newFilePrompt("folder");
+                    }
+                },
             ];
 
             // Menu context to item file
             scope.menuOptionsFile = [
-                ['Supprimer', function ($itemScope) {
-                    params = {
-                        filepath:scope.currentDir +$itemScope.file.filename
-                    };
+                {
+                    html: toHTMLItem('times', "Supprimer"),
+                    enabled: function() {return true},
+                    click: function ($itemScope) {
+                        params = {
+                            filepath:scope.currentDir +$itemScope.file.filename
+                        };
 
-                    // Confirm suppression
-                    confirmRemove = confirm("Etes vous sûr de vouloir supprimer " +
-                        params.filepath);
+                        // Confirm suppression
+                        confirmRemove = confirm("Etes vous sûr de vouloir supprimer " +
+                            params.filepath);
 
-                    if(confirmRemove){
-                        User.operation({verb:"remove", object:"file", params:params}).then(
-                            // Success
-                            function(successMessage){
-                                console.log("Success remove");
-                                console.log(successMessage);
-                                scope.updateFiles(scope.currentDir);
-                            },
-                            // Error
-                            function(err){
-                                alert('Impossible de supprimer le fichier ' + params.filepath)
-                            }
-                        );
+                        if(confirmRemove){
+                            User.operation({verb:"remove", object:"file", params:params}).then(
+                                // Success
+                                function(successMessage){
+                                    console.log("Success remove");
+                                    console.log(successMessage);
+                                    scope.updateFiles(scope.currentDir);
+                                },
+                                // Error
+                                function(err){
+                                    alert('Impossible de supprimer le fichier ' + params.filepath)
+                                }
+                            );
+                        }
                     }
-                }],
-                ['Renommer', function ($itemScope) {
-                    params = {
-                        newFilepath:scope.currentDir + $itemScope.file.filename,
-                        oldFilepath:scope.currentDir + $itemScope.file.filename
-                    };
+                },
+                {
+                    html: toHTMLItem('pencil-square-o', "Renommer"),
+                    enabled: function() {return true},
+                    click: function ($itemScope) {
+                        params = {
+                            newFilepath:scope.currentDir + $itemScope.file.filename,
+                            oldFilepath:scope.currentDir + $itemScope.file.filename
+                        };
 
-                    newFile =
-                     prompt("Entrez le nouveau nom du fichier : ", $itemScope.file.filename);
+                        newFile =
+                         prompt("Entrez le nouveau nom du fichier : ", $itemScope.file.filename);
 
-                    if(newFile){
-                        params.newFilepath = scope.currentDir + newFile;
-                        User.operation({verb:"move", object:"file", params:params}).then(
-                            // Success
-                            function(successMessage){
-                                console.log("Success remove");
-                                console.log(successMessage);
-                                scope.updateFiles(scope.currentDir);
-                            },
-                            // Error
-                            function(err){
-                                alert('Impossible de renommer le fichier ' +
-                                params.oldFilepath + " en " +
-                                params.newFilepath)
-                            }
-                        );
+                        if(newFile){
+                            params.newFilepath = scope.currentDir + newFile;
+                            User.operation({verb:"move", object:"file", params:params}).then(
+                                // Success
+                                function(successMessage){
+                                    console.log("Success remove");
+                                    console.log(successMessage);
+                                    scope.updateFiles(scope.currentDir);
+                                },
+                                // Error
+                                function(err){
+                                    alert('Impossible de renommer le fichier ' +
+                                    params.oldFilepath + " en " +
+                                    params.newFilepath)
+                                }
+                            );
+                        }
                     }
-                }],
+                }
             ]
 
             // Stop follow file on destroy
