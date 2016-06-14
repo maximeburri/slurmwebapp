@@ -1,3 +1,11 @@
+<!--<form class="dropzone"
+      method="post"
+      enctype="multipart/form-data"
+      ng-dropzone
+      dropzone="dropzone"
+      dropzone-config="dropzoneConfig"
+      event-handlers="{ 'addedfile': dzAddedFile, 'error': dzError }">
+</form>-->
 
 <div style="background: #F9F9F9;
     border-radius: 5px;
@@ -15,6 +23,11 @@
                     ng-hide="loading">
                     <i class="fa fa-refresh"></i>
                 </button>
+                <label class="btn btn-default btn-xs btn-file">
+                    <i class="fa fa-upload"></i>
+                    <input type="file" style="display: none;"
+                        swa-files-upload="filesToUpload" swa-files-folder="currentDir" swa-on-finish="onUploadFinish(files)" multiple="true"/>
+                </label>
     </div>
     <div style="width:100%; margin-top:5x;padding: 10px;
                 height: 300px; overflow:overlay;

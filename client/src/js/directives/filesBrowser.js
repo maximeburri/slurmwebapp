@@ -7,16 +7,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
         restrict: 'AE',
         scope: {selectable:'@', selectableTypes:'@', selected:'=', tableStyle:'@', onFileSelected:'&?'},
         templateUrl: 'templates/filesBrowser.html',
-        controller: function(){
-        },/*
-        compile: function compile(tElement, tAttrs, transclude) {
-              return {
-                pre: function preLink(scope, iElement, iAttrs, controller) { ... },
-                post: function postLink(scope, iElement, iAttrs, controller) { ... }
-              }
-              // or
-              // return function postLink( ... ) { ... }
-          },*/
         link: function(scope, element, attrs){
             scope.options = {};
             scope.options.showHiddenFiles = false;
@@ -179,6 +169,11 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 }
                 return false;
             }
+
+
+            scope.onUploadFinish = function(files){
+                scope.updateFiles(scope.currentDir);
+            };
 
             scope.updateFiles(scope.currentDir);
         }
