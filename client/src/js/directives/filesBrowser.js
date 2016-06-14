@@ -37,6 +37,29 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             var scope = scope;
             var that = this;
 
+            //Menu context
+            scope.menuOptionsFile = [
+                ['Supprimer', function ($itemScope) {
+                    params = {
+                        filepath:scope.currentDir +$itemScope.file.filename
+                    };
+
+                    User.operation({verb:"remove", object:"file", params:params}).then(
+                        // Success
+                        function(successMessage){
+                            console.log("Success remove");
+                            console.log(successMessage);
+                            scope.updateFiles(scope.currentDir);
+                        },
+                        // Error
+                        function(err){
+                            alert('Impossible de supprimer le fichier ' + params.filepath)
+                        }
+                    );
+                }]
+            ]
+
+            // Stop follow file on destroy
             scope.$on("$destroy", function() {
                 scope.stopFollowFileContent();
             });
