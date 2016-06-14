@@ -72,7 +72,7 @@ function swaFilesBrowser($window, User, Files, $modal, $compile) {
                     newFile =
                      prompt("Entrez le nouveau nom du fichier : ", $itemScope.file.filename);
 
-                    if(params.newFile){
+                    if(newFile){
                         params.newFilepath = scope.currentDir + newFile;
                         User.operation({verb:"move", object:"file", params:params}).then(
                             // Success
