@@ -13,7 +13,7 @@ function(client, operationInfo, clientCallback) {
     newFilepath = operationInfo.params.newFilepath;
     sourceFilepath = operationInfo.params.sourceFilepath;
 
-    if(!newFilepath && !sourceFilepath)
+    if(!newFilepath || !sourceFilepath)
         clientCallback(null, {type:"REQUIRED_PARAMETERS", operationInfo:operationInfo});
 
     var cmd = shellescape(["cp", "-r", sourceFilepath, newFilepath]);
