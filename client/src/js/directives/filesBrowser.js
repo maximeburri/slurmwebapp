@@ -37,9 +37,49 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             var scope = scope;
             var that = this;
 
-            //Menu context
+            // Request a new file with a prompt
+            // Type can be "file" or "folder"
+            scope.newFilePrompt = function(type){
+                params = {
+                    newFilepath:null
+                };
+
+                completeFileType = (type == "file" ? "fichier" : "dossier");
+                newFile =
+                 prompt("Nom du nouveau " + completeFileType, "nouveau " + completeFileType);
+
+                if(newFile){
+                    params.newFilepath = scope.currentDir + newFile;
+                    params.type = type;
+                    User.operation({verb:"new", object:"file", params:params}).then(
+                        // Success
+                        function(successMessage){
+                            console.log("Success new file");
+                            console.log(successMessage);
+                            scope.updateFiles(scope.currentDir);
+                        },
+                        // Error
+                        function(err){
+                            alert('Impossible de créer le ' + completeFileType + " " +
+                            params.newFilepath);
+                        }
+                    );
+                }
+            }
+
+            // Context menu to folder
+            scope.menuOptionsCurrentFolder = [
+                ['Nouveau fichier', function ($itemScope) {
+                    scope.newFilePrompt("file");
+                }],
+                ['Nouveau dossier', function ($itemScope) {
+                    scope.newFilePrompt("folder");
+                }],
+            ];
+
+            // Menu context to item file
             scope.menuOptionsFile = [
-                ['Supprimer', function ($itemScope, $event, model) {
+                ['Supprimer', function ($itemScope) {
                     params = {
                         filepath:scope.currentDir +$itemScope.file.filename
                     };
@@ -90,7 +130,6 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                         );
                     }
                 }],
-
             ]
 
             // Stop follow file on destroy
