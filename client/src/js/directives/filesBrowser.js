@@ -33,16 +33,21 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             scope.files = [];
             scope.currentDir = ".";
             scope.loading = false;
+            /* Copy path, copy.filepath & copy.type ('folder', 'file')*/
+            scope.copy = undefined;
             promiseSocketContentFile = false;
             var scope = scope;
             var that = this;
 
             // Request a new file with a prompt
             // Type can be "file" or "folder"
-            scope.newFilePrompt = function(type){
+            scope.newFilePrompt = function(type, copyFilepath){
                 params = {
                     newFilepath:null
                 };
+
+                if(copyFilepath)
+                    params.sourceFilepath = copyFilepath;
 
                 completeFileType = (type == "file" ? "fichier" : "dossier");
                 newFile =
@@ -51,7 +56,12 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 if(newFile){
                     params.newFilepath = scope.currentDir + newFile;
                     params.type = type;
-                    User.operation({verb:"new", object:"file", params:params}).then(
+
+                    var verb = "new";
+                    if(copyFilepath)
+                        verb = "copy";
+
+                    User.operation({verb:verb, object:"file", params:params}).then(
                         // Success
                         function(successMessage){
                             console.log("Success new file");
@@ -76,6 +86,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             }
             // Context menu to folder
             scope.menuOptionsCurrentFolder = [
+                /* NEW FILE */
                 {
                     html: toHTMLItem('file-o', "Nouveau fichier"),
                     enabled: function() {return true},
@@ -83,6 +94,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                         scope.newFilePrompt("file");
                     }
                 },
+                /* NEW FOLDER */
                 {
                     html: toHTMLItem('folder-open', "Nouveau dossier"),
                     enabled: function() {return true},
@@ -90,10 +102,20 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                         scope.newFilePrompt("folder");
                     }
                 },
+                null,
+                /* PASTE */
+                {
+                    html: toHTMLItem('clipboard', "Coller"),
+                    enabled: function() {return scope.copy},
+                    click: function () {
+                        scope.newFilePrompt(scope.copy.type, scope.copy.filepath)
+                    }
+                }
             ];
 
             // Menu context to item file
             scope.menuOptionsFile = [
+                /* REMOVE */
                 {
                     html: toHTMLItem('times', "Supprimer"),
                     enabled: function() {return true},
@@ -122,6 +144,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                         }
                     }
                 },
+                /* RENAME */
                 {
                     html: toHTMLItem('pencil-square-o', "Renommer"),
                     enabled: function() {return true},
@@ -151,6 +174,23 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                                 }
                             );
                         }
+                    }
+                },
+                null,
+                /* COPY*/
+                {
+                    html: toHTMLItem('clipboard', "Copier"),
+                    enabled: function() {return true},
+                    click: function ($itemScope) {
+                        var type = "folder";
+                        if($itemScope.file.type != "folder")
+                            type = "file";
+
+                        scope.copy = {
+                            filepath:scope.currentDir +
+                                $itemScope.file.filename,
+                            type : type
+                        };
                     }
                 }
             ]
