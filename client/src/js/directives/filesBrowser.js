@@ -44,18 +44,24 @@ function swaFilesBrowser($window, User, Files, $modal, $compile) {
                         filepath:scope.currentDir +$itemScope.file.filename
                     };
 
-                    User.operation({verb:"remove", object:"file", params:params}).then(
-                        // Success
-                        function(successMessage){
-                            console.log("Success remove");
-                            console.log(successMessage);
-                            scope.updateFiles(scope.currentDir);
-                        },
-                        // Error
-                        function(err){
-                            alert('Impossible de supprimer le fichier ' + params.filepath)
-                        }
-                    );
+                    // Confirm suppression
+                    confirm = $window.confirm("Etes vous sûr de vouloir supprimer " +
+                        params.filepath);
+
+                    if(confirm){
+                        User.operation({verb:"remove", object:"file", params:params}).then(
+                            // Success
+                            function(successMessage){
+                                console.log("Success remove");
+                                console.log(successMessage);
+                                scope.updateFiles(scope.currentDir);
+                            },
+                            // Error
+                            function(err){
+                                alert('Impossible de supprimer le fichier ' + params.filepath)
+                            }
+                        );
+                    }
                 }],
                 ['Renommer', function ($itemScope) {
                     params = {
