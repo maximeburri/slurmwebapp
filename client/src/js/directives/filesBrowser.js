@@ -1,8 +1,8 @@
 angular
     .module('RDash')
-    .directive('swaFilesBrowser', ['$window', 'User', 'Files', '$modal','$compile', swaFilesBrowser]);
+    .directive('swaFilesBrowser', ['User', 'Files', '$modal','$compile', swaFilesBrowser]);
 
-function swaFilesBrowser($window, User, Files, $modal, $compile) {
+function swaFilesBrowser(User, Files, $modal, $compile) {
     var directive = {
         restrict: 'AE',
         scope: {
@@ -39,16 +39,16 @@ function swaFilesBrowser($window, User, Files, $modal, $compile) {
 
             //Menu context
             scope.menuOptionsFile = [
-                ['Supprimer', function ($itemScope) {
+                ['Supprimer', function ($itemScope, $event, model) {
                     params = {
                         filepath:scope.currentDir +$itemScope.file.filename
                     };
 
                     // Confirm suppression
-                    confirm = $window.confirm("Etes vous sûr de vouloir supprimer " +
+                    confirmRemove = confirm("Etes vous sûr de vouloir supprimer " +
                         params.filepath);
 
-                    if(confirm){
+                    if(confirmRemove){
                         User.operation({verb:"remove", object:"file", params:params}).then(
                             // Success
                             function(successMessage){
