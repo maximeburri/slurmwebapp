@@ -1,8 +1,8 @@
 angular
     .module('RDash')
-    .directive('swaFilesBrowser', ['User', 'Files', '$modal','$compile', swaFilesBrowser]);
+    .directive('swaFilesBrowser', ['$window', 'User', 'Files', '$modal','$compile', swaFilesBrowser]);
 
-function swaFilesBrowser(User, Files, $modal, $compile) {
+function swaFilesBrowser($window, User, Files, $modal, $compile) {
     var directive = {
         restrict: 'AE',
         scope: {
@@ -56,7 +56,35 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                             alert('Impossible de supprimer le fichier ' + params.filepath)
                         }
                     );
-                }]
+                }],
+                ['Renommer', function ($itemScope) {
+                    params = {
+                        newFilepath:scope.currentDir + $itemScope.file.filename,
+                        oldFilepath:scope.currentDir + $itemScope.file.filename
+                    };
+
+                    newFile =
+                     prompt("Entrez le nouveau nom du fichier : ", $itemScope.file.filename);
+
+                    if(params.newFile){
+                        params.newFilepath = scope.currentDir + newFile;
+                        User.operation({verb:"move", object:"file", params:params}).then(
+                            // Success
+                            function(successMessage){
+                                console.log("Success remove");
+                                console.log(successMessage);
+                                scope.updateFiles(scope.currentDir);
+                            },
+                            // Error
+                            function(err){
+                                alert('Impossible de renommer le fichier ' +
+                                params.oldFilepath + " en " +
+                                params.newFilepath)
+                            }
+                        );
+                    }
+                }],
+
             ]
 
             // Stop follow file on destroy
