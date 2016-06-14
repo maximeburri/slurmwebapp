@@ -35,13 +35,11 @@ function(result, exitcode, clientCallback){
 
     modulesListString = result.split("\n");
     modulesListParsed = [];
-    version = false;
 
     for(i = 0;i<modulesListString.length-1;i++){
-        line = modulesListString[i].toString();
-
+        var line = modulesListString[i].toString();
         if(line.length>0 &&
-            (line[line.length-1] == '/' || line.indexOf('Rebuilding cache'))){
+            (line[line.length-1] == '/' || line.indexOf('Rebuilding cache') > -1)){
                 continue;
         }else{
             if(line.length > 1 && line[line.length - 1] != '/')
