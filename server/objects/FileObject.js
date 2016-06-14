@@ -6,6 +6,7 @@ var UploadFileOperation = require('../operations/file/UploadFileOperation.js');
 var RemoveFileOperation = require('../operations/file/RemoveFileOperation.js');
 var MoveFileOperation = require('../operations/file/MoveFileOperation.js');
 var NewFileOperation = require('../operations/file/NewFileOperation.js');
+var CopyFileOperation = require('../operations/file/CopyFileOperation.js');
 
 function FileObject() {
     ObjectOperation.call(this, {
@@ -14,6 +15,7 @@ function FileObject() {
         "remove" : new RemoveFileOperation(),
         "move" : new MoveFileOperation(),
         "new" : new NewFileOperation(),
+        "copy" : new CopyFileOperation(),
     });
 }
 
