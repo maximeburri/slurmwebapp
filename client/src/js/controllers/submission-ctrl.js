@@ -152,6 +152,27 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $loc
         }
     }
 
+    fillRequiredAttribute = function(job, autoFirstDep){
+        if(!$scope.job.memory)
+            $scope.job.memory = {default:true, value:0, unit:null};
+
+        if(job.modules && job.modules.module)
+            $scope.updateModuleDependencies(job.modules.module, autoFirstDep);
+        else{
+            job.modules = {
+                module : null,
+                dependencies : null
+            }
+        }
+
+        if(job.execution === undefined)
+            job.execution = {command : "", executable :""};
+        if(job.execution.command === undefined)
+            job.execution.command = "";
+        if(job.execution.executable === undefined)
+            job.execution.executable = "";
+    }
+
     changeJob = function(newJob, oldJob){
         // Merge between job and predefined submission
         replaceInsteadMerge = ['notificationEvents', 'licenses', 'modules', 'memory'];
@@ -180,14 +201,7 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $loc
             }
         });
 
-        if(newJob.modules && newJob.modules.module)
-            $scope.updateModuleDependencies(newJob.modules.module);
-        else{
-            newJob.modules = {
-                module : null,
-                dependencies : null
-            }
-        }
+        fillRequiredAttribute(oldJob);
     }
 
     $scope.resetModule = function(){
@@ -295,13 +309,7 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $loc
                 if(!angular.equals({}, result.job)){
                     angular.copy(result.job, $scope.job);
 
-                    if(!$scope.job.memory)
-                        $scope.job.memory = {default:true, value:0, unit:null};
-
-                    // Update dependencies but no choose the first
-                    if($scope.job.modules && $scope.job.modules.module)
-                        $scope.updateModuleDependencies(
-                            $scope.job.modules.module, false);
+                    fillRequiredAttribute($scope.job, false);
                 }
 
             },
