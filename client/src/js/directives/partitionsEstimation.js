@@ -23,7 +23,25 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
             scopeRules.user = {groups:[], user:""};
 
             var fncScopeRules = {
-                "toBytes": Memory.toBytes
+                // Transform to bytes
+                "toBytes" : Memory.toBytes,
+
+                // Check is user is a array of specified groups
+                "isUserInGroups" : function(specifiedGroups){
+                    if(typeof groups == "string")
+                        groups = [groups];
+
+                    // Foreach groups of specified groups
+                    for(var i = 0;i<specifiedGroups.length;i++){
+                        var specifiedGroup = specifiedGroups[i];
+                        for(var j = 0;j<scopeRules.user.groups.length;j++){
+                            var userGroup = scopeRules.user.groups[j];
+                            if(userGroup == specifiedGroup)
+                                return true;
+                        }
+                    }
+                    return false;
+                }
             };
 
             scopeRules.tools = fncScopeRules;
