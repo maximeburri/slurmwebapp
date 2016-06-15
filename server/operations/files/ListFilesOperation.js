@@ -1,6 +1,7 @@
 var Operation = require('../Operation.js');
 var shellescape = require('shell-escape');
 var inherits = require('util').inherits;
+var path = require('path');
 
 function ListFilesOperation() {
     Operation.call(this);
@@ -59,7 +60,7 @@ function(result, exitcode, clientCallback){
         filesInfo.push({filename:filename, type:fileType});
     });
 
-    clientCallback({path:currentPath, files:filesInfo}, false)
+    clientCallback({path:path.normalize(currentPath), files:filesInfo}, false)
 }
 
 
