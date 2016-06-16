@@ -22,25 +22,32 @@
                                 <swa-files-browser
                                     ng-if="parameters.projectType == 'new'"
                                     selectable="true"
-                                    selected="job.folderSelected"
+                                    selected="parameters.projectFolder"
                                     selectable-types='["folder"]'
                                     tableStyle="height:50px;overflow:scroll" >
                                 </swa-files-browser>
                                 <swa-files-browser
                                     ng-if="parameters.projectType == 'load'"
                                     selectable="true"
-                                    selected="parameters.batchFile"
+                                    selected="parameters.batchFilename"
                                     tableStyle="height:50px;overflow:scroll"
                                     on-file-selected="loadSubmissionScript">
                                 </swa-files-browser>
                             </div>
                         </div>
                         <div class="row">
+                            <label class="col-sm-3 control-label">Dossier du projet </label>
+                            <div class="col-sm-5">
+                                <span ng-if="parameters.projectFolder">{{parameters.projectFolder}}</span>
+                                <i ng-if="!parameters.projectFolder">Auncun dossier</i>
+                            </div>
+                        </div>
+                        <div class="row">
                             <label class="col-sm-3 control-label">Nom du fichier </label>
-                            <div class="col-sm-9">
+                            <div class="col-sm-4">
                                 <input type="text" class="form-control"
-                                    ng-model="parameters.batchFile" placeholder=""
-                                    ng-init="parameters.batchFile='job.sh'">
+                                    ng-model="parameters.batchFilename" placeholder=""
+                                    ng-init="parameters.batchFilename='job.sh'">
                             </div>
                         </div>
                     </form>
@@ -296,7 +303,10 @@
                             <label class="col-sm-2 control-label">Arguments </label>
                             <div class="col-sm-6">
                               <input type="name" class="form-control" ng-model="job.execution.arguments" placeholder="Ex: arg1 arg2 arg3"
-                                ng-click="updateArgsCursorPos($event)" id="inputArgs" ng-keyup="updateArgsCursorPos($event)" ng-blur="inputArgsBlur()">
+                                ng-mouseup="updateArgsCursorPos($event)"
+                                ng-mousedown="updateArgsCursorPos($event)"
+                                ng-click="updateArgsCursorPos($event)"
+                                 id="inputArgs" ng-keyup="updateArgsCursorPos($event)" ng-blur="inputArgsBlur()">
                             </div>
                             <div class="col-sm-2">
 

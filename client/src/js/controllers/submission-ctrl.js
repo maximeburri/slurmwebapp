@@ -3,10 +3,12 @@
  */
 
 angular.module('RDash')
-    .controller('SubmissionCtrl', ['$timeout', '$scope', '$rootScope', 'User', 'Memory',
-        '$modal', '$location', SubmissionCtrl]);
+    .controller('SubmissionCtrl', ['$timeout', '$scope', '$rootScope',
+        'User', 'Memory', '$modal', '$location',
+        'Files', SubmissionCtrl]);
 
-function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $location) {
+function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
+                        $modal, $location, Files) {
     $scope.projectBrowserSelectableTypes = ["folder"];
 
     $scope.loadings = {};
@@ -266,10 +268,10 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $loc
         };
 
         if($scope.parameters.projectType == "load"){
-            script = $scope.parameters.batchFile;
+            script = $scope.parameters.batchFilename;
             params.readScriptFilePath = script;
         }else{
-            script = job.folderSelected + "/" + $scope.parameters.batchFile;
+            script = parameters.projectFolder + "/" + $scope.parameters.batchFilename;
             params.saveScriptFilePath = script;
         }
 
@@ -302,6 +304,8 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $loc
     }
 
     $scope.loadSubmissionScript = function(fileObject){
+        $scope.parameters.projectFolder = Files.dirname(fileObject.filepath);
+        $scope.parameters.batchFilename = Files.basename(fileObject.filepath);
         User.operation({verb:"load", object:"submissionScript",
             params:{scriptFile:fileObject.filepath}}).then(
             // Success
@@ -327,7 +331,7 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $loc
         };
 
         if($scope.parameters.projectType == "load"){
-            params.readScriptFilePath = $scope.parameters.batchFile;
+            params.readScriptFilePath = $scope.parameters.batchFilename;
         }
 
         User.operation({verb:"save", object:"submissionScript",
@@ -395,10 +399,16 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory, $modal, $loc
         oldText = document.getElementById("inputArgs").value;
         newCursorPos = {};
 
+        filepath = "";
+        if($scope.argsCursorPos.begin != $scope.argsCursorPos.end){
+            filepath = oldText.slice($scope.argsCursorPos.begin,
+                    $scope.argsCursorPos.end);
+        }
+
         // Browser files params
         newScope.browser = {
             selectable : true,
-            selected : $scope.job.execution.arguments,
+            selected : filepath,
 
             // On file selected, cut string and replace
             onFileSelected : function(file){

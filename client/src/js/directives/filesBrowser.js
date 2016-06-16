@@ -32,6 +32,10 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             };
             scope.files = [];
             scope.currentDir = ".";
+            if(scope.selected){
+                scope.currentDir = Files.dirname(scope.selected);
+            }
+
             scope.loading = false;
             /* Copy path, copy.filepath & copy.type ('folder', 'file')*/
             scope.copy = undefined;
