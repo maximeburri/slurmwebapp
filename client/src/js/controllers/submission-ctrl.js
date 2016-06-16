@@ -399,10 +399,15 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
         oldText = document.getElementById("inputArgs").value;
         newCursorPos = {};
 
-        filepath = "";
+        filepath = $scope.parameters.projectFolder + '/unknow';
+        console.log(filepath)
         if($scope.argsCursorPos.begin != $scope.argsCursorPos.end){
             filepath = oldText.slice($scope.argsCursorPos.begin,
                     $scope.argsCursorPos.end);
+
+            // Relative to absolute path (from projectFolder)
+            filepath = Files.resolve($scope.parameters.projectFolder,
+                        filepath);
         }
 
         // Browser files params
@@ -412,8 +417,9 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
 
             // On file selected, cut string and replace
             onFileSelected : function(file){
-                console.log($scope.argsCursorPos.begin);
-                console.log($scope.job.execution.arguments);
+                // Absolute to relative path (from projectFolder)
+                file.filepath = Files.relative($scope.parameters.projectFolder, file.filepath);
+
                 $scope.job.execution.arguments =
                     oldText.slice(0, $scope.argsCursorPos.begin) +
                         file.filepath +
@@ -448,10 +454,15 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
 
     $scope.editCommand = function(){
         newScope = $scope.$new();
+        // Relative to absolute path (from projectFolder)
+        filepath = Files.resolve($scope.parameters.projectFolder,
+                    $scope.job.execution.executable);
         newScope.browser = {
             selectable : true,
-            selected : $scope.job.execution.executable,
+            selected : filepath,
             onFileSelected : function(file){
+                // Absolute to relative path (from projectFolder)
+                file.filepath = Files.relative($scope.parameters.projectFolder, file.filepath);
                 $scope.job.execution.executable = file.filepath;
             }
         }
