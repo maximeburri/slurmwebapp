@@ -152,12 +152,12 @@ function Files($q, $rootScope, User) {
     };
 
     // posix version
-    posix.isAbsolute = function(path) {
+    this.isAbsolute = function(path) {
       return path.charAt(0) === '/';
     };
 
     // posix version
-    posix.join = function() {
+    this.join = function() {
       var path = '';
       for (var i = 0; i < arguments.length; i++) {
         var segment = arguments[i];
@@ -172,7 +172,7 @@ function Files($q, $rootScope, User) {
           }
         }
       }
-      return posix.normalize(path);
+      return self.normalize(path);
     };
 
 
