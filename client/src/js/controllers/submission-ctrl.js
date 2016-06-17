@@ -260,26 +260,35 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
             $scope.updateJobByPredefinedSubmission(predSub);
     }
 
+    $scope.saveSubmissionScript = function(onlyVisualization){
+        newScriptFile =
+            Files.join($scope.parameters.projectFolder, $scope.parameters.batchFilename);
 
-    $scope.submitJob = function(){
-        script = "";
         params = {
-            job : $scope.job
+            job : $scope.job,
+            onlyVisualization : onlyVisualization,
+            saveScriptFilePath  : newScriptFile
         };
 
         if($scope.parameters.projectType == "load"){
-            script = $scope.parameters.batchFilename;
-            params.readScriptFilePath = script;
-        }else{
-            script = parameters.projectFolder + "/" + $scope.parameters.batchFilename;
-            params.saveScriptFilePath = script;
+            params.readScriptFilePath = $scope.parameters.loadBatchFilepath;
         }
 
-        User.operation({verb:"save", object:"submissionScript",
-            params:params}).then(
+        return User.operation({verb:"save", object:"submissionScript",
+            params:params});
+    }
+
+
+    $scope.submitJob = function(){
+        var scriptPath =
+            Files.join($scope.parameters.projectFolder,
+                $scope.parameters.batchFilename);
+
+        $scope.saveSubmissionScript().then(
             // Success
             function(result){
-                User.operation({verb:"submit", object:"job", params:{scriptPath:script}}).then(
+                User.operation({verb:"submit", object:"job",
+                                params:{scriptPath:scriptPath}}).then(
                     // Success
                     function(successMessage){
                         console.log("Job submitted");
@@ -303,6 +312,25 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
         );
     }
 
+    $scope.visualizeScript = function(){
+        $scope.saveSubmissionScript(true).then(
+            // Success
+            function(result){
+                scope = $scope.$new(true);
+                scope.script = result.script;
+                $modal.open({
+                    template:"<pre>{{script}}</pre>",
+                    scope:scope
+                });
+                console.log(result);
+            },
+            // Error
+            function(err){
+                console.error(err);
+            }
+        );
+    }
+
     $scope.loadSubmissionScript = function(fileObject){
         $scope.parameters.projectFolder = Files.dirname(fileObject.filepath);
         $scope.parameters.batchFilename = Files.basename(fileObject.filepath);
@@ -316,35 +344,6 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
                     fillRequiredAttribute($scope.job, false);
                 }
 
-            },
-            // Error
-            function(err){
-                console.error(err);
-            }
-        );
-    }
-
-    $scope.visualizeScript = function(){
-        params = {
-            job : $scope.job,
-            onlyVisualization : true
-        };
-
-        if($scope.parameters.projectType == "load"){
-            params.readScriptFilePath = $scope.parameters.batchFilename;
-        }
-
-        User.operation({verb:"save", object:"submissionScript",
-            params:params}).then(
-            // Success
-            function(result){
-                scope = $scope.$new(true);
-                scope.script = result.script;
-                $modal.open({
-                    template:"<pre>{{script}}</pre>",
-                    scope:scope
-                });
-                console.log(result);
             },
             // Error
             function(err){
