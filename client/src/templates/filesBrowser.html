@@ -60,8 +60,8 @@
         ng-dblclick="itemDoubleClick(file)"
         ng-hide="file.filename == '.' || file.filename == '..'"
         ng-class="{'bg-primary' : currentDir + file.filename == selected,
-                      'text-warning': file.type == 'folder',
-                      'text-info': file.type == 'executable'}">
+                      'folder-color': file.type == 'folder',
+                      'executable-color': file.type == 'executable'}">
 
 
                 <!--<label style="font-weight: normal; font-size:23px;">-->
@@ -73,9 +73,9 @@
 
                     />
                     <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',
-                                  'fa fa-folder-open text-warning': file.type == 'folder',
+                                  'fa fa-folder-open': file.type == 'folder',
                                   'fa fa-file-text-o': file.type == 'file',
-                                  'fa fa-cog text-info': file.type == 'executable'
+                                  'fa fa-cog': file.type == 'executable'
                                   }"
 
                         style="font-size:20px;">
