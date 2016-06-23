@@ -20,6 +20,8 @@ config.connection = {}
 config.connection.max_attempts_by_ip = 3; // In attempts
 config.connection.time_banned_by_ip =
     1 /*minutes*/ * 60 /*seconds*/ // In seconds
+// Whitelist of accepted clusuters (undefined to all cluster)
+config.connection.accepted_clusters = ["baobab.unige.ch"];
 
 config.ssh = {}
 config.ssh.timeout = 6000;

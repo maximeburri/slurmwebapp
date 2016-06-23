@@ -32,14 +32,18 @@ function User($q, $rootScope, Notification) {
             this.socket.on('connect', function() {
                 deferred.notify('socket-connected');
                 // Try login
-                that.socket.emit("login", params);
-            });
-
-            // Banned on connection
-            this.socket.on('banned', function(info) {
-                that.socket = false;
-                that.authenticated = false;
-                deferred.reject({type:'connection-banned', info:info});
+                that.socket.emit("login", params, function(data){
+                    console.log(data);
+                    if(data.type == 'authenticated'){
+                        that.authenticated = true;
+                        deferred.notify('authenticated');
+                        console.log("Authenticated");
+                    }else{
+                        that.socket = false;
+                        that.authenticated = false;
+                        deferred.reject({type:data.type, info:data.info});
+                    }
+                });
             });
 
             // Error
@@ -84,9 +88,6 @@ function User($q, $rootScope, Notification) {
 
                 // Check type ssh connection error
                 err = "ssh-connection";
-                if(data.level != undefined &&
-                    data.level == "client-authentication")
-                    err ="client-authentication";
                 deferred.reject({type:err});
 
                 // Disconnect the socket
@@ -102,14 +103,6 @@ function User($q, $rootScope, Notification) {
                 deferred.reject({type:'disconnect'});
                 that.socket = false;
                 that.authenticated = false;
-            });
-
-            // On authenticated
-            this.socket.on("authenticated", function(data){
-                that.authenticated = true;
-                deferred.notify('authenticated');
-                console.log("Authenticated");
-                console.log(data);
             });
 
             // On logout

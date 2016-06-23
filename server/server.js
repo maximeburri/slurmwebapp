@@ -94,31 +94,61 @@ io.on('connection', function (socket) {
         }
     }
     var attemptsClient = attemptsIpv6Clients[ipv6String];
+    var connectionClientCallback = undefined;
 
-    sendBanned = function(){
-        socket.emit("banned",
-            {timestampUnban : attemptsClient.timestampUnban});
-    }
+    sendResponseLogin = function(type, info){
+        // Check if banned, so send
+        if(attemptsClient.attempts >= config.connection.max_attempts_by_ip )
+        {
+            currentTimestamp = Math.round(new Date().getTime()/1000);
+            attemptsClient.banned = true;
+            attemptsClient.timestampUnban = currentTimestamp +
+                config.connection.time_banned_by_ip ;
+            attemptsClient.attempts = 0;
+        }
+        if(attemptsClient.banned){
+            if(!info)
+                info = {};
+            info.banned = true;
+            info.timestampUnban = attemptsClient.timestampUnban;
+        }
+
+        connectionClientCallback(
+            {
+                type:type,
+                info: info
+            });
+    };
 
 	console.log("Client::connection " + ipv6String);
 
 	// When client want to login
-    function login(data){
-
-        currentTimestamp = Math.round(new Date().getTime()/1000);
-
+    function login(data, clientCallback){
+        connectionClientCallback = clientCallback;
 
         // If already attemps
         if(attemptsClient.banned){
+            currentTimestamp = Math.round(new Date().getTime()/1000);
             if(attemptsClient.timestampUnban > currentTimestamp){
-                sendBanned();
+                sendResponseLogin("banned");
                 return;
             }else{
                 attemptsClient.banned = false;
             }
         }
-
         attemptsClient.attempts++;
+
+        if(data == undefined){
+            sendResponseLogin("bad-parameter");
+            return;
+        }
+
+        // Check whitelisted
+        if( config.connection.accepted_clusters &&
+            config.connection.accepted_clusters.indexOf(data.cluster) < 0){
+            sendResponseLogin("cluster-rejected");
+            return;
+        }
 
 		// Remove login
 		socket.removeListener('login', login);
@@ -137,7 +167,9 @@ io.on('connection', function (socket) {
         }
 		// Connection error
 		catch(e){
-			sshError(e.message);
+            // Reconnect login function
+            socket.on('login', login);
+            sendResponseLogin(e.message);
         }
     }
 
@@ -175,7 +207,7 @@ io.on('connection', function (socket) {
 			socket.on('operation', operation);
 
 			// Emit authenticated
-			socket.emit("authenticated", {type:"SSH_CONNECTED"});
+			sendResponseLogin("authenticated");
 		}catch(e){}
 	}
 
@@ -197,23 +229,17 @@ io.on('connection', function (socket) {
 
 	// When SSh2 error
 	function sshError(err){
-		// Reconnect login function
-		socket.on('login', login);
+        // Reconnect login function
+        socket.on('login', login);
 
-        // Check if banned, so send
-
-        if(attemptsClient.attempts >= config.connection.max_attempts_by_ip ){
-            attemptsClient.banned = true;
-            attemptsClient.timestampUnban = currentTimestamp +
-                config.connection.time_banned_by_ip ;
-            attemptsClient.attempts = 0;
-            sendBanned();
-        }else{
-
+        // Error in authentication ? Use callback login client
+        if(err.level == "client-authentication" || err.level == "client-socket"){
+            sendResponseLogin(err.level);
         }
-
-        // Send error
-        socket.emit("error_ssh", {error:err, loginAttempts:attemptsClient.attempts});
+        else{
+            // Send error
+            socket.emit("error_ssh", {error:err});
+        }
 
 		console.log("Client::ssh::error:"+ client.toString()+err)
 

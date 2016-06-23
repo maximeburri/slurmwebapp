@@ -35,7 +35,7 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files, $timeout) {
                 console.log(successMessage);
             },
             // Error
-            function(failMessage, info){
+            function(failMessage){
                 $rootScope.connectionProcessing = false;
                 $rootScope.authenticated = false;
                 console.log("Failed message "+failMessage.type)
@@ -43,14 +43,21 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files, $timeout) {
                     $rootScope.connection.error.isBridge = true;
                 else if(failMessage.type == "client-authentication")
                     $rootScope.connection.error.isAuthentication = true;
-                else if(failMessage.type == "ssh-connection")
+                else if(failMessage.type == "client-socket")
                     $rootScope.connection.error.isCluster = true;
                 else if(failMessage.type == "disconnect"){
                     $rootScope.connection.error.bridgeDisconnected = true;
-                }else if(failMessage.type == "connection-banned"){
+                }else if(failMessage.type == "cluster-rejected"){
+                    $rootScope.connection.error.isClusterRejected = true;
+                }
+
+                // If banned in info
+                if(failMessage.info && failMessage.info.banned){
                     $rootScope.connection.error.isBanned = true;
                     $rootScope.connection.error.bannedInfo = failMessage.info;
                     $rootScope.connection.error.bannedInfo.timestampUnban++;
+
+                    // No banned in now-timstampUnban time
                     $timeout(function () {
                             console.log("Finish banned");
                             $rootScope.connection.error.isBanned = false;

@@ -19,11 +19,12 @@
                     <alert type="danger" ng-show="connection.error.isAuthentication">Le mot de passe et/ou le nom d'utilisateur n'est pas correct</alert>
                     <hr>
                     <!---->
-                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isCluster}">
+                    <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isCluster || connection.error.isClusterRejected}">
                         <label>Cluster (SSH) </label>
                         <input ng-disabled="connectionProcessing || authenticated" required ng-model="user.cluster" class="form-control" placeholder="ex: baobab.ungige.ch" name="cluster" id="inputCluser" autofocus>
                     </div>
                     <alert type="danger" ng-show="connection.error.isCluster">Impossible de se connecter à ce cluster</alert>
+                    <alert type="danger" ng-show="connection.error.isClusterRejected">Ce cluster n'est pas permis par le pont</alert>
 
                     <div ng-class="{'form-group':true, 'form-group has-error':connection.error.isBridge}">
                         <label>Pont </label>
