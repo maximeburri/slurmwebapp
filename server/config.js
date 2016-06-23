@@ -15,6 +15,12 @@ config.https_server.port = 3000;
 config.https_server.certs_key_file = "./certs/key.pem";
 config.https_server.certs_cert_file = "./certs/cert.pem";
 
+// Config about connection
+config.connection = {}
+config.connection.max_attempts_by_ip = 3; // In attempts
+config.connection.time_banned_by_ip =
+    1 /*minutes*/ * 60 /*seconds*/ // In seconds
+
 config.ssh = {}
 config.ssh.timeout = 6000;
 
@@ -34,5 +40,5 @@ config.configuration_files.paths = {};
 config.configuration_files.paths.partitions_rules =
     ".slurmwebapp/partitionsRules.js";
 config.configuration_files.paths.predefined_submissions =
-    ".slurmwebapp/predefinedSubmissions.js";  
+    ".slurmwebapp/predefinedSubmissions.js";
 module.exports = config;

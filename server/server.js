@@ -82,7 +82,6 @@ var io = socketio(server);
 
 io.on('connection', function (socket) {
     var ssh = new ClientSSH();
-    var jobsSubscribed = false;
     var client = new Client(ssh, socket);
     var ip = ipaddr.parse(socket.request.connection.remoteAddress);
     var ipv6String = ip.toNormalizedString();
@@ -203,9 +202,10 @@ io.on('connection', function (socket) {
 
         // Check if banned, so send
 
-        if(attemptsClient.attempts >= 3){
+        if(attemptsClient.attempts >= config.connection.max_attempts_by_ip ){
             attemptsClient.banned = true;
-            attemptsClient.timestampUnban = currentTimestamp + 60;
+            attemptsClient.timestampUnban = currentTimestamp +
+                config.connection.time_banned_by_ip ;
             attemptsClient.attempts = 0;
             sendBanned();
         }else{
