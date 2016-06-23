@@ -3,9 +3,11 @@
  */
 
 angular.module('RDash')
-    .controller('LoginCtrl', ['$rootScope', '$location', '$cookieStore', 'User','Files', LoginCtrl]);
+    .controller('LoginCtrl', ['$rootScope', '$location',
+    '$cookieStore', 'User','Files',
+    '$timeout', LoginCtrl]);
 
-function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
+function LoginCtrl($rootScope, $location, $cookieStore, User, Files, $timeout) {
     if($rootScope.authenticated == undefined){
         $rootScope.connectionProcessing = false;
         $rootScope.authenticated = false;
@@ -33,18 +35,28 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
                 console.log(successMessage);
             },
             // Error
-            function(failMessage){
+            function(failMessage, info){
                 $rootScope.connectionProcessing = false;
                 $rootScope.authenticated = false;
-                console.log("Failed message "+failMessage)
-                if(failMessage == "socket-timeout")
+                console.log("Failed message "+failMessage.type)
+                if(failMessage.type == "socket-timeout")
                     $rootScope.connection.error.isBridge = true;
-                else if(failMessage == "client-authentication")
+                else if(failMessage.type == "client-authentication")
                     $rootScope.connection.error.isAuthentication = true;
-                else if(failMessage == "ssh-connection")
+                else if(failMessage.type == "ssh-connection")
                     $rootScope.connection.error.isCluster = true;
-                else if(failMessage == "disconnect"){
+                else if(failMessage.type == "disconnect"){
                     $rootScope.connection.error.bridgeDisconnected = true;
+                }else if(failMessage.type == "connection-banned"){
+                    $rootScope.connection.error.isBanned = true;
+                    $rootScope.connection.error.bannedInfo = failMessage.info;
+                    $rootScope.connection.error.bannedInfo.timestampUnban++;
+                    $timeout(function () {
+                            console.log("Finish banned");
+                            $rootScope.connection.error.isBanned = false;
+                        },
+                        failMessage.info.timestampUnban*1000 -
+                        (new Date).getTime() - 1000);
                 }
             },
             // Progress
@@ -61,13 +73,10 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files) {
                     }];
                     $rootScope.updateMessageOfTheDay();
                     $location.path('/dashboard');
-                    $location.path('/submission');
                 }
             }
         );
     };
-
-    $rootScope.login();
 
     $rootScope.updateMessageOfTheDay = function(){
         Files.getFileContent("/etc/motd", false).then(
