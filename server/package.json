@@ -12,6 +12,7 @@
     "express": "^4.13.3",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.1",
+    "ipaddr.js": "^1.1.1",
     "shell-escape": "^0.2.0",
     "socket.io": "^1.4.5",
     "ssh2": "^0.4.12"

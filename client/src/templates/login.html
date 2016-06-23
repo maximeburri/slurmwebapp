@@ -32,7 +32,18 @@
                     <alert type="danger" ng-show="connection.error.isBridge">Impossible de se connecter à ce pont</alert>
 
                     <!-- Change this to a button or input when using this as a form -->
-                    <button ng-disabled="connectionProcessing || authenticated" type="submit" class="btn btn-lg btn-success btn-block"><i ng-class="{'fa fa-circle-o-notch fa-spin':connectionProcessing}"></i> Connexion</button>
+                    <button ng-if="!connection.error.isBanned" ng-disabled="connectionProcessing || authenticated" type="submit" class="btn btn-lg btn-success btn-block"><i ng-class="{'fa fa-circle-o-notch fa-spin':connectionProcessing}"></i> Connexion</button>
+                    <button ng-if="connection.error.isBanned" ng-disabled="true" type="submit" class="btn btn-lg btn-danger btn-block">
+                        <i class="fa fa-times">
+                        </i> Trop de tentatives ont été effectuées<br/>
+                        Réessayez dans <br/>
+                        <timer end-time="connection.error.bannedInfo.timestampUnban*1000">
+                            <span ng-show="days">{{days}} jours</span>
+                            <span ng-show="hours">{{hours}} heures</span>
+                            <span ng-show="minutes">{{minutes}} minutes</span>
+                            <span ng-show="seconds">{{seconds}} secondes</span>
+                        </timer>
+                    </button>
                 </fieldset>
             </form>
         </div>

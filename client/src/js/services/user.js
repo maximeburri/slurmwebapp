@@ -35,6 +35,13 @@ function User($q, $rootScope, Notification) {
                 that.socket.emit("login", params);
             });
 
+            // Banned on connection
+            this.socket.on('banned', function(info) {
+                that.socket = false;
+                that.authenticated = false;
+                deferred.reject({type:'connection-banned', info:info});
+            });
+
             // Error
             this.socket.on('error', function(data) {
                 console.log('error');
@@ -55,7 +62,7 @@ function User($q, $rootScope, Notification) {
 
             // Reconnect faild
             this.socket.on('connect_failed', function(data) {
-                deferred.reject('socket-timeout');
+                deferred.reject({type:'socket-timeout'});
                 console.log('reconnect_failed');
                 console.log(data);
                 that.socket = false;
@@ -64,7 +71,7 @@ function User($q, $rootScope, Notification) {
 
             // Reconnect faild
             this.socket.on('reconnect_failed', function(data) {
-                deferred.reject('socket-timeout');
+                deferred.reject({type:'socket-timeout'});
                 console.log('reconnect_failed');
                 console.log(data);
                 that.socket = false;
@@ -80,10 +87,10 @@ function User($q, $rootScope, Notification) {
                 if(data.level != undefined &&
                     data.level == "client-authentication")
                     err ="client-authentication";
-                deferred.reject(err);
+                deferred.reject({type:err});
 
                 // Disconnect the socket
-                that.socket.disconnect();
+                that.socket = false;
 
                 console.log("Error ssh: ");
                 console.log(data);
@@ -92,7 +99,7 @@ function User($q, $rootScope, Notification) {
             // On disconnect
             this.socket.on('disconnect', function() {
                 console.log("Disconnected");
-                deferred.reject('disconnect');
+                deferred.reject({type:'disconnect'});
                 that.socket = false;
                 that.authenticated = false;
             });
@@ -113,7 +120,7 @@ function User($q, $rootScope, Notification) {
                 that.authenticated = false;
             });
         }else{
-            deferred.reject('already-connected');
+            deferred.reject({type:'already-connected'});
         }
 
         return deferred.promise;
