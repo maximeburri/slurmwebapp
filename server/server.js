@@ -77,7 +77,8 @@ console.log = function(data)
 var attemptsIpv6Clients = {};
 /** Socket IO **/
 var io = socketio(server);
-
+io.set('heartbeat interval', 1000);
+io.set('heartbeat timeout', 5000);
 
 
 io.on('connection', function (socket) {
