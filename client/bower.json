@@ -19,7 +19,7 @@
   "dependencies": {
     "rdash-ui": "1.0.*",
     "angular": "1.2.29",
-    "angular-cookies": "1.2.29",
+    "angular-cookies": "1.5.6",
     "angular-bootstrap": "~0.12.0",
     "angular-ui-router": "^0.2.10",
     "bootstrap": "~3.2.0",
@@ -30,14 +30,15 @@
     "moment": "momentjs#^2.11.2",
     "nya-bootstrap-select": "^2.1.6",
     "angular-moment": "^0.10.3",
-    "pie-chart": "n3-charts.pie-chart#^1.0.0"
+    "pie-chart": "n3-charts.pie-chart#^1.0.0",
+    "angular-bootstrap-contextmenu": "^0.9.7"
   },
   "repository": {
     "type": "gitorious",
     "url": "http://ezgit.unige.ch/slurmwebapp"
   },
   "resolutions": {
-    "angular": "1.2.29",
+    "angular": "1.5.7",
     "humanize-duration": "^3.6.1",
     "moment": "^2.11.2",
     "angular-cookies": "1.2.29"
