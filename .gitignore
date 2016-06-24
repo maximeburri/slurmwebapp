@@ -9,3 +9,6 @@
 ## Server
 # Node modules
 /server/node_modules
+
+## Credentials
+/tests/inputs/*
