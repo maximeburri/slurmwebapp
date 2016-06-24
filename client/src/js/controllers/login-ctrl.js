@@ -8,6 +8,8 @@ angular.module('RDash')
     '$timeout', LoginCtrl]);
 
 function LoginCtrl($rootScope, $location, $cookieStore, User, Files, $timeout) {
+    console.log(CONFIG);
+
     if($rootScope.authenticated == undefined){
         $rootScope.connectionProcessing = false;
         $rootScope.authenticated = false;
@@ -16,10 +18,10 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files, $timeout) {
 
         // Default input
         $rootScope.user = {
-            username : "burrimax",
-            password : "",
-            cluster  : "baobab.unige.ch",
-            bridge   : "127.0.0.1:3000",//129.194.185.74
+            username : CONFIG.credentials.username,
+            password : CONFIG.credentials.password,
+            cluster  : CONFIG.credentials.cluster,
+            bridge   : CONFIG.credentials.bridge,
         };
     }
 
@@ -79,7 +81,7 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files, $timeout) {
                         timeout: 10000
                     }];
                     $rootScope.updateMessageOfTheDay();
-                    $location.path('/dashboard');
+                    $location.path(CONFIG.mainPage);
                 }
             }
         );
@@ -95,5 +97,9 @@ function LoginCtrl($rootScope, $location, $cookieStore, User, Files, $timeout) {
                 alert('Impossible de lire le fichier /etc/motd');
             }
         )
+    }
+
+    if(CONFIG.autoLogin){
+        $rootScope.login();
     }
 };

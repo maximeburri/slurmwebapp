@@ -12,7 +12,7 @@ var gulp = require('gulp'),
 var Server = require('karma').Server;
 
 var paths = {
-    scripts: 'src/js/**/*.*',
+    scripts: ['src/js/**/*.*', 'config.js'],
     styles: 'src/less/**/*.*',
     images: 'src/img/**/*.*',
     templates: 'src/templates/**/*.html',
