@@ -49,8 +49,6 @@ login = function(usernameValue, passwordValue, bridgeValue, clusterValue){
 
     cluster.submit();
 
-    expect(loadingConnection.isPresent()).toBe(true);
-
     return connectionLoadingFinish();
 }
 
