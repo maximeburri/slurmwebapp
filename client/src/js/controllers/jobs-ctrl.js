@@ -6,11 +6,6 @@ angular.module('RDash')
     .controller('JobsCtrl', ['$scope', '$rootScope', 'User', 'Jobs', '$modal','$location', '$interval', JobsCtrl]);
 
 function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location, $interval) {
-
-    $interval(function(){
-        $rootScope.timestamp = Math.round((new Date()).getTime()/1000);
-    }, 1000);
-
     if($rootScope.jobs == undefined){
         $rootScope.jobs = [];
         $rootScope.search = {}
@@ -18,6 +13,11 @@ function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location, $interval) 
         $rootScope.search.jobsType = "all";
         $rootScope.search.query = "";
     }
+
+
+    $interval(function(){
+        $rootScope.timestamp = Math.round((new Date()).getTime()/1000);
+    }, 1000);
 
     $scope.$on("$destroy", function() {
         Jobs.unsubscribe();
@@ -44,7 +44,7 @@ function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location, $interval) 
         function(response){
             console.log("Update jobs");
             console.log(response);
-            $rootScope.jobs = response.jobs;
+            $scope.jobs = response.jobs;
         }
     );
 
