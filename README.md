@@ -49,6 +49,20 @@ gulp
 
 The page is accessible to `http://127.0.0.1:8888/` and auto-compiled and reload when a file is modified (with gulp). The bridge for websocket is `127.0.0.1:3000` (https is added).
 
+## Tests
+Protractor is used to make tests.
+Complete the configuration file in tests/inputs/default.js with your SLURM cluster, your credentials and other parameters of configurations. They can be multiple inputs files, the file selected to make tests is indicated in tests/conf.js.
+
+Run the web driver in a command prompt
+```
+webdriver-manager start
+```
+In other command prompt, go to tests folder and execute protractor
+```
+cd tests
+protractor conf.js
+```
+
 ## Configuration
 The parameters of configuration can be modified in file `server/config.js`, like :
 - the port number : `config.https_server.port`
