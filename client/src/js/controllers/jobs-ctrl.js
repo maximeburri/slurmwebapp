@@ -6,13 +6,11 @@ angular.module('RDash')
     .controller('JobsCtrl', ['$scope', '$rootScope', 'User', 'Jobs', '$modal','$location', '$interval', JobsCtrl]);
 
 function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location, $interval) {
-    if($rootScope.jobs == undefined){
-        $rootScope.jobs = [];
-        $rootScope.search = {}
-        $rootScope.search.jobsOwner ="my";
-        $rootScope.search.jobsType = "all";
-        $rootScope.search.query = "";
-    }
+    $scope.jobs = [];
+    $scope.search = {}
+    $scope.search.jobsOwner ="my";
+    $scope.search.jobsType = "all";
+    $scope.search.query = "";
 
 
     $interval(function(){
