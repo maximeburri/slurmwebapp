@@ -85,7 +85,8 @@ function(client){
 OperationPublishSubscribe.prototype.publishDataClient =
 function(client){
     var hostname = client.ssh.config.host;
-    client.socket.emit(this.eventNamePublish, this.dataToPublish[hostname]);
+    if(this.dataToPublish[hostname])
+        client.socket.emit(this.eventNamePublish, this.dataToPublish[hostname]);
 }
 
 // Publish to all subscribers
