@@ -32,7 +32,11 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
             module : null,
             dependencies : null
         },
-        licenses : []
+        licenses : [],
+        execution : {
+            executable : "",
+            arguments : ""
+        }
     };
 
     $scope.defaultJob = {};
