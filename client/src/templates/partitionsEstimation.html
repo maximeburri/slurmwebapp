@@ -7,11 +7,10 @@
     background-color: #DEDEDE;border-radius: 5px;">
                 <i class="fa fa-cog fa-spin" ng-show="loadingEstimation"></i>
                 <button class="btn btn-default btn-xs"
-                    ng-click="actualiseEstimation()"
+                    ng-click="actualiseEstimations()"
                     ng-hide="loadingEstimation">
-                    <i class="fa fa-refresh"></i>
+                    <i class="fa fa-refresh"></i> Actualisser les estimations
                 </button>
-                Estimation : <i ng-if="estimation == false">Aucune estimation</i>
                 <i ng-if="estimation != false">
                     <i class="fa fa-hourglass-start"></i>
                     <span ng-if="estimation.timeAgo <= 0"> Maintenant </span>
@@ -64,6 +63,34 @@
                             style="font-size:20px;">
                         </i>
                         <span style="/*width:25%;*/display:inline-block;font-weight:bold">{{name}}</span> <small style="" ng-if="partition.advice.reason !== ''"> - {{partition.advice.reason}}</small>
+
+                        <small ng-if="partition.estimation">
+                            <span style="padding:5px;border: 1px dashed #A2A2A2;border-radius: 5px; float:right;margin-right:20px;">
+                                        <i class="fa fa-cog fa-spin" ng-show="partition.loadingEstimation"></i>
+                                        Estimation :
+                                        <i ng-if="partition.estimation.timeAgo !== undefined">
+                                            <i class="fa fa-hourglass-start"></i>
+                                            <span ng-if="partition.estimation.timeAgo <= 0"> Maintenant </span>
+                                            <span ng-if="partition.estimation.timeAgo > 0">
+                                                <timer end-time="partition.estimation.estimatedTime.toString()*1000" interval="1000">
+                                                    <span ng-show="days">{{days}}j </span>
+                                                    <span ng-show="hours">{{hhours}}h </span>
+                                                    <span ng-show="minutes">{{mminutes}}m </span>
+                                                    <!--<span ng-show="seconds">{{sseconds}}s</span>-->
+                                                </timer>
+                                            </span>
+                                            <span style="margin-left:10px;">
+                                                <i class="fa fa-circle"></i> {{partition.estimation.nbProcessors}} CPUs
+                                            </span>
+                                            <span style="margin-left:10px;">
+                                                <i class="fa fa-clone"></i> {{partition.estimation.nodes}}
+                                            </span>
+                                        </i>
+                                        <i ng-if="partition.estimationError" class="text-danger">
+                                            (erreur lors de l'estimation)
+                                        </i>
+                            </span>
+                        </small>
                         <div class="container-fluid" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
                             <div class="row">
                                 <div class="col-xs-12 col-md-6" style="margin-bottom:0px;">

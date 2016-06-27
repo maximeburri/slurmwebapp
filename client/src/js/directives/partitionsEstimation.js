@@ -147,6 +147,9 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                 job = scope.jobToEstimate;
 
                 angular.forEach(scope.partitions, function(partition){
+                    // Remove estimation
+                    partition.estimation = false;
+
                     // Disabled ?
                     if((result = isDisabled(job, partition))){
                         partition.advice = {};
@@ -227,49 +230,60 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                 }
             }
 
-            scope.actualiseEstimation = function(){
-                if(scope.jobToEstimate === undefined){
-                    console.error("Job to estimate not defined");
-                    return false;
-                }
-
-                loadingEstimation = true;
-
-                function twoDigits(n){
-                    return (n < 10 ? '0' : '') + n.toFixed();
-                }
-
-                estimatedTime =
-                        twoDigits(scope.jobToEstimate.timeLimit.days) +
-                        "-" +
-                        twoDigits(scope.jobToEstimate.timeLimit.hours) +
-                        ":" +
-                        twoDigits(scope.jobToEstimate.timeLimit.minutes) +
-                        ":" +
-                        twoDigits(scope.jobToEstimate.timeLimit.seconds);
-                console.log(estimatedTime);
-                User.operation({verb:"estimate", object:"job", params:{
-                    partition:scope.jobToEstimate.partition,
-                    nbTasks:scope.jobToEstimate.nbTasks,
-                    nbCPUsPerTasks:scope.jobToEstimate.nbCPUsPerTasks,
-                    estimatedTime :estimatedTime}}).then(
-                    // Success
-                    function(data){
-                        scope.estimationError = false;
-                        console.log(data);
-                        loadingEstimation = false;
-                        scope.estimation = data;
-                        scope.estimation.timeAgo  = data.estimatedTime - Math.round(new Date().getTime()/1000) ;
-                    },
-
-                    function(data){
-                        console.error(data);
-                        loadingEstimation = false;
-                        scope.estimation = false;
-                        scope.estimationError = true;
+            scope.actualiseEstimations = function(){
+                // For all good partitions
+                angular.forEach(scope.partitions, function(partition){
+                    if(partition.advice.type === "disabled"){
+                        partition.estimation = false;
+                        return false;
                     }
-                );
+                    partition.estimation = true;
+
+                    if(scope.jobToEstimate === undefined){
+                        console.error("Job to estimate not defined");
+                        return false;
+                    }
+
+                    partition.loadingEstimation = true;
+
+                    function twoDigits(n){
+                        return (n < 10 ? '0' : '') + n.toFixed();
+                    }
+
+                    estimatedTime =
+                            twoDigits(scope.jobToEstimate.timeLimit.days) +
+                            "-" +
+                            twoDigits(scope.jobToEstimate.timeLimit.hours) +
+                            ":" +
+                            twoDigits(scope.jobToEstimate.timeLimit.minutes) +
+                            ":" +
+                            twoDigits(scope.jobToEstimate.timeLimit.seconds);
+                    console.log(estimatedTime);
+                    User.operation({verb:"estimate", object:"job", params:{
+                        partition:partition.partitionName,
+                        nbTasks:scope.jobToEstimate.nbTasks,
+                        nbCPUsPerTasks:scope.jobToEstimate.nbCPUsPerTasks,
+                        estimatedTime :estimatedTime}}).then(
+                        // Success
+                        function(data){
+                            partition.estimationError = false;
+                            console.log(data);
+                            loadingEstimation = false;
+                            partition.estimation = data;
+                            partition.estimation.timeAgo  = data.estimatedTime - Math.round(new Date().getTime()/1000) ;
+                            partition.loadingEstimation = false;
+                        },
+
+                        function(data){
+                            console.error(data);
+                            loadingEstimation = false;
+                            partition.estimationError = true;
+                            partition.loadingEstimation = false;
+                        }
+                    );
+                });
             }
+
             scope.partitionOrder = function(partition){
                 if (partition.advice.type == "enabled") return 1;
                 if (partition.advice.type == "discouraged") return 2;
