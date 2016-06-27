@@ -284,10 +284,18 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                 });
             }
 
-            scope.partitionOrder = function(partition){
+            scope.partitionAdviceOrder = function(partition){
                 if (partition.advice.type == "enabled") return 1;
                 if (partition.advice.type == "discouraged") return 2;
                 if (partition.advice.type == "disabled") return 3;
+            }
+
+            scope.partitionEstimationOrder = function(partition){
+                if(!partition.estimation || partition.estimation.timeAgo === undefined){
+                    return Infinity;
+                }else {
+                    return partition.estimation.timeAgo;
+                }
             }
 
         }
