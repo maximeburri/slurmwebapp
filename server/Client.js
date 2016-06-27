@@ -85,7 +85,9 @@ Client.prototype.killProcess = function ( pid, callbackFinish) {
 }
 
 Client.prototype.toString = function () {
-    return  this.params.username + " " + "("+this.params.cluster+")";
+    if(this.params)
+        return  this.params.username + " " + "("+this.params.cluster+")";
+    return undefined;
 }
 
 // export the class
