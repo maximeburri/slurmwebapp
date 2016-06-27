@@ -4,26 +4,26 @@
             <rd-widget>
                 <rd-widget-header icon="fa-tasks" title="Jobs">
                     <i class="fa fa-user" style="margin-right: 13px;"></i>
-                    <div class="btn-group">
+                    <div class="btn-group"  ng-click="initLimit()">
                         <label class="btn btn-xs btn-primary" ng-model="search.jobsOwner" btn-radio="'my'" >Moi</label>
                         <label class="btn btn-xs btn-primary" ng-model="search.jobsOwner" btn-radio="'all'" >Tous</label>
                     </div>
                     <br/>
                     <i class="fa fa-filter" style="margin-right: 13px;"></i>
-                    <div class="btn-group">
+                    <div class="btn-group" ng-click="initLimit()">
                         <label class="btn btn-xs btn-primary" ng-model="search.jobsType" btn-radio="'all'" >Tous</label>
                         <label class="btn btn-xs btn-primary" ng-model="search.jobsType" btn-radio="'pending'" >En attente</label>
                         <label class="btn btn-xs btn-primary" ng-model="search.jobsType" btn-radio="'running'" >En cours</label>
                     </div>
                     <br/>
-                    <i class="fa fa-search"></i>
+                    <i class="fa fa-search" ng-click="initLimit()"></i>
                     <input type="text" ng-model="search.query" placeholder="Recherche" class="form-control input-sm" style="display: inline;max-width: 100px;padding:5px;" />
                 </rd-widget-header>
-                <rd-widget-body classes="no-padding">
-                    <div class="table-responsive">
-                        <table class="table table-hover" ng-show="jobs.length">
-
-                            <tbody>
+                <rd-widget-body classes="no-padding" >
+                    <div class="table-responsive" id="scrollingJobs"  style="height: 60vh;
+                                            overflow: auto;">
+                        <table class="table table-hover" ng-show="filteredJobs.length">
+                            <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Name </th>
@@ -33,9 +33,17 @@
                                     <th ng-show="search.jobsType == 'running'" style="min-width:170px;">Remaining<br/>time</th>
                                     <th ng-show="search.jobsType == 'running'" style="min-width:170px;">Elapsed<br/>time</th>
                                     <th>Nb<br/>CPU</th>
-                                    <th ng-show="search.jobsType == 'running'">Nodes</th><!-- -->
+                                    <th ng-show="search.jobsType == 'running'">Nodes</th>
                                 </tr>
-                                <tr ng-repeat="job in filteredJobs = (jobs | filter: (search.jobsType == 'running' || '') && {state:'RUNNING'} | filter: (search.jobsType == 'pending' || '') && {state:'PENDING'} | filter: (search.jobsOwner == 'my' || '') && {username:user.username} | filter: search.query)"
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="job in filteredJobs = (
+                                filteredJobsWithoutLimit = (jobs | filter: (search.jobsType == 'running' || '') &&
+                                {state:'RUNNING'} | filter: (search.jobsType == 'pending' || '') &&
+                                {state:'PENDING'} | filter: (search.jobsOwner == 'my' || '') &&
+                                {username:user.username} |
+                                filter: search.query )|
+                                limitTo : search.limit )"
                                 ng-click="goToJob(job)" style="cursor: pointer;">
                                     <td>
                                         <span><swa-job-state state="{{job.state}}" reason="{{job.reasonWaiting}}"></swa-job-state> {{job.id}}</span>
@@ -107,25 +115,34 @@
                                         <span><!--<button ng-show="job.nodes != null" class="btn btn-xs btn-info" style="width:80px;">-->{{job.nodes}}<!--</button>--></span>
                                     </td>
                                 </tr>
+                                <tr >
+                                    <td colspan="10" ng-if="search.limit < filteredJobsWithoutLimit.length">
+                                        <a class="btn btn-primary btn-lg" style="width:100%" ng-click="showMore()">Afficher plus</a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div ng-show="!filteredJobs.length">
-                        <p class="text-center"><i>Aucun jobs</i></p>
+                    <div ng-if="!filteredJobs.length">
+                        <p class="text-center" style="margin-top:-440px;"><i>Aucun jobs répond aux critères de selection</i></p>
                     </div>
+
                 </rd-widget-body>
+                <rd-widget-footer>
+                    Légende :   <swa-job-state state="COMPLETED" description="true"></swa-job-state>
+                                <swa-job-state state="COMPLETING" description="true"></swa-job-state>
+                                <swa-job-state state="CONFIGURING" description="true"></swa-job-state>
+                                <swa-job-state state="PENDING" description="true"></swa-job-state>
+                                <swa-job-state state="RUNNING" description="true"></swa-job-state>
+                                <swa-job-state state="SUSPENDED" description="true"></swa-job-state>
+                                <swa-job-state state="CANCELLED" description="true"></swa-job-state>
+                                <swa-job-state state="TIMEOUT" description="true"></swa-job-state>
+                                <swa-job-state state="FAILED" description="true"></swa-job-state>
+                                <swa-job-state state="NODE_FAIL" description="true"></swa-job-state>
+                                <swa-job-state state="PREEMPTED" description="true"></swa-job-state>
+                </rd-widget-footer>
             </rd-widget>
-            Légende :   <swa-job-state state="COMPLETED" description="true"></swa-job-state>
-                        <swa-job-state state="COMPLETING" description="true"></swa-job-state>
-                        <swa-job-state state="CONFIGURING" description="true"></swa-job-state>
-                        <swa-job-state state="PENDING" description="true"></swa-job-state>
-                        <swa-job-state state="RUNNING" description="true"></swa-job-state>
-                        <swa-job-state state="SUSPENDED" description="true"></swa-job-state>
-                        <swa-job-state state="CANCELLED" description="true"></swa-job-state>
-                        <swa-job-state state="TIMEOUT" description="true"></swa-job-state>
-                        <swa-job-state state="FAILED" description="true"></swa-job-state>
-                        <swa-job-state state="NODE_FAIL" description="true"></swa-job-state>
-                        <swa-job-state state="PREEMPTED" description="true"></swa-job-state>
+
         </div>
     </div>
 </div>

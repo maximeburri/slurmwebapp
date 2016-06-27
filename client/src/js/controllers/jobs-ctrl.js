@@ -8,9 +8,11 @@ angular.module('RDash')
 function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location, $interval) {
     $scope.jobs = [];
     $scope.search = {}
-    $scope.search.jobsOwner ="my";
+    $scope.search.jobsOwner ="all";
     $scope.search.jobsType = "all";
     $scope.search.query = "";
+    $scope.stepsItems = 15;
+    $scope.search.limit = $scope.stepsItems;
 
 
     $interval(function(){
@@ -45,5 +47,18 @@ function JobsCtrl($scope, $rootScope, User, Jobs, $modal, $location, $interval) 
             $scope.jobs = response.jobs;
         }
     );
+
+    // Show more items
+    $scope.showMore = function(){
+        $scope.search.limit += $scope.stepsItems;
+    }
+
+    // Init scroll and limit
+    $scope.initLimit = function(){
+        $scope.search.limit = $scope.stepsItems;
+
+        // TODO : Maybe use directive instead of getElementById ?
+        document.getElementById('scrollingJobs').scrollTop = 0;
+    }
 
 }
