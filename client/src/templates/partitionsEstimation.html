@@ -3,35 +3,14 @@
     border: 1px solid #B9B9B9;
     margin-bottom:4px;
     ">
-    <div style="padding:5px;border-bottom: 1px dashed #A2A2A2;
+    <div style="padding:10px;border-bottom: 1px dashed #A2A2A2;
     background-color: #DEDEDE;border-radius: 5px;">
-                <i class="fa fa-cog fa-spin" ng-show="loadingEstimation"></i>
-                <button class="btn btn-default btn-xs"
-                    ng-click="actualiseEstimations()"
-                    ng-hide="loadingEstimation">
-                    <i class="fa fa-refresh"></i> Actualisser les estimations
+                Séléctionnez la partition
+                <br/>
+                <button class="btn btn-primary btn-xs"
+                    ng-click="actualiseEstimations()">
+                    <i class="fa fa-refresh"></i> Actualiser les estimations d'exécution
                 </button>
-                <i ng-if="estimation != false">
-                    <i class="fa fa-hourglass-start"></i>
-                    <span ng-if="estimation.timeAgo <= 0"> Maintenant </span>
-                    <span ng-if="estimation.timeAgo > 0">
-                        <timer end-time="estimation.estimatedTime.toString()*1000" interval="1000">
-                            <span ng-show="days">{{days}}j </span>
-                            <span ng-show="hours">{{hhours}}h </span>
-                            <span ng-show="minutes">{{mminutes}}m </span>
-                            <!--<span ng-show="seconds">{{sseconds}}s</span>-->
-                        </timer>
-                    </span>
-                    <span style="margin-left:10px;">
-                        <i class="fa fa-circle"></i> {{estimation.nbProcessors}} CPUs
-                    </span>
-                    <span style="margin-left:10px;">
-                        <i class="fa fa-clone"></i> {{estimation.nodes}}
-                    </span>
-                </i>
-                <i ng-if="estimationError" class="text-danger">
-                    (erreur lors de l'estimation)
-                </i>
     </div>
     <div style="width:100%; margin-top:1x;padding: 2px; height: auto; overflow:overlay;max-height:400px;">
 
@@ -65,26 +44,31 @@
                         <span style="/*width:25%;*/display:inline-block;font-weight:bold">{{name}}</span> <small style="" ng-if="partition.advice.reason !== ''"> - {{partition.advice.reason}}</small>
 
                         <small ng-if="partition.estimation">
-                            <span style="padding:5px;border: 1px dashed #A2A2A2;border-radius: 5px; float:right;margin-right:20px;">
+                            <span style="padding:5px;border: 1px dashed #A2A2A2;border-radius: 5px; float:right;margin-right:20px;"
+                                tooltip-enable="{{!partition.estimationError}}"
+                                 data-tooltip-html-unsafe='
+                                     <span style="margin-left:10px;">
+                                         <i class="fa fa-circle"></i> {{partition.estimation.nbProcessors}} CPUs
+                                     </span>
+                                     <span style="margin-left:10px;">
+                                         <i class="fa fa-clone"></i> {{partition.estimation.nodes}}
+                                     </span>'
+                                     >
                                         <i class="fa fa-cog fa-spin" ng-show="partition.loadingEstimation"></i>
-                                        Estimation :
+                                        Estimer pour
                                         <i ng-if="partition.estimation.timeAgo !== undefined">
                                             <i class="fa fa-hourglass-start"></i>
-                                            <span ng-if="partition.estimation.timeAgo <= 0"> Maintenant </span>
+                                            <span ng-if="partition.estimation.timeAgo <= 0"> maintenant </span>
                                             <span ng-if="partition.estimation.timeAgo > 0">
+
                                                 <timer end-time="partition.estimation.estimatedTime.toString()*1000" interval="1000">
-                                                    <span ng-show="days">{{days}}j </span>
+                                                    ~<span ng-show="days">{{days}}j </span>
                                                     <span ng-show="hours">{{hhours}}h </span>
                                                     <span ng-show="minutes">{{mminutes}}m </span>
                                                     <!--<span ng-show="seconds">{{sseconds}}s</span>-->
                                                 </timer>
                                             </span>
-                                            <span style="margin-left:10px;">
-                                                <i class="fa fa-circle"></i> {{partition.estimation.nbProcessors}} CPUs
-                                            </span>
-                                            <span style="margin-left:10px;">
-                                                <i class="fa fa-clone"></i> {{partition.estimation.nodes}}
-                                            </span>
+
                                         </i>
                                         <i ng-if="partition.estimationError" class="text-danger">
                                             (erreur lors de l'estimation)

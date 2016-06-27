@@ -12,8 +12,6 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
 
         link: function(scope, element, attrs){
             scope.partitions = [];
-            scope.loadingEstimation = false;
-            scope.estimation = false;
             scope.partitionsRules = {};
             scope.loadingStates = {};
             scope.rules = {};
