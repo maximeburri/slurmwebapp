@@ -1,0 +1,46 @@
+<div style="background: #F9F9F9;
+    border-radius: 5px;
+    border: 1px solid #B9B9B9;
+    height: 100%;">
+    <div style="padding:5px;border-bottom: 1px dashed #A2A2A2;
+    background-color: #DEDEDE;border-radius: 5px;">
+            <button class="btn btn-default btn-md" ng-disabled="fileViewer.edit"
+                ng-click="edit()">
+                <i class="fa fa-pencil-square-o"></i> Editer
+            </button>
+            <button class="btn btn-default btn-md"
+                ng-disabled="!fileViewer.edit || fileViewer.saved"
+                ng-click="save()">
+                <i class="fa fa-floppy-o"></i> Sauvegarder
+            </button>
+            <span style="margin-left:6px;">{{fileViewer.filepath}}</span>
+    </div>
+    <div style="width:100%; margin-top:5x;
+                overflow:none;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;height:100%;">
+        <pre style="margin:2px;width:99%;height:90%"
+        ng-show="!fileViewer.loading &&
+        !fileViewer.too_big &&
+        !fileViewer.not_exist &&
+        !fileViewer.edit">{{fileViewer.content}}</pre>
+        <textarea style="margin:2px;  width:100%;height:90%"
+            ng-show="!fileViewer.loading &&
+            !fileViewer.too_big &&
+            !fileViewer.not_exist &&
+            fileViewer.edit"
+            ng-model="fileViewer.content" ng-change="fileViewer.saved = false"></textarea>
+        <div ng-if="fileViewer.too_big" class="alert alert-danger">
+            <i class="fa fa-times"></i>
+            Le fichier est trop volumineux
+        </div>
+        <div ng-if="fileViewer.not_exist" class="alert alert-danger">
+            <i class="fa fa-times"></i>
+            Le fichier n'existe pas
+        </div>
+    </div>
+</div>

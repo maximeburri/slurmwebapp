@@ -1,91 +1,11 @@
 <div data-ng-controller="BrowserCtrl" class="ng-scope ng-binding">
-    <div class="row" ng-show="fileViewer.show">
+    <div class="row">
         <div class="col-lg-12">
             <rd-widget>
-                <rd-widget-header icon="fa-file-o" title="Fichier" >
+                <rd-widget-header icon="fa fa-files-o" title="Navigateur de fichier">
                 </rd-widget-header>
                 <rd-widget-body classes="no-padding">
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    <button class="btn btn-primary"
-                                        ng-click="fileViewer.show = false; stopFollowFileContent(); actualiseListFiles();">
-                                        <i class="fa fa-arrow-up"></i> Dossier parent
-                                    </button>
-                                    <span style="margin-left:6px;">{{fileViewer.filepath}}</span>
-                                    <div ng-show="fileViewer.modified" style="margin-top:10px;" class="alert alert-warning">
-                                        Le fichier à été entièrement modifié
-                                        <button class="btn btn-primary btn-xs"
-                                            ng-click="viewFileRefresh()">
-                                            <i class="fa fa-refresh"></i> Actualiser
-                                        </button>
-                                    </div>
-                                    <div ng-show="fileViewer.not_exist" style="margin-top:10px;" class="alert alert-danger">
-                                        Le fichier n'existe pas
-                                    </div>
-                                    <div ng-show="fileViewer.too_big" style="margin-top:10px;" class="alert alert-danger">
-                                        Le fichier est trop volumineux
-                                    </div>
-                                </th>
-                            </tr>
-                            <tr ng-hide="fileViewer.not_exist || fileViewer.too_big">
-                                <td><pre><code style="">{{fileViewer.content}}</code></pre>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </rd-widget-body>
-            </rd-widget>
-        </div>
-    </div>
-
-    <div class="row" ng-hide="fileViewer.show">
-        <div class="col-lg-6">
-            <rd-widget>
-                <rd-widget-header icon="fa-tasks" title="Fichiers" >
-                    <button type="button" class="btn btn-primary btn-xs" ng-model="options.showHiddenFiles" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
-                        <i ng-class="options.showHiddenFiles ? 'fa fa-check-square-o' : 'fa fa-square-o'"></i>
-                    </i> Afficher fichiers cachées
-                    </button>
-                </rd-widget-header>
-                <rd-widget-body classes="no-padding">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        <button class="btn btn-primary" ng-click="goToParentFolder()">
-                                            <i class="fa fa-arrow-up"></i> Dossier parent
-                                        </button>
-                                        <span style="margin-left:6px;">{{currentDir}}</span>
-                                        <i class="fa fa-cog fa-spin" ng-show="loading"></i>
-                                        <button class="btn btn-default btn-xs"
-                                            ng-click="actualiseListFiles()"
-                                            ng-hide="loading">
-                                            <i class="fa fa-refresh"></i>
-                                        </button>
-                                    </th>
-                                </tr>
-                                <tr ng-repeat="file in filteredFiles = (files | filterHiddenFilename :options.showHiddenFiles)" ng-click="goToFile(file)" style="cursor: pointer;" ng-hide="file.filename == '.' || file.filename == '..'">
-                                    <td>
-                                        <i ng-class="{'fa fa-external-link': file.type == 'symboliclink',
-                                                      'fa fa-folder': file.type == 'folder',
-                                                      'fa fa-file-text-o': file.type == 'file',
-                                                      'fa fa-cog': file.type == 'executable'
-                                                      }"
-
-                                            style="color:gray">
-                                        </i>
-                                        <span style="margin-left:6px;">{{file.filename}}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div ng-show="!filteredFiles.length">
-                            <p class="text-center"><i>Aucun fichier</i></p>
-                        </div>
-                    </div>
+                    <swa-files-browser file-viewable="true"></swa-files-browser>
                 </rd-widget-body>
             </rd-widget>
         </div>

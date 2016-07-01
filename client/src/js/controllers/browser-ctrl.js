@@ -6,7 +6,7 @@ angular.module('RDash')
     .controller('BrowserCtrl', ['$scope', 'User', 'Files', '$modal', BrowserCtrl]);
 
 function BrowserCtrl($scope, User, Files, $modal) {
-    $scope.options = {};
+    /*$scope.options = {};
     $scope.options.showHiddenFiles = false;
     $scope.fileViewer = {
         content : "",
@@ -132,7 +132,7 @@ function BrowserCtrl($scope, User, Files, $modal) {
         );
     }
 
-    $scope.updateFiles($scope.currentDir);
+    $scope.updateFiles($scope.currentDir);*/
 
 
 }

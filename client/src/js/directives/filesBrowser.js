@@ -10,7 +10,8 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             selectableTypes:'@',
             selected:'=',
             tableStyle:'@',
-            onFileSelected:'&?'},
+            onFileSelected:'&?',
+            fileViewable : '@?'},
         templateUrl: 'templates/filesBrowser.html',
         link: function(scope, element, attrs){
             scope.options = {};
@@ -22,6 +23,8 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             else{
                 scope.selectableTypesArray = JSON.parse(scope.selectableTypes);
             }
+            if(scope.fileViewable === undefined)
+                scope.fileViewable = false;
 
             scope.fileViewer = {
                 content : "",
@@ -234,8 +237,8 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
 
                         }
                     );
-                }else{
-
+                }else if(scope.fileViewable){
+                    scope.viewFile(futurDir);
                 }
             }
 
@@ -259,8 +262,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             }
 
             scope.itemDoubleClick = function(file){
-                if(file.type == 'folder')
-                    scope.goToFile(file);
+                scope.goToFile(file);
             }
 
             scope.actualiseListFiles = function(){
@@ -295,39 +297,14 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             }
 
             scope.viewFile = function(filePath){
-                scope.fileViewer.content = "";
-                scope.fileViewer.modified = false;
-                scope.fileViewer.filepath = filePath;
-                promiseSocketContentFile = Files.getFileContent(filePath, true);
-                scope.fileViewer.show = true;
-                scope.fileViewer.not_exist = false;
-                scope.fileViewer.too_big = false;
-                promiseSocketContentFile.then(
-                    // Success
-                    function(successMessage){
-                        console.log("Success");
-                        console.log(successMessage);
-                    },
-                    // Error
-                    function(err){
-                        console.log("Fail");
-                        console.log(err);
-                        if(err.type == "not_exist"){
-                            scope.fileViewer.not_exist = true;
-                        }else if(err.type == "too_big"){
-                            scope.fileViewer.too_big = true;
-                        }else{
-                            scope.fileViewer.modified = true;
-                        }
-                        scope.stopFollowFileContent();
-                    },
-                    // Progress
-                    function(notificationMessage){
-                        console.log("Notification");
-                        console.log(notificationMessage);
-                        scope.fileViewer.content += notificationMessage.data;
-                    }
-                );
+                newScope = scope.$new(false);
+                newScope.filepath = filePath;
+
+                $modal.open({
+                    templateUrl:"templates/modal/fileViewer.html",
+                    scope:newScope,
+                    size:'lg'
+                });
             }
 
             // Check if file is selectable if type is in selectableTypes
