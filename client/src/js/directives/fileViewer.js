@@ -5,7 +5,7 @@ angular
 function swaFileViewer(User, Files, $modal, $compile) {
     var directive = {
         restrict: 'AE',
-        scope: {filepath:'@', edit:'@?'},
+        scope: {filepath:'@', editMode:'@?'},
         templateUrl: 'templates/fileViewer.html',
         link: function(scope, element, attrs){
             scope.fileViewer = {}
@@ -15,8 +15,7 @@ function swaFileViewer(User, Files, $modal, $compile) {
             scope.fileViewer.not_exist = false;
             scope.fileViewer.too_big = false;
             scope.fileViewer.loading = true;
-            console.log(scope.edit);
-            scope.fileViewer.edit = (scope.edit === undefined ? false : scope.edit);
+            scope.fileViewer.edit = (scope.editMode === undefined ? false : scope.editMode);
             scope.fileViewer.saved = true;
 
             Files.getFileContent(scope.filepath, false).then(
