@@ -122,6 +122,15 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
 
             // Menu context to item file
             scope.menuOptionsFile = [
+                /* Edit */
+                {
+                    html: toHTMLItem('pencil', "Editer"),
+                    enabled: function($itemScope) {return $itemScope.file.type == "file"},
+                    click: function ($itemScope) {
+                        filepath = scope.currentDir +$itemScope.file.filename;
+                        scope.viewFile(filepath, true);
+                    }
+                },
                 /* Visualize */
                 {
                     html: toHTMLItem('eye', "Visualiser"),
@@ -306,9 +315,10 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 scope.viewFile(scope.fileViewer.filepath);
             }
 
-            scope.viewFile = function(filePath){
+            scope.viewFile = function(filePath, edit){
                 newScope = scope.$new(false);
                 newScope.filepath = filePath;
+                newScope.edit = edit;
 
                 $modal.open({
                     templateUrl:"templates/modal/fileViewer.html",
