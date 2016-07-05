@@ -122,6 +122,16 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
 
             // Menu context to item file
             scope.menuOptionsFile = [
+                /* Visualize */
+                {
+                    html: toHTMLItem('eye', "Visualiser"),
+                    enabled: function($itemScope) {return $itemScope.file.type == "file"},
+                    click: function ($itemScope) {
+                        filepath = scope.currentDir +$itemScope.file.filename;
+                        scope.viewFile(filepath);
+                    }
+                },
+                null,
                 /* REMOVE */
                 {
                     html: toHTMLItem('times', "Supprimer"),
