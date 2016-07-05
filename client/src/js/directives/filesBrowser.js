@@ -125,7 +125,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 /* Edit */
                 {
                     html: toHTMLItem('pencil', "Editer"),
-                    enabled: function($itemScope) {return $itemScope.file.type == "file"},
+                    enabled: function($itemScope) {return $itemScope.file.type == "folder"},
                     click: function ($itemScope) {
                         filepath = scope.currentDir +$itemScope.file.filename;
                         scope.viewFile(filepath, true);
@@ -134,7 +134,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 /* Visualize */
                 {
                     html: toHTMLItem('eye', "Visualiser"),
-                    enabled: function($itemScope) {return $itemScope.file.type == "file"},
+                    enabled: function($itemScope) {return $itemScope.file.type != "folder"},
                     click: function ($itemScope) {
                         filepath = scope.currentDir +$itemScope.file.filename;
                         scope.viewFile(filepath);
