@@ -125,7 +125,7 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
                 /* Edit */
                 {
                     html: toHTMLItem('pencil', "Editer"),
-                    enabled: function($itemScope) {return $itemScope.file.type == "folder"},
+                    enabled: function($itemScope) {return $itemScope.file.type != "folder"},
                     click: function ($itemScope) {
                         filepath = scope.currentDir +$itemScope.file.filename;
                         scope.viewFile(filepath, true);
