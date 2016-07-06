@@ -113,9 +113,9 @@
                             </div>
                         </div>
 
-                        <div class="form-group animate-hide" ng-hide="parameters.userType == 'novice'">
-                            <label class="col-sm-3 control-label">Nombre de tâche </label>
-                            <div class="col-sm-3">
+                        <div class="form-group animate-hide">
+                            <label class="col-sm-3 control-label" ng-hide="parameters.userType == 'novice'">Nombre de tâche </label>
+                            <div class="col-sm-3" ng-hide="parameters.userType == 'novice'">
                               <input type="number" class="form-control" ng-model="job.nbTasks" placeholder="">
                             </div>
                             <label class="col-sm-3 control-label">CPU par tâche </label>
