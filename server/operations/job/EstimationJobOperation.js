@@ -19,7 +19,7 @@ function EstimationJobOperation() {
             args : "--cpus-per-task"
         },
         {
-            paramName : "estimatedTime",
+            paramName : "timeLimit",
             args : "--time"
         }
     ]
@@ -49,7 +49,7 @@ function(client, operationInfo, clientCallback) {
                 stderr = stderr.toString().slice(0, -1)
                 var words = stderr.split(' ');
                 var jobId = null;
-                var estimatedTime = null;
+                var timeLimit = null;
                 var nbProcessors = null;
                 var nodes = null;
                 if(!(words && words.length))
@@ -65,7 +65,7 @@ function(client, operationInfo, clientCallback) {
                         }
                     }
                     if(words[i] == "at" && (i+1)<words.length){
-                        estimatedTime = words[i+1];
+                        timeLimit = words[i+1];
                         i++;
                         continue;
                     }
@@ -86,7 +86,7 @@ function(client, operationInfo, clientCallback) {
                 clientCallback({
                     result        : stderr.toString(),
                     jobId         : jobId,
-                    estimatedTime : estimatedTime,
+                    timeLimit : timeLimit,
                     nbProcessors  : nbProcessors,
                     nodes         : nodes
                 }, false);

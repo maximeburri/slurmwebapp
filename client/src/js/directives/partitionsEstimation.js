@@ -248,7 +248,7 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                         return (n < 10 ? '0' : '') + n.toFixed();
                     }
 
-                    estimatedTime =
+                    timeLimit =
                             twoDigits(scope.jobToEstimate.timeLimit.days) +
                             "-" +
                             twoDigits(scope.jobToEstimate.timeLimit.hours) +
@@ -256,19 +256,19 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                             twoDigits(scope.jobToEstimate.timeLimit.minutes) +
                             ":" +
                             twoDigits(scope.jobToEstimate.timeLimit.seconds);
-                    console.log(estimatedTime);
+                    console.log(timeLimit);
                     User.operation({verb:"estimate", object:"job", params:{
                         partition:partition.partitionName,
                         nbTasks:scope.jobToEstimate.nbTasks,
                         nbCPUsPerTasks:scope.jobToEstimate.nbCPUsPerTasks,
-                        estimatedTime :estimatedTime}}).then(
+                        timeLimit :timeLimit}}).then(
                         // Success
                         function(data){
                             partition.estimationError = false;
                             console.log(data);
                             loadingEstimation = false;
                             partition.estimation = data;
-                            partition.estimation.timeAgo  = data.estimatedTime - Math.round(new Date().getTime()/1000) ;
+                            partition.estimation.timeAgo  = data.timeLimit - Math.round(new Date().getTime()/1000) ;
                             partition.loadingEstimation = false;
                         },
 
