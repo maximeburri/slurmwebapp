@@ -29,7 +29,7 @@ inherits(EstimationJobOperation, Operation);
 // Overwrite
 EstimationJobOperation.prototype.makeOperation =
 function(client, operationInfo, clientCallback) {
-    var cmd = "env SLURM_TIME_FORMAT=\"%s\" srun --test-only";
+    var cmd = "env SLURM_TIME_FORMAT=\"%s\" srun --test-only 2>&1";
 
     this.valuesParamsArgs.forEach(function(paramArg){
         if(operationInfo.params[paramArg.paramName] !== undefined){
@@ -37,61 +37,11 @@ function(client, operationInfo, clientCallback) {
         }
     });
 
-    // Warning, the srun result print in STDERR !
     var stderr = "";
 
     client.executeCommand(cmd,
         // FINISH
-        function(result, exitcode, clientCallback){
-            if(exitcode != 0){
-                clientCallback(null, {error:"ESTIMATION_FAIL"});
-            }else{
-                stderr = stderr.toString().slice(0, -1)
-                var words = stderr.split(' ');
-                var jobId = null;
-                var timeLimit = null;
-                var nbProcessors = null;
-                var nodes = null;
-                if(!(words && words.length))
-                    clientCallback(null, {error:"ESTIMATION_FAIL"});
-
-                for(var i = 0;i<words.length;i++){
-                    if(words[i] == "Job" && (i+1)<words.length){
-                        integer = parseInt(words[i+1]);
-                        if(integer !== NaN){
-                            jobId = integer;
-                            i++;
-                            continue;
-                        }
-                    }
-                    if(words[i] == "at" && (i+1)<words.length){
-                        timeLimit = words[i+1];
-                        i++;
-                        continue;
-                    }
-                    if(words[i] == "using" && (i+2)<words.length && words[i+2] == "processors"){
-                        integer = parseInt(words[i+1]);
-                        if(integer !== NaN){
-                            nbProcessors = integer;
-                            i+=2;
-                            continue;
-                        }
-                    }
-                    if(words[i] == "on" && (i+1)<words.length){
-                        nodes = words[i+1];
-                        i++;
-                        continue;
-                    }
-                }
-                clientCallback({
-                    result        : stderr.toString(),
-                    jobId         : jobId,
-                    timeLimit : timeLimit,
-                    nbProcessors  : nbProcessors,
-                    nodes         : nodes
-                }, false);
-            }
-        },
+        this.parseSrunTestOnly,
         clientCallback,
 
         // STDERR
@@ -100,6 +50,57 @@ function(client, operationInfo, clientCallback) {
         }
     );
 };
+
+EstimationJobOperation.prototype.parseSrunTestOnly = function(result, exitcode, clientCallback){
+    if(exitcode != 0){
+        clientCallback(null, {error:"ESTIMATION_FAIL"});
+    }else{
+        result = result.toString().slice(0, -1)
+        var words = result.split(' ');
+        var jobId = null;
+        var timeLimit = null;
+        var nbProcessors = null;
+        var nodes = null;
+        if(!(words && words.length))
+            clientCallback(null, {error:"ESTIMATION_FAIL"});
+
+        for(var i = 0;i<words.length;i++){
+            if(words[i] == "Job" && (i+1)<words.length){
+                integer = parseInt(words[i+1]);
+                if(integer !== NaN){
+                    jobId = integer;
+                    i++;
+                    continue;
+                }
+            }
+            if(words[i] == "at" && (i+1)<words.length){
+                timeLimit = words[i+1];
+                i++;
+                continue;
+            }
+            if(words[i] == "using" && (i+2)<words.length && words[i+2] == "processors"){
+                integer = parseInt(words[i+1]);
+                if(integer !== NaN){
+                    nbProcessors = integer;
+                    i+=2;
+                    continue;
+                }
+            }
+            if(words[i] == "on" && (i+1)<words.length){
+                nodes = words[i+1];
+                i++;
+                continue;
+            }
+        }
+        clientCallback({
+            result        : result.toString(),
+            jobId         : jobId,
+            timeLimit : timeLimit,
+            nbProcessors  : nbProcessors,
+            nodes         : nodes
+        }, false);
+    }
+}
 
 // export the class
 module.exports = EstimationJobOperation;
