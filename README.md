@@ -1,72 +1,38 @@
 # SLURM Web App
+SLURM Web App is a project server-side and client-side to manage jobs on a *SLURM* cluster, under licenses [AGPLv3](./LICENSE). The base of project was created for a thesis bachelor to [HEPIA](http://hepia.hesge.ch/) in association with the [University of Geneva](http://www.unige.ch/).
 
-SLURM Web App is a project server-side and client-side to manage a SLURM cluster.
+## Features
+They are multiple features after authentification by the user :
+- **statistics of cluster**, with the ratio of CPUs and nodes allocated
+- **list of jobs in queues**, with reamining time and estimated time
+- **detail of job**, with live display of standard output and standard error
+- **submission of job**, with loading of old batch file, modification of parameters with fileds, advice of the partition to be chosen and predefined submissions
+- **files browser of cluster files**, with copy/paste/creation/suppression of files, upload of files, files viewer and files editor
 
-Client-side is a Bootstrap/AngularJS project. Server-side is a NodeJS project which receive WebSocket(SSL) messages by client and execute SSH commands on cluster.
+![Dashboard & statistics](/docs/images/screenshots/desktop/1_dashboard.png)
+Show more screenshots in [gallery page](./docs/gallery.md)
 
-## Server
-The server is a NodeJS script and use SSH2, ExpressJS, Socket.io
+## Limitations
+The application is only in french for the moment. Furthermore, he works only with the resource management *SLURM*
 
-## Client
-The client is based on dashboard rdash-angular, an AngularJS/Bootstrap template example. (https://github.com/rdash/rdash-angular)
+## Architecture
+Client-side is a Bootstrap/AngularJS project. Server-side is a NodeJS project
+which receive WebSocket(SSL) JSON messages by client and execute SSH commands on cluster.
 
-## Compilation
-NodeJS have to be installed (https://nodejs.org/en/download/package-manager/).
-Install npm modules in the `client` and the `server` directory :
-```
-npm install
-```
+The server is a NodeJS script and use SSH2, ExpressJS, Socket.io.The client is based on dashboard rdash-angular(https://github.com/rdash/rdash-angular).
 
-Then Bower needs to be installed. In the `client` directory,
-install Bower
-```
-sudo npm install bower -g
-```
+![Architecture](/docs/images/resume.png)
 
-and install Bower components
-```
-bower install
-```
+## Documentation
+More information can be read to these pages :
+1. [Gallery](./docs/gallery.md)
+2. [Installation](./docs/installation.md)
+3. [Configuration](./docs/configuration.md)
+4. [Tests](./docs/tests.md)
 
-### Production
-`client` directory
-```
-gulp build
-```
 
-`server` directory
-```
-nodejs server.js
-```
-
-The page is accessible to `https://127.0.0.1:3000/`. The bridge for websocket is `127.0.0.1:3000` (https is added).
-
-### Developpement
-In `client` and `server` directory
-```
-gulp
-```
-
-The page is accessible to `http://127.0.0.1:8888/` and auto-compiled and reload when a file is modified (with gulp). The bridge for websocket is `127.0.0.1:3000` (https is added).
-
-## Tests
-Protractor is used to make tests.
-Complete the configuration file in tests/inputs/default.js with your SLURM cluster, your credentials and other parameters of configurations. They can be multiple inputs files, the file selected to make tests is indicated in tests/conf.js.
-
-Run the web driver in a command prompt
-```
-webdriver-manager start
-```
-In other command prompt, go to tests folder and execute protractor
-```
-cd tests
-protractor conf.js
-```
-
-## Configuration
-The parameters of configuration can be modified in file `server/config.js`, like :
-- the port number : `config.https_server.port`
-- the ssl keys files
-  - Key file: `config.https_server.certs_key_file`
-  - Certificate file: `config.https_server.certs_cert_file`
-- the ssh timeout connection : `config.ssh.timeout`
+## TODO
+A list of improvments :
+- History list of own job
+- Multilingue support
+- ! Limitation file upload
