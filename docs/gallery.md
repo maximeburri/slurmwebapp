@@ -13,5 +13,5 @@ Some screenshot of application in desktop
 # Android
 Some screenshot of application in android
 ![Login](/docs/images/screenshots/android/0_login.png)
-![Dashboard & statistics](/docs/images/screenshots/android/1_stats.png)
-![Cluster file editor](/docs/images/screenshots/desktop/2_file.png)
+![Dashboard & statistics](/docs/images/screenshots/android/1_android_stats.png)
+![Cluster file editor](/docs/images/screenshots/android/2_file.png)
