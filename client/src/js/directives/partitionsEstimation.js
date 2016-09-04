@@ -268,7 +268,7 @@ function swaPartitionsEstimation(User, Memory, $modal, $compile) {
                             console.log(data);
                             loadingEstimation = false;
                             partition.estimation = data;
-                            partition.estimation.timeAgo  = data.timeLimit - Math.round(new Date().getTime()/1000) ;
+                            partition.estimation.timeAgo  = data.estimatedTime - Math.round(new Date().getTime()/1000) ;
                             partition.loadingEstimation = false;
                         },
 

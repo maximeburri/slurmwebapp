@@ -60,7 +60,6 @@
                                             <i class="fa fa-hourglass-start"></i>
                                             <span ng-if="partition.estimation.timeAgo <= 0"> maintenant </span>
                                             <span ng-if="partition.estimation.timeAgo > 0">
-
                                                 <timer end-time="partition.estimation.estimatedTime.toString()*1000" interval="1000">
                                                     ~<span ng-show="days">{{days}}j </span>
                                                     <span ng-show="hours">{{hhours}}h </span>

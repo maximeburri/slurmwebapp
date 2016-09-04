@@ -58,7 +58,7 @@ EstimationJobOperation.prototype.parseSrunTestOnly = function(result, exitcode, 
         result = result.toString().slice(0, -1)
         var words = result.split(' ');
         var jobId = null;
-        var timeLimit = null;
+        var estimatedTime = null;
         var nbProcessors = null;
         var nodes = null;
         if(!(words && words.length))
@@ -74,7 +74,7 @@ EstimationJobOperation.prototype.parseSrunTestOnly = function(result, exitcode, 
                 }
             }
             if(words[i] == "at" && (i+1)<words.length){
-                timeLimit = words[i+1];
+                estimatedTime = words[i+1];
                 i++;
                 continue;
             }
@@ -95,7 +95,7 @@ EstimationJobOperation.prototype.parseSrunTestOnly = function(result, exitcode, 
         clientCallback({
             result        : result.toString(),
             jobId         : jobId,
-            timeLimit : timeLimit,
+            estimatedTime : estimatedTime,
             nbProcessors  : nbProcessors,
             nodes         : nodes
         }, false);
