@@ -3,6 +3,7 @@ var ScriptSubmission = require('./functions.js');
 var shellescape = require('shell-escape');
 var inherits = require('util').inherits;
 var ContentFileOperation = require('../file/ContentFileOperation.js');
+var path = require('path');
 
 var config = require('../../config');
 
@@ -36,27 +37,42 @@ function(client, operationInfo, clientCallback) {
         saveScriptFilePath = readScriptFilePath;
     }
 
-    if(readScriptFilePath){
-        this.readFile(client, clientCallback, readScriptFilePath,
-            function(fileContent){
-            script = ScriptSubmission.save(job, fileContent);
 
-            // If no visualization, save
-            if(!onlyVisualization)
-                self.writeFile(client, clientCallback, script,
-                        saveScriptFilePath);
-            else
-                clientCallback({script:script});
+    var basedir = path.dirname(saveScriptFilePath);
+
+    // Chmod +x
+    if(job.execution.executable){
+        var cmd =  shellescape(["chmod", "+x", basedir + "/" + job.execution.executable]);
+        client.executeCommand(cmd,
+        // Chmod finished, continue
+        function(result, exitcodeFinal, paramsCallback){
+
+            if(readScriptFilePath){
+                self.readFile(client, clientCallback, readScriptFilePath,
+                    function(fileContent){
+                    script = ScriptSubmission.save(job, fileContent);
+
+                    // If no visualization, save
+                    if(!onlyVisualization)
+                        self.writeFile(client, clientCallback, script,
+                                saveScriptFilePath);
+                    else
+                        clientCallback({script:script});
+                });
+            }else{
+                script = ScriptSubmission.save(job);
+
+                // If no visualization, save
+                if(!onlyVisualization)
+                    self.writeFile(client, clientCallback, script,
+                            saveScriptFilePath);
+                else
+                    clientCallback({script:script});
+            }
+        }, {},
+        function(result, data, paramsCallback){
+
         });
-    }else{
-        script = ScriptSubmission.save(job);
-
-        // If no visualization, save
-        if(!onlyVisualization)
-            self.writeFile(client, clientCallback, script,
-                    saveScriptFilePath);
-        else
-            clientCallback({script:script});
     }
 };
 
