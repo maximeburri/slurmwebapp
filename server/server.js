@@ -15,6 +15,7 @@ var util = require('util');
 var shellescape = require('shell-escape');
 var path = require('path');
 var ipaddr = require('ipaddr.js');
+var colors = require('colors'); // Log colors
 
 var Client = require('./Client.js');
 var ClientSSH = require('ssh2').Client;
@@ -56,7 +57,7 @@ var optionsServer = {
 var server = https.createServer(optionsServer, app);
 
 server.listen(config.https_server.port, function() {
-	console.log("Server listening on port " + config.https_server.port)
+	console.log(("Server listening on port " + config.https_server.port).green)
 });
 
 /* HTTP server for client files */
@@ -70,7 +71,7 @@ if(config.https_server.client_files.serve_files){
 console.logCopy = console.log.bind(console);
 console.log = function(data)
 {
-    var currentDate = '[' + new Date().toUTCString() + '] ';
+    var currentDate = ('[' + new Date().toUTCString() + ']').grey;
     this.logCopy(currentDate, data);
 };
 
@@ -106,6 +107,7 @@ io.on('connection', function (socket) {
             attemptsClient.timestampUnban = currentTimestamp +
                 config.connection.time_banned_by_ip ;
             attemptsClient.attempts = 0;
+            console.log("Client::banned ".red + ipv6String.toString().cyan);
         }
         if(attemptsClient.banned){
             if(!info)
@@ -121,7 +123,7 @@ io.on('connection', function (socket) {
             });
     };
 
-	console.log("Client::connection " + ipv6String);
+	console.log("Client::connection " + ipv6String.toString().cyan);
 
 	// When client want to login
     function login(data, clientCallback){
@@ -157,7 +159,7 @@ io.on('connection', function (socket) {
 		// Try to connect
         try{
             client.params = data;
-            console.log("Client::login : " + client.toString());
+            console.log("Client::login : " + client.toString().cyan);
             ssh.connect({
                 host: data.cluster,
                 username: data.username,
@@ -177,7 +179,7 @@ io.on('connection', function (socket) {
 	// When client want to logout
 	function logout(data){
 		try{
-			console.log("Client::logout : " + client.toString())
+			console.log("Client::logout : " + client.toString().cyan)
             quitClientCloseSSH();
 
 			// Reconnect login function
@@ -215,7 +217,7 @@ io.on('connection', function (socket) {
 	// When the socket disconnects
 	function disconnect(){
 		try{
-			console.log("Client::disconnected : " + client.toString())
+			console.log("Client::disconnected : " + client.toString().cyan)
 
             quitClientCloseSSH();
 

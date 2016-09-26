@@ -18,29 +18,30 @@ Client.prototype.cutString = function(string){
 // Log execution of command
 Client.prototype.logExecutionCommand = function(selfIdCommand, command){
     if(config.log.commands.execution)
-        console.log(this.toString() + " execute command " + selfIdCommand +
-            " : " + this.cutString(command));
+        console.log(this.toString().cyan + " execute command " +
+            selfIdCommand.toString().cyan +
+            " : " + this.cutString(command).yellow);
 }
 
 // Log stdout command
 Client.prototype.logStdout = function(selfIdCommand, data){
     if(config.log.commands.print_stdout)
-        console.log("stdout command " + selfIdCommand +
-                " : " + this.cutString(data.toString()));
+        console.log("stdout command " + selfIdCommand.toString().cyan +
+                " : " + this.cutString(data.toString()).yellow);
 }
 
 // Log exit code of command
 Client.prototype.logExitcode = function(selfIdCommand, exitcode){
     if(config.log.commands.print_exitcode)
-        console.log("exit command " + selfIdCommand +
-                " : code:"+exitcode.toString());
+        console.log("exit command " + selfIdCommand.toString().cyan +
+                " : code:"+exitcode.toString().yellow);
 }
 
 // Log stderr command
 Client.prototype.logStderr = function(selfIdCommand, data){
     if(config.log.commands.print_stderr)
-        console.log("stderr command " + selfIdCommand +
-                " : " + this.cutString(data.toString()));
+        console.log("stderr command " + selfIdCommand.toString().cyan +
+                " : " + this.cutString(data.toString()).yellow);
 }
 
 // Execute custom command with paramters data, exit, end, etc...
