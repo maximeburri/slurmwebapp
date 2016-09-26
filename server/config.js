@@ -5,7 +5,13 @@
  */
 var config = {};
 
-config.debug_show_output = false; // Show output of command in server
+config.log = {};
+config.log.commands = {};
+config.log.commands.print_stdout = false; // Show output of command in server
+config.log.commands.print_stderr = true;
+config.log.commands.print_exitcode = true;
+config.log.commands.execution = true;
+config.log.commands.max_length = 100;
 
 config.https_server = {}
 config.https_server.client_files = {}

@@ -139,7 +139,8 @@ function(client, filename, notifyEventName, clientCallback){
         // std err
         function(data) {
             console.log("STDERR:"+data);
-        }
+        },
+        true /* Log stdout in flow */
     );
 }
 
