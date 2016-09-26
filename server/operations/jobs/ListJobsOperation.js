@@ -82,8 +82,6 @@ function(hostname, self){
     // Squeue with SLURM_TIME_FORMAT == timestamp
     var command = "env SLURM_TIME_FORMAT=\"%s\" squeue -a --states=all --format=\"%i %P %j %u %T %S %C %R %e %l %S %V\"";
 
-    console.log("Execute squeue with " + client.socket.id);
-    self.showSubscribers();
     try {
         client.executeCommand(command,
             // Parsing

@@ -40,10 +40,9 @@ function(client, callbackFinish) {
 
 OperationPublishSubscribe.prototype.subscribe =
 function(client) {
-    this.showSubscribers();
     if(!this.isClientSubscribed(client)){
         var hostname = client.ssh.config.host;
-        console.log("listJobs::subscribe::"+hostname+" client : " + client.params.username);
+        console.log(this.eventNamePublish+"::subscribe::"+hostname+" client : " + client.params.username);
 
         if(this.subscribers[hostname] === undefined)
             this.subscribers[hostname] = [];
@@ -55,12 +54,11 @@ function(client) {
 
 OperationPublishSubscribe.prototype.unsubscribe =
 function(client) {
-    this.showSubscribers();
     var i = this.getIndexClientInSubscribers(client);
     // Client existant
     if(i >= 0){
         var hostname = client.ssh.config.host;
-        console.log("listJobs::unsubscribe::"+hostname+" client : " + client.params.username);
+        console.log(this.eventNamePublish+"::unsubscribe::"+hostname+" client : " + client.params.username);
 
         // Delete the subscriber
         this.subscribers[hostname].splice(i--, 1);
@@ -120,15 +118,22 @@ function(client){
 
 OperationPublishSubscribe.prototype.showSubscribers =
 function(){
-    console.log("================ Subscribers '" + this.eventNamePublish +"' ================== ");
+    // Foreach hostname
     for (var hostname in this.subscribers) {
-        console.log("Hostname: " + hostname);
-        console.log("Nb: " + this.subscribers[hostname].length);
+        hostnameSubscribers = "Subscribers '" + this.eventNamePublish
+                               + "' to "+hostname+": ";
+        // Show subsribers
         for (var i = 0; i < this.subscribers[hostname].length; i++) {
-            console.log(" - " + this.subscribers[hostname][i].params.username + " (" + this.subscribers[hostname][i].socket.id + ")");
+            if(i !== 0)
+                hostnameSubscribers += ',';
+            hostnameSubscribers += this.subscribers[hostname][i].params.username;
         }
+        // None subscriber
+        if(i == 0)
+            hostnameSubscribers = 'none';
+
+        console.log(hostnameSubscribers);
     }
-    console.log("================ =============== ================== ");
 }
 
 // export the class
