@@ -85,48 +85,47 @@ function(hostname, self){
     console.log("Execute squeue with " + client.socket.id);
     self.showSubscribers();
     try {
-        client.ssh.exec(command, function(err, stream) {
-            if (err) console.error(err.stack);
-            else
-                stream.on('data', function(data) {
-                    result += data;
-                }).on('exit', function(e) {
-                    //console.log('EXIT: ' + e);
-                    exitcode = e;
-                }).on('end', function(){
-                    //console.log('CLOSE');
-                    if(exitcode == 0){
-                        if(self.jobsInfo[hostname].jobs.text != result){
-                            self.jobsInfo[hostname].jobs.text = result;
-                            self.jobsInfo[hostname].lastRequest = Date.now();
-                            self.jobsInfo[hostname].jobs.objects = self.parseJobs(result);
-                            self.dataToPublish[hostname] = {
-                                date:self.jobsInfo[hostname].lastRequest,
-                                jobs:self.jobsInfo[hostname].jobs.objects
-                            }
-
-                            self.publishDataBroadcast(hostname);
+        client.executeCommand(command,
+            // Parsing
+            function(result, exitcode, paramsCallback ){
+                //console.log('CLOSE');
+                if(exitcode == 0){
+                    if(self.jobsInfo[hostname].jobs.text != result){
+                        self.jobsInfo[hostname].jobs.text = result;
+                        self.jobsInfo[hostname].lastRequest = Date.now();
+                        self.jobsInfo[hostname].jobs.objects = self.parseJobs(result);
+                        self.dataToPublish[hostname] = {
+                            date:self.jobsInfo[hostname].lastRequest,
+                            jobs:self.jobsInfo[hostname].jobs.objects
                         }
+
+                        self.publishDataBroadcast(hostname);
                     }
-                    if(self.subscribers[hostname].length >= 0)
-                        self.jobsInfo[hostname].timeoutFunction =
-                            setTimeout(self.updateJobsLoop, config.jobs.interval_update, hostname, self);
-                    else
-                        self.jobsInfo[hostname].timeoutFunction = null;
-                })
-                .stderr.on('data', function(data) {
-                    console.log('squeue STDERR: ' + data);
-                });
-        });
+                }
+                if(self.subscribers[hostname].length >= 0)
+                    self.jobsInfo[hostname].timeoutFunction =
+                        setTimeout(self.updateJobsLoop, config.jobs.interval_update, hostname, self);
+                else
+                    self.jobsInfo[hostname].timeoutFunction = null;
+            },
+            undefined, /* Params */
+            // Error
+            function(finalStdout, stdErr, paramsCallback){
+                self.resetTimeout(self);
+            }
+        );
     }catch(err) {
-        console.error("updateJobsLoop : client ssh error");
-        // Une erreur s'est produite, directement remettre à jour les jobs
-        if(self.subscribers[hostname].length >= 0)
-            self.jobsInfo[hostname].timeoutFunction =
-                setTimeout(self.updateJobsLoop, config.jobs.interval_update, hostname, self);
-        else
-            self.jobsInfo[hostname].timeoutFunction = null;
+        self.resetTimeout(self);
     }
+}
+
+ListJobsOperation.prototype.resetTimeout = function(self){
+    // Une erreur s'est produite, directement remettre à jour les jobs
+    if(self.subscribers[hostname].length >= 0)
+        self.jobsInfo[hostname].timeoutFunction =
+            setTimeout(self.updateJobsLoop, config.jobs.interval_update, hostname, self);
+    else
+        self.jobsInfo[hostname].timeoutFunction = null;
 }
 
 // Parse jobs formated %i %P %j %u %T %S %C %R %e %l %S %V
