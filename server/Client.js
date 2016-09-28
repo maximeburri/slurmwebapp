@@ -32,6 +32,9 @@ Client.prototype.logStdout = function(selfIdCommand, data){
 
 // Log exit code of command
 Client.prototype.logExitcode = function(selfIdCommand, exitcode){
+    if(exitcode === null || exitcode === undefined)
+        exitcode = "<none>";
+        
     if(config.log.commands.print_exitcode)
         console.log("exit command " + selfIdCommand.toString().cyan +
                 " : code:"+exitcode.toString().yellow);
