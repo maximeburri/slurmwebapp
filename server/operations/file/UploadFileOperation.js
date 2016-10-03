@@ -16,11 +16,11 @@ function(client, operationInfo, clientCallback) {
     data = operationInfo.params.data;
 
     // Check data length max upload
-    if( config.configuration_files.max_filesize_upload !== undefined &&
-        data.length > config.configuration_files.max_filesize_upload){
+    if( config.files.max_filesize_upload !== undefined &&
+        data.length > config.files.max_filesize_upload){
         clientCallback(null,
             {"too_big":true,
-            "limitation" : config.configuration_files.max_filesize_upload});
+            "limitation" : config.files.max_filesize_upload});
         return;
     }
 

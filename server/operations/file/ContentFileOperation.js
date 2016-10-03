@@ -25,7 +25,7 @@ function(client, operationInfo, clientCallback) {
         },
         // Filesize received
         function(filesize, path){
-            if(filesize > config.configuration_files.max_filesize_download)
+            if(filesize > config.files.max_filesize_download)
                 clientCallback(null, {type:"too_big"});
             else{
                 if(operationInfo.params.follow){

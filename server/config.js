@@ -36,19 +36,19 @@ config.jobs = {}
 config.jobs.interval_update = 5000 // ms
 
 // Configuration files on cluster
-config.configuration_files = {};
+config.files = {};
 // Files downloaded by client (cluster -> bridge -> client)
-config.configuration_files.max_filesize_download =
+config.files.max_filesize_download =
     100000; // bytes
 // Files uploaded by client (client -> bridge -> cluster)
-config.configuration_files.max_filesize_upload =
+config.files.max_filesize_upload =
     50*1024*1024; // bytes
 
-config.configuration_files.paths = {};
+config.files.paths = {};
 // path relative to HOME
 // $HOME and ~ doesn't work because it's escaped
-config.configuration_files.paths.partitions_rules =
+config.files.paths.partitions_rules =
     ".slurmwebapp/partitionsRules.js";
-config.configuration_files.paths.predefined_submissions =
+config.files.paths.predefined_submissions =
     ".slurmwebapp/predefinedSubmissions.js";
 module.exports = config;

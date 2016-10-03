@@ -91,7 +91,7 @@ function(client, clientCallback, file, finishCallback){
         },
         // Filesize received
         function(filesize, file){
-            if(filesize > config.configuration_files.max_filesize_download)
+            if(filesize > config.files.max_filesize_download)
                 clientCallback(null, {type:"too_big"});
             else{
                 self.executeReadFileCat(client, file, function(result){
