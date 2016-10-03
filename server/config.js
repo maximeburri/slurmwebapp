@@ -32,16 +32,18 @@ config.connection.accepted_clusters = ["baobab.unige.ch"];
 config.ssh = {}
 config.ssh.timeout = 6000;
 
-config.general = {}
-config.general.max_filesize_transfer = 100000;
-
 config.jobs = {}
-config.jobs.interval_update = 5000
+config.jobs.interval_update = 5000 // ms
 
 // Configuration files on cluster
 config.configuration_files = {};
-config.configuration_files.max_filesize_transfer =
-    config.general.max_filesize_transfer;
+// Files downloaded by client (cluster -> bridge -> client)
+config.configuration_files.max_filesize_download =
+    100000; // bytes
+// Files uploaded by client (client -> bridge -> cluster)
+config.configuration_files.max_filesize_upload =
+    100000;
+
 config.configuration_files.paths = {};
 // path relative to HOME
 // $HOME and ~ doesn't work because it's escaped

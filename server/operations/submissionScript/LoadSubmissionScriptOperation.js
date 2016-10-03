@@ -29,7 +29,7 @@ function(client, operationInfo, clientCallback) {
         },
         // Filesize received
         function(filesize, scriptFile){
-            if(filesize > config.configuration_files.max_filesize_transfer)
+            if(filesize > config.configuration_files.max_filesize_download)
                 clientCallback(null, {type:"too_big"});
             else{
                 self.executeReadFileCat(client, scriptFile, function(result){
