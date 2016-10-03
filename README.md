@@ -35,6 +35,10 @@ More information can be read to these pages :
 
 ## TODO
 A list of improvments :
+- ~~! Limitation file upload~~
+- Visualization file modes (1 line, all, ..)
+- Fix bug #1
+- Download file
+- (Upload zip)
 - History list of own job
 - Multilingue support
-- ! Limitation file upload
