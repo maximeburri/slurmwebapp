@@ -336,10 +336,17 @@ function swaFilesBrowser(User, Files, $modal, $compile) {
             }
 
 
-            scope.onUploadFinish = function(files, error){
+            scope.onUploadFinish = function(files, error, errorInfo){
                 if(error){
                     scope.uploadError = true;
                     scope.uploadSuccess = false;
+
+                    // Check too big
+                    if(errorInfo.too_big){
+                        alert("Le fichier est trop volumineux (limitation à "
+                               + errorInfo.limitation + " bytes )");
+                    }
+
                 }else{
                     scope.uploadSuccess = true;
                     scope.uploadError = false;

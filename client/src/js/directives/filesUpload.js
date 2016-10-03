@@ -53,13 +53,14 @@ function swaFilesUpload(User) {
                             function(err){
                                 console.error("Error upload");
                                 console.error(err);
+
                                 error = true;
 
                                 if ( datas.length === files.length ){
                                     scope.swaFilesUpload = datas;
                                     if(scope.swaOnFinish !== undefined &&
                                         scope.swaOnFinish() !== undefined){
-                                        scope.swaOnFinish()(files, error);
+                                        scope.swaOnFinish()(files, error, err);
                                     }
                                 }
                             }

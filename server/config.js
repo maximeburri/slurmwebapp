@@ -42,7 +42,7 @@ config.configuration_files.max_filesize_download =
     100000; // bytes
 // Files uploaded by client (client -> bridge -> cluster)
 config.configuration_files.max_filesize_upload =
-    100000;
+    50*1024*1024; // bytes
 
 config.configuration_files.paths = {};
 // path relative to HOME

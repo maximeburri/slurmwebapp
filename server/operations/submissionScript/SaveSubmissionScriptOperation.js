@@ -123,7 +123,7 @@ function(client, clientCallback, content, file){
                 if(data !== null && data.upload_success){
                     clientCallback({"written":true});
                 }else{
-                    clientCallback(null, {"error_written_file":true});
+                    clientCallback(null, error);
                 }
             });
     },

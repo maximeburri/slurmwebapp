@@ -310,7 +310,11 @@ function SubmissionCtrl($timeout, $scope, $rootScope, User, Memory,
             },
             // Error
             function(err){
-                alert("Impossible d'écrire le script");
+                var msg = "Impossible d'écrire le script";
+                if(err.too_big)
+                    msg += " : le ficher de soumission généré est trop volumineux";
+
+                alert(msg);
                 console.error(err);
             }
         );
