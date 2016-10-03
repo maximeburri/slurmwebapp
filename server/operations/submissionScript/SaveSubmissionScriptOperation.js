@@ -4,6 +4,7 @@ var shellescape = require('shell-escape');
 var inherits = require('util').inherits;
 var ContentFileOperation = require('../file/ContentFileOperation.js');
 var path = require('path');
+var UploadFileOperation = require('../file/UploadFileOperation.js');
 
 var config = require('../../config');
 
@@ -111,17 +112,20 @@ function(client, clientCallback, content, file){
     this.makeBackupFile(client, function(exitCode){
 
         // Then echo file
-        cmd = "echo '" + content + "' > "+file;
-        client.executeCommand(cmd,
-        function(result, exitcodeFinal, paramsCallback){
-            if(exitcodeFinal == 0)
-                clientCallback({"writted":true});
-            else
-                clientCallback(null, {exitcode : exitcodeFinal});
-        }, {},
-        function(result, data, paramsCallback){
-
-        });
+        (new UploadFileOperation()).makeOperation(client,
+            {
+                params:{
+                    data : new Buffer(content),
+                    filepath : file
+                }
+            },
+            function(data, error){
+                if(data !== null && data.upload_success){
+                    clientCallback({"written":true});
+                }else{
+                    clientCallback(null, {"error_written_file":true});
+                }
+            });
     },
     file);
 }
