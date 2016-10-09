@@ -14,7 +14,6 @@ var socketio = require('socket.io');
 var util = require('util');
 var shellescape = require('shell-escape');
 var path = require('path');
-var ipaddr = require('ipaddr.js');
 var colors = require('colors'); // Log colors
 
 var Client = require('./Client.js');
@@ -81,12 +80,10 @@ var io = socketio(server);
 io.set('heartbeat interval', 1000);
 io.set('heartbeat timeout', 5000);
 
-
 io.on('connection', function (socket) {
     var ssh = new ClientSSH();
     var client = new Client(ssh, socket);
-    var ip = ipaddr.parse(socket.request.connection.remoteAddress);
-    var ipv6String = ip.toNormalizedString();
+    var ipv6String = client.ipv6String;
     if(!attemptsIpv6Clients[ipv6String]){
         attemptsIpv6Clients[ipv6String] = {
             attempts : 0,
@@ -98,7 +95,10 @@ io.on('connection', function (socket) {
     var attemptsClient = attemptsIpv6Clients[ipv6String];
     var connectionClientCallback = undefined;
 
-    sendResponseLogin = function(type, info){
+    console.log("Client::connection "+
+            client.toStringDetail());
+
+    sendResponseLogin = function(type, info, success){
         // Check if banned, so send
         if(attemptsClient.attempts >= config.connection.max_attempts_by_ip )
         {
@@ -107,7 +107,7 @@ io.on('connection', function (socket) {
             attemptsClient.timestampUnban = currentTimestamp +
                 config.connection.time_banned_by_ip ;
             attemptsClient.attempts = 0;
-            console.log("Client::banned ".red + ipv6String.toString().cyan);
+            type = "banned";
         }
         if(attemptsClient.banned){
             if(!info)
@@ -116,6 +116,9 @@ io.on('connection', function (socket) {
             info.timestampUnban = attemptsClient.timestampUnban;
         }
 
+        console.log("Client::login : " + client.toString() +
+                    " : " + (success ? type.toString().green :
+                               type.toString().red ));
         connectionClientCallback(
             {
                 type:type,
@@ -123,20 +126,25 @@ io.on('connection', function (socket) {
             });
     };
 
-	console.log("Client::connection " + ipv6String.toString().cyan);
-
 	// When client want to login
     function login(data, clientCallback){
         connectionClientCallback = clientCallback;
+        console.log("Client::login : " + client.toString() +
+            " cluster:" + data.cluster.toString().cyan +
+            " username:" + data.username.toString().cyan);
 
         // If already attemps
         if(attemptsClient.banned){
             currentTimestamp = Math.round(new Date().getTime()/1000);
             if(attemptsClient.timestampUnban > currentTimestamp){
+                console.log("Client::login : " + client.toString() +
+                    " already banned".red );
                 sendResponseLogin("banned");
                 return;
             }else{
                 attemptsClient.banned = false;
+                console.log("Client::login : " + client.toString() +
+                    " no more banned" );
             }
         }
         attemptsClient.attempts++;
@@ -159,7 +167,6 @@ io.on('connection', function (socket) {
 		// Try to connect
         try{
             client.params = data;
-            console.log("Client::login : " + client.toString().cyan);
             ssh.connect({
                 host: data.cluster,
                 username: data.username,
@@ -210,7 +217,7 @@ io.on('connection', function (socket) {
 			socket.on('operation', operation);
 
 			// Emit authenticated
-			sendResponseLogin("authenticated");
+			sendResponseLogin("authenticated", {}, true);
 		}catch(e){}
 	}
 
@@ -242,9 +249,9 @@ io.on('connection', function (socket) {
         else{
             // Send error
             socket.emit("error_ssh", {error:err});
+            		console.log("Client::login::ssh::error: "+ client.toString()
+                        + " " + err.red)
         }
-
-		console.log("Client::ssh::error:"+ client.toString()+err)
 
         ssh.end();
 	}

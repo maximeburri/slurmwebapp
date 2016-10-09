@@ -1,11 +1,18 @@
 var config = require('./config');
+var ipaddr = require('ipaddr.js');
 
 var globalCurrentIdCommand = 0;
+var globalCurrentIdClient = 0;
 
 function Client(ssh, socket, params) {
+    globalCurrentIdClient++;
+
     this.ssh = ssh;
     this.socket = socket;
     this.params = params;
+    this.id = globalCurrentIdClient;
+    this.ip = ipaddr.parse(socket.request.connection.remoteAddress);
+    this.ipv6String = this.ip.toNormalizedString();
 }
 
 // Cut string if length lesser than constant config.log.commands.max_length
@@ -34,7 +41,7 @@ Client.prototype.logStdout = function(selfIdCommand, data){
 Client.prototype.logExitcode = function(selfIdCommand, exitcode){
     if(exitcode === null || exitcode === undefined)
         exitcode = "<none>";
-        
+
     if(config.log.commands.print_exitcode)
         console.log("exit command " + selfIdCommand.toString().cyan +
                 " : code:"+exitcode.toString().yellow);
@@ -56,7 +63,7 @@ function(command, dataCallback, exitCallback, endCallback,
     // Variables
     var self = this;
     globalCurrentIdCommand++;
-    var selfIdCommand = "#" + globalCurrentIdCommand;
+    var selfIdCommand = "c#" + globalCurrentIdCommand;
     var finalStdout = "";
     if(stdErrCallbak == undefined)
         stdErrCallbak = function(err){};
@@ -145,9 +152,16 @@ Client.prototype.killProcess = function ( pid, callbackFinish) {
 }
 
 Client.prototype.toString = function () {
-    if(this.params)
-        return  this.params.username + " " + "("+this.params.cluster+")";
-    return undefined;
+    return this.getStringId();
+}
+
+Client.prototype.toStringDetail = function () {
+    return this.getStringId() + " " +
+           this.ipv6String.toString().cyan;
+}
+
+Client.prototype.getStringId = function(){
+    return ("u#"+this.id).toString().cyan;
 }
 
 // export the class
